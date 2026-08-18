@@ -1,0 +1,143 @@
+\documentclass[10pt,a4paper]{article}
+
+% ATS-Friendly Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[top=0.5in, bottom=0.5in, left=0.6in, right=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+% ATS-safe fonts: Times body (compact, universally parsed) + Helvetica headings.
+% Both ship with every TeX distribution (psnfss), so this always compiles.
+\usepackage{mathptmx}
+\usepackage[scaled=0.92]{helvet}
+
+% Slightly open line spacing for on-screen readability
+\linespread{1.05}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+    pdfborder={0 0 0}
+}
+
+% Remove page numbers
+\pagestyle{empty}
+
+% Compact section formatting
+\titleformat{\section}
+    {\sffamily\large\bfseries\uppercase}
+    {}
+    {0em}
+    {}
+    [\vspace{-4pt}\titlerule]
+
+\titlespacing{\section}{0pt}{9pt}{5pt}
+
+% Minimal spacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+
+% Compact commands
+% Company (bold sans, primary anchor) / Job title (bold serif, clearly scannable)
+% Location and dates recede to small roman - still plain text for ATS extraction.
+\newcommand{\resumeSubheading}[4]{
+    {\sffamily\bfseries #1} \hfill {\small #2} \\
+    \vspace{1pt}
+    \textbf{#3} \hfill {\small #4}
+}
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    {\sffamily\LARGE\bfseries KENDRICK KEE} \\
+    \vspace{3pt}
+    {\small +6597296685 $|$ kennyhu831@gmail.com $|$ Singapore $|$ \href{https://github.com/yourusername}{GitHub} $|$ \href{https://linkedin.com/in/yourprofile}{LinkedIn}}
+\end{center}
+\vspace{-8pt}
+
+%----------PROFESSIONAL SUMMARY----------
+\section{Professional Summary}
+Software Engineer with 6+ years building high-throughput, partner-facing systems in financial markets and large-scale consumer platforms. Deep Golang and REST API expertise, currently at Apple building Go microservices behind on-device personalization shipping across the global iOS install base. Extensive trading-domain background: built equities/commodities pricing engines at Citibank supporting \$2B+ daily volume, with full-stack delivery experience spanning Angular frontends, RESTful service design, and Docker/Kubernetes deployment.
+
+%----------TECHNICAL SKILLS----------
+\section{Technical Skills}
+\vspace{-2pt}
+\textbf{Languages:} Go, Java (8/11/17), Scala, Python, JavaScript, SQL \\
+\textbf{Backend \& APIs:} Go microservices, REST API design, gRPC, Spring Boot, JPA/Hibernate, event-driven architecture \\
+\textbf{Frontend:} Angular, JavaScript, HTML/CSS $|$
+\textbf{Databases:} SQL/relational (Oracle, MSSQL, IBM Db2), Cassandra, MongoDB \\
+\textbf{Cloud \& DevOps:} Docker, Kubernetes, CI/CD (Jenkins, TeamCity), Git, Splunk, Grafana $|$
+\textbf{Messaging:} Kafka, RabbitMQ \\
+\textbf{Data:} Apache Spark (Scala/PySpark), batch \& streaming ETL, feature pipelines, two-tower retrieval \\
+\textbf{Domain:} Equities \& commodities trading, pricing engines, market data, recommendation systems
+\vspace{2pt}
+
+%----------PROFESSIONAL EXPERIENCE----------
+\section{Professional Experience}
+\vspace{-2pt}
+
+\resumeSubheading
+{Apple Inc via TEKsystems}{Singapore}
+{Software Engineer}{May 2026 - Present}
+\vspace{-6pt}
+\begin{itemize}[leftmargin=0.18in, label={\textbullet}, itemsep=1pt, parsep=0pt, topsep=3pt]
+    \item Own the Go serving tier for a recommendations platform supporting payments- and commerce-adjacent surfaces, designing REST/gRPC service APIs and Cassandra-backed retrieval under strict latency budgets.
+    \item Ship on-device personalization across the global iOS install base, pushing ranking logic to the client under privacy constraints that keep user data on-device, at inference footprints orders of magnitude smaller than server-side.
+    \item Operate a dual-hat backend/data role, additionally owning Scala/Spark batch and streaming pipelines that convert raw interaction events into production features and embeddings for a two-tower retrieval model.
+    \item Drive architectural decisions end-to-end with cross-functional ML and product partners, from data model design through service rollout and online A/B validation.
+\end{itemize}
+\vspace{2pt}
+
+\resumeSubheading
+{Citibank Singapore Limited via LTIMindtree}{Singapore}
+{Software Engineer}{Oct 2024 - Apr 2026}
+\vspace{-6pt}
+\begin{itemize}[leftmargin=0.18in, label={\textbullet}, itemsep=1pt, parsep=0pt, topsep=3pt]
+    \item Architected REST-based pricing calculation microservice for equities/commodities trading, processing 100K+ daily transactions at sub-200ms latency using Java Spring Boot and Oracle (supporting \$2B+ daily volume).
+    \item Built real-time trade monitoring dashboards consumed by trading desks; migrated 20+ MongoDB collections to Oracle RDBMS and optimized queries by 40\%, cutting dashboard load times from 8s to 4.8s.
+    \item Delivered high-availability architecture for 24/7 trading operations using distributed caching (Redis) and hybrid relational/NoSQL persistence patterns.
+    \item Built CI/CD pipeline (TeamCity, uDeploy) automating deployment and regression testing, reducing release cycle from 2 weeks to 3 days; Splunk instrumentation enabled 60\% faster incident resolution.
+\end{itemize}
+\vspace{2pt}
+
+\resumeSubheading
+{ComBuilder Pte Ltd}{Singapore}
+{Java Software Developer}{Jul 2023 - Oct 2024}
+\vspace{-6pt}
+\begin{itemize}[leftmargin=0.18in, label={\textbullet}, itemsep=1pt, parsep=0pt, topsep=3pt]
+    \item Designed enterprise integration bus supporting multi-protocol external partner integration (REST, SOAP, JMS), enabling event-driven cross-system synchronization.
+    \item Architected 4+ Spring Boot microservices achieving 200\% performance improvement via algorithm optimization and query tuning (IBM Db2, MongoDB); raised uptime from 97\% to 99.8\%.
+    \item Led and mentored 3-person team delivering 4 production modules on schedule; established JUnit/Mockito testing at 85\%+ coverage, reducing production bugs by 40\%.
+\end{itemize}
+\vspace{2pt}
+
+\resumeSubheading
+{Avensys Pte Ltd}{Singapore}
+{Software Developer}{Apr 2022 - Jun 2023}
+\vspace{-6pt}
+\begin{itemize}[leftmargin=0.18in, label={\textbullet}, itemsep=1pt, parsep=0pt, topsep=3pt]
+    \item Delivered user-facing features end-to-end across the full stack: Angular frontends backed by Java Spring Boot REST APIs and relational persistence, for public-facing government service portals.
+    \item Integrated microservices with external partner systems via REST/SOAP; optimized SQL queries and indexing, reducing report generation time by 50\%.
+\end{itemize}
+\vspace{2pt}
+
+
+%----------EDUCATION----------
+\section{Education}
+\vspace{-2pt}
+\textbf{Georgia Institute of Technology} \hfill May 2025 \\
+Master of Science in Computer Science $|$ CGPA: 3.83/4.0
+
+\vspace{2pt}
+
+\textbf{University of Wollongong, Australia} \hfill Oct 2023 \\
+Bachelor of Science in Computer Science with Distinction $|$ WAM: 79/100
+
+\end{document}

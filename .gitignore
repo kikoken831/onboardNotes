@@ -1,0 +1,29 @@
+# Generated practice sheets — regenerate with tools/mcq_shuffle.py
+practice/
+
+# MCQ progress state (local, personal)
+.mcq-progress.json
+.mcq-progress.tmp
+.mcq-progress.corrupt.json
+
+# Python
+__pycache__/
+*.py[cod]
+
+# IDE
+.idea/
+*.iml
+
+# LaTeX build artefacts
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.toc
+
+# macOS
+.DS_Store
