@@ -70,6 +70,13 @@ in most markdown previewers it's collapsed; in a plain editor, cover the screen.
 - [`quiz/18-concurrency-api-inventory.md`](quiz/18-concurrency-api-inventory.md) — the `java.util.concurrent` catalogue: `CompletableFuture` in depth, synchronisers, locks, concurrent collections, `BlockingQueue` family, `Executors` factories, `ThreadLocal`. **Companion to `quiz/01`–`03`, which cover the reasoning rather than the API surface.**
 - [`quiz/19-design-patterns.md`](quiz/19-design-patterns.md) — the GoF set that actually comes up, which ones dissolve in a language with lambdas, Spring's pattern map, and "name a pattern you'd argue against"
 
+### Standalone set — the LeetCode list, 1:1
+- [`leetcode-set/`](leetcode-set/) — the **129 questions from the LeetCode "100 important questions" post, in the post's own order, one answer each, duplicates intact** (~12 of them, answered from a different angle each time). Short answers — what it is, the idiom, one gotcha — each pointing into the deep treatment. Its own MCQ deck (`leetcode-set/mcq/`, 129 questions) with a **separate progress file**, so this set's coverage is tracked independently:
+  ```bash
+  python3 tools/mcq_track.py --root leetcode-set/mcq drill -n 15
+  ```
+  Use this when you want to work *through the list*; use `quiz/16`–`19` when you want to learn the topics. Same material, different shape.
+
 ### Tools
 - [`tools/`](tools/) — `mcq_shuffle.py` regenerates randomised practice sheets (question order *and* A/B/C/D positions) so the MCQs stay reusable; `mcq_track.py` is an auto-graded drill with coverage tracking and Leitner-style review scheduling. Standard library only. See [`tools/README.md`](tools/README.md).
 
