@@ -446,14 +446,19 @@ Also: `compareTo` (natural order, on the class) vs `compare` (external, in a `Co
 
 <details><summary>Answer</summary>
 
-**C.** `parallelSort` uses a parallel merge sort on the **common `ForkJoinPool`**, with a threshold of
-8192 (`MIN_ARRAY_SORT_GRAN`) below which it just calls the sequential sort. It also needs **O(n) extra
-space** for the merge (allocated via `Array.newInstance` on the object path).
+**C.** …for **object** arrays. `parallelSort` uses a parallel merge sort on the **common `ForkJoinPool`**,
+and needs **O(n) extra space** for the merge (allocated via `Array.newInstance`).
 
-One nuance worth having, since the 8192 number gets quoted as universal: **it only gates the object-array
-overloads** (`Comparable`/`Comparator`). Since the JDK 14 `DualPivotQuicksort` rewrite, the *primitive*
-overloads such as `parallelSort(int[])` no longer branch on the threshold at all — they delegate
-unconditionally, passing the common pool's parallelism, and the sort decides internally.
+The 8192 number gets quoted as universal; it isn't. Read out of JDK 21.0.11's own `src.zip`:
+
+| Overload | Threshold | Constant |
+|---|---|---|
+| `T[]` / `T[]` + `Comparator` | **8192** | `Arrays.MIN_ARRAY_SORT_GRAN = 1 << 13` — used *only* in the four object paths |
+| `int[]`, `long[]`, `float[]`, `double[]` | **4096** | `DualPivotQuicksort.MIN_PARALLEL_SORT_SIZE = 4 << 10`, and it also requires `parallelism > 1` |
+| `byte[]`, `char[]`, `short[]` | **never parallel** | handed to `DualPivotQuicksort.sort(a, low, high)` — no parallelism parameter exists on that path |
+
+So a "parallel" sort of a `byte[]` is silently sequential no matter how large it is. The primitive split
+dates from the JDK 14 `DualPivotQuicksort` rewrite.
 
 Same shared-pool caveat as `parallelStream`, and the same conclusion: measure.
 

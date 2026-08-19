@@ -174,41 +174,81 @@ Do it in this order:
    minutes — only one of those gets you hired.
 
 ---
+---
 
-## Verification pass (August 2026)
+## Verification pass (August 2026) — and how much it actually proves
 
-These four files went through a research pass against primary sources (OpenJDK source, Javadoc, JLS,
-JEPs, the Adoptium support table) with an adversarial verification stage — **41 claims were put to
-independent refutation attempts and none were refuted.** What follows is what the pass *changed*, so you
-know which sentences are load-bearing and which were repaired.
+These files went through a research pass against primary sources (OpenJDK `src.zip` and GA-tag sources,
+Javadoc, JEPs, the Adoptium support table). **Read the evidence tiers below before quoting any of it**,
+because the pass was much stronger on some topics than others and the headline number is misleading:
 
-**Corrected here, and the correction re-verified by running it on JDK 21.0.11:**
+> 29 sources → **95 claims extracted** → only the **top 25 were adversarially verified** (3 independent
+> refutation attempts each) → **24 confirmed, 1 refuted**.
 
-| Was written | Actually | Where fixed |
+The verified 25 covered class loading / proxies / method handles, the Java 8 stream-and-`Optional`
+semantics, and one `ConcurrentHashMap` item. **Everything else — most of `java.util.concurrent`, all the
+core-language facts, the LTS baseline, and the 2026-frequency question — produced no verified claims**,
+and the research's own caveats say those sections "must not be published as verified". Two verifier
+fetches also died on HTTP 429 rate limits, and `docs.oracle.com` was blocked throughout, so Javadoc
+quotes were read from OpenJDK source mirrors instead of the rendered pages.
+
+So the corrections below are split by what actually backs them.
+
+### Tier 1 — I re-verified these myself by running code on JDK 21.0.11
+
+These don't depend on the research being right. The commands are in the answers.
+
+| Was written | Actually | Fixed in |
 |---|---|---|
-| "On 1 CPU the FJ common pool has **parallelism 0** and runs a thread per task" | The *behaviour* is right — measured `Thread-0/1/2` under `-XX:ActiveProcessorCount=1` — but `getCommonPoolParallelism()` **returns 1**, because the getter floors it. Don't say "0"; it's checkable. | `mcq-quiz/18` Q3, Q22; `quiz/18` Q23; `quiz/02` Q7; `quiz/04` Q12; `cheatsheets/gc-flags-and-logs.md` |
-| "FJP default parallelism = `availableProcessors() − 1`" | **Common pool only.** Measured on 14 cores: `new ForkJoinPool()` → 14, `newWorkStealingPool()` → 14, `commonPool()` → 13. | `mcq-quiz/18` Q22; `quiz/18` Q23 |
-| `finalize()` described as "removed for use" | **Deprecated for removal** (JDK 18, JEP 421) — still present and still **enabled by default**. `--finalization=disabled` is opt-in. | `quiz/09` |
-| "JDK 21 is the LTS baseline" | As of Aug 2026 the **latest LTS is JDK 25**; latest GA feature release is **26**; **27** lands Sep 2026. Supported LTS line: 8/11/17/21/25. The pack is still *verified against* 21, which is the realistic banking baseline — say it that way. | `quiz/16` Q25 |
-| `parallelSort`'s 8192-element threshold, stated as universal | Gates the **object-array** overloads only. Since the JDK 14 `DualPivotQuicksort` rewrite the primitive overloads don't branch on it at all. | `mcq-quiz/17` Q17 |
-| "`Recursive update` is `computeIfAbsent`'s guard" | The Javadoc says **"detectably"** — not a reliable guard — and JDK 21u has **nine** identical throw sites (`putVal`, `replaceNode`, `compute`, `merge`, …). | `mcq-quiz/18` Q14 |
-| "`Collectors.toMap` NPEs on a null value" | True, but from a `requireNonNull` in the accumulator — **not in `toMap`'s contract**. Only `toUnmodifiableMap` documents it. Null *keys* are accepted. | `mcq-quiz/17` Q12 |
-| `StructuredTaskScope.ShutdownOnFailure` shown without a version warning | Those constructors **don't exist in JDK 25+** (replaced by `open()` + `Joiner`, `@since 25`), and the API is **still preview** in Aug 2026. Virtual threads are final since 21 — separate claim. | `quiz/03` Q6; `mcq-quiz/03` |
+| "On 1 CPU the FJ common pool has **parallelism 0** and runs a thread per task" | Behaviour confirmed — `supplyAsync` ran on `Thread-0/1/2` under `-XX:ActiveProcessorCount=1`, no workers. But `getCommonPoolParallelism()` **returns 1**, because the getter floors it. Don't say "0"; it's checkable and wrong. | `mcq-quiz/18` Q3, Q22; `quiz/18` Q23; `quiz/02` Q7; `quiz/04` Q12; `cheatsheets/gc-flags-and-logs.md` |
+| "FJP default parallelism = `availableProcessors() − 1`" | **Common pool only.** Measured on 14 cores: `new ForkJoinPool()` → 14, `Executors.newWorkStealingPool()` → 14, `commonPool()` → 13. | `mcq-quiz/18` Q22; `quiz/18` Q23 |
+| — (new) | `newSingleThreadExecutor()` is returned **wrapped**: `instanceof ThreadPoolExecutor` is **false**, where `newFixedThreadPool(1)` is **true**. So it can't be cast and reconfigured. | `mcq-quiz/18` Q21 |
+| `parallelSort`'s 8192 threshold, stated as universal | Read out of JDK 21.0.11 `src.zip`: `MIN_ARRAY_SORT_GRAN` (8192) appears **only** in the four object-array paths. `int/long/float/double` use `DualPivotQuicksort.MIN_PARALLEL_SORT_SIZE` = **4096** and also require `parallelism > 1`. **`byte[]`/`char[]`/`short[]` never parallelise at all** — their `sort()` overload has no parallelism parameter. | `mcq-quiz/17` Q17 |
 
-**Confirmed against primary sources, no change needed:** the `Integer` cache range is a **JLS 5.1.7
-requirement** (asserted in OpenJDK as `assert IntegerCache.high >= 127`) with only the upper bound
-tunable; `peek` may not run (verbatim `@apiNote`, and the elision is a **JDK 9** change, not Java 8);
-`Optional` is **not `Serializable`** and `get()` is **not deprecated**, only discouraged by `@apiNote`;
-`protected` **does** grant package access (compiled and confirmed), with §6.6.2.1's qualifying-type rule
-as the subtlety; JDK proxies are interface-only; method-handle access checks happen once, at lookup.
+### Tier 2 — in the adversarially verified 25 (high confidence)
 
-**Details the pass added that no version of the source list has:** `forName("[LFoo;")` never initialises
-`Foo` regardless of the flag; the JDK 9 `forName(Module, String)` overload returns `null` instead of
-throwing; `equals`/`hashCode`/`toString` are dispatched to your `InvocationHandler`; the generated proxy
-extends `java.lang.reflect.Proxy`, which is *why* it can't wrap a class; `newSingleThreadExecutor()` is
-wrapped and **cannot** be cast to `ThreadPoolExecutor` (measured — `newFixedThreadPool(1)` can);
-class-file major version = feature release **+ 44**.
+Confirmed as the pack already stated them: `Class.forName` initialises and uses the **caller's defining
+loader**, not the TCCL; `forName(name, false, loader)` is the non-initialising form;
+`MethodHandles.Lookup.defineClass` (`@since 9`) and `defineHiddenClass` (`@since 15`) are the modern
+alternatives to the `protected final` `ClassLoader.defineClass`; dynamic proxies are **interface-only**;
+method-handle access checks happen **once at lookup** versus `Method.invoke`'s per-call check; `peek` may
+not run; `Collectors.toMap` throws `IllegalStateException` on duplicate keys.
 
-**Uncorroborated, and left alone deliberately:** with Valhalla preview features enabled, `Integer`,
-`Optional` and `clone()` semantics all change (value classes, `IdentityException`). That's real in
-mainline but irrelevant to any interview you'll sit in 2026 — noted here rather than in the answers.
+One item **CORRECTED**: `Optional.get()` is **not deprecated** in any release through mainline — only
+discouraged by an `@apiNote` pointing at `orElseThrow()` (no-arg form `@since 10`). `Optional` is **not
+`Serializable`**, and the "never use it as a field or parameter" rule is **JDK-team commentary, not
+documentation** — so attribute it that way rather than to the Javadoc. `quiz/17` Q9's phrasing
+("effectively soft-deprecated") is accurate; don't upgrade it to "deprecated".
+
+Two version boundaries to state explicitly: the `peek`/`count()` elision is **JDK 9+** (absent in 8u),
+and the duplicate-key `IllegalStateException` **message text changed in JDK 9** — assert the exception
+type, never the message.
+
+### Tier 3 — single-source finder claims, NOT adversarially verified
+
+I applied these because they're well-established and low-risk, but they came from the unverified two-
+thirds of the pass. **Re-check before relying on them in an interview.**
+
+| Change | Status |
+|---|---|
+| `finalize()` is **deprecated for removal** (JDK 18, JEP 421), still present and **enabled by default** — not "removed" | The research flags this as "the highest-risk core-language fact, never verified". The JEP itself is well known; the *current default* is the soft part. Fixed in `quiz/09`. |
+| Latest LTS is **JDK 25**; latest GA is **26**; **27** lands Sep 2026; supported LTS line 8/11/17/21/25 | From the Adoptium support table only, and the research explicitly lists "which JDK is the current LTS" as still open. Verify at adoptium.net before quoting a date. Fixed in `quiz/16` Q25. |
+| `StructuredTaskScope.ShutdownOnFailure` doesn't exist in JDK 25+ (`open()` + `Joiner`, `@since 25`); still preview in Aug 2026 | Read from mainline source, unverified. Directionally safe because it's stated as a hedge ("don't quote 21's signatures as final"). `quiz/03` Q6; `mcq-quiz/03`. |
+| `ConcurrentHashMap`'s "Recursive update" guard has 9 throw sites and is best-effort | The **"detectably"** wording is in the verified set; the throw-site count is not. `mcq-quiz/18` Q14. |
+| `Collectors.toMap`'s null-value NPE comes from the accumulator, not the contract | Verified item, but the "null keys are accepted" half is finder-only. `mcq-quiz/17` Q12. |
+
+### What was refuted, and what stays open
+
+**One claim was killed 0–3:** that `Stream.forEach`'s documented non-determinism is scoped to *parallel*
+pipelines. The Javadoc's statement is **unqualified**, so don't claim sequential `forEach` is guaranteed
+ordered — say "use `forEachOrdered` if you need encounter order". The pack's wording (parallel `forEach`
+doesn't preserve encounter order) is true and untouched by this.
+
+**Still unanswered by any pass:** whether `invokeExact` vs `invoke` is exactly the adaptation distinction
+as stated; which 2023-list gaps are genuinely highest-frequency in 2026 (no curriculum source was
+reachable — treat any ranking here, including mine, as judgement not evidence); and the precise
+`Executors` factory constants.
+
+**Deliberately not applied:** with Valhalla preview features enabled, `Integer`, `Optional` and `clone()`
+semantics all change (value classes, `IdentityException`). Real in mainline, irrelevant to a 2026
+interview — recorded here rather than in the answers.
