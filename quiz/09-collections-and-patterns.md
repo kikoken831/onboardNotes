@@ -724,8 +724,10 @@ A classic screening question — quick, and it's really three questions.
   resources: unlocking a `ReentrantLock`, `ThreadLocal.remove()`. Prefer
   **try-with-resources** for `AutoCloseable` things. Gotcha: a `return` in `finally`
   discards an in-flight exception — never do it.
-- **`finalize()`** — the deprecated (JDK 9) and **removed for use** hook the GC would call
-  before reclaiming an object. Never rely on it: no guarantee it runs, needs two GC cycles,
+- **`finalize()`** — deprecated in JDK 9, **deprecated *for removal*** in JDK 18 (JEP 421, which
+  also added `--finalization=disabled`). Precisely: it is still present and still **enabled by
+  default** as of the JDK 25/26 line — "deprecated for removal", not removed. Never rely on it:
+  no guarantee it runs, needs two GC cycles,
   a single slow finalizer stalls the queue and can OOM you, and it can resurrect objects.
   Use **try-with-resources**, or **`Cleaner`** as a native-memory safety net (quiz 04 Q20).
 

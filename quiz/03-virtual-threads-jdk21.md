@@ -130,7 +130,17 @@ try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
 ```
 `ShutdownOnFailure` = "all must succeed" (interrupts siblings on first error); `ShutdownOnSuccess` = "first wins" (hedged requests). The scope's `close()` guarantees no subtask outlives the block.
 
-Say it's **preview in 21** and the API was reshaped in later versions (`open()` factories + `Joiner`s), so don't quote 21's exact signatures as final. Cats Effect's `parTupled`/`Supervisor` and ZIO's fiber-scoping give you this already — ZIO in particular has had structured concurrency since day one, which is a nice bridge to make.
+Say it's **preview in 21** and be specific about what changed, because this is a place where 2023-era
+prep material is now actively wrong: the `new StructuredTaskScope.ShutdownOnFailure()` /
+`ShutdownOnSuccess` constructors above are the **JDK 21 preview** shape and **do not exist in JDK 25+**.
+They were replaced by static `StructuredTaskScope.open(...)` factories plus a **`Joiner`** policy
+(`Joiner.allSuccessfulOrThrow()`, `anySuccessfulOrThrow()`), all `@since 25`, with more added in 26 and
+27 (`Joiner.timeout()`). And as of **August 2026 it is still a preview API** — every public type carries
+`@PreviewFeature`, so it still needs `--enable-preview` and can still change. Virtual threads themselves
+are **final since 21** (JEP 444); keep the two claims separate.
+
+Cats Effect's `parTupled`/`Supervisor` and ZIO's fiber-scoping give you this already — ZIO in particular
+has had structured concurrency since day one, which is a nice bridge to make.
 </details>
 
 ---

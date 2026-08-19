@@ -1,6 +1,6 @@
 # tools/
 
-Two scripts for reusing the 210 MCQs in `mcq-quiz/`. **Standard library only** — no pip install,
+Two scripts for reusing the 290 MCQs in `mcq-quiz/`. **Standard library only** — no pip install,
 no venv. Both are executable.
 
 ---

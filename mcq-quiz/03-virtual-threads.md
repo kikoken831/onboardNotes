@@ -161,8 +161,10 @@ burning capacity for a discarded response), and unattributable stack traces.
 `ShutdownOnFailure` = all must succeed, interrupting siblings on first error.
 `ShutdownOnSuccess` = first wins (hedged requests).
 
-Say it's **preview in JDK 21** (`--enable-preview`, JEP 453) and the API was reshaped later —
-don't quote 21's signatures as final.
+Say it's **preview in JDK 21** (`--enable-preview`, JEP 453), and be precise about the churn, because
+2023-era material now fails to compile: those two constructors **do not exist in JDK 25+** — replaced by
+`StructuredTaskScope.open(Joiner.allSuccessfulOrThrow())` and friends, all `@since 25`. It is **still a
+preview API as of August 2026**. Virtual threads themselves went final in 21 (JEP 444) — separate claim.
 
 → `quiz/03` Q6
 </details>

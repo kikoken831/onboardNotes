@@ -3,7 +3,7 @@
 
 Shuffles question order AND the A/B/C/D choices within each question, remapping
 the answer letter and every letter reference in the explanation. Run it again for
-a different shuffle -- so the same 210 questions stay useful after you've started
+a different shuffle -- so the same 290 questions stay useful after you've started
 remembering that "the answer to Q7 is C".
 
 The canonical mcq-quiz/ files are never modified; output goes to a separate

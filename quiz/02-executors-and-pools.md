@@ -140,7 +140,7 @@ CompletableFuture
 
 <details><summary>Answer</summary>
 
-- `supply` → **`ForkJoinPool.commonPool-worker-1`** (no executor given → common pool; note: if `availableProcessors() == 1`, common-pool parallelism is 0 and it silently falls back to a **new thread per task**).
+- `supply` → **`ForkJoinPool.commonPool-worker-1`** (no executor given → common pool; note: if `availableProcessors() == 1`, the common pool degrades to a **new thread per task** — measured `Thread-0`, `Thread-1`, … on JDK 21.0.11 with `-XX:ActiveProcessorCount=1` — while `getCommonPoolParallelism()` still *reports* 1, so the metric hides it).
 - `apply` → whichever thread **completes** the previous stage. In practice the same common-pool worker, because the supplier is still running when `thenApply` is registered.
 - `applyAsync` → **a common-pool worker**, resubmitted (possibly a different one).
 - `accept` → the thread that completed `applyAsync`.

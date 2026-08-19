@@ -24,8 +24,8 @@ Three passes, roughly 3 sessions:
 
 | Pass | Goal | Files |
 |---|---|---|
-| 0. Screen | Where are my gaps? (fast, 210 MCQs) | `mcq-quiz/`, or `tools/mcq_track.py drill` |
-| 1. Recall | Can you answer out loud, no notes? | `quiz/01`–`07`, `09`–`15` |
+| 0. Screen | Where are my gaps? (fast, 290 MCQs) | `mcq-quiz/`, or `tools/mcq_track.py drill` |
+| 1. Recall | Can you answer out loud, no notes? | `quiz/01`–`07`, `09`–`19` |
 | 2. Hands-on | Can you find/fix the bug in code? | `problems/` |
 | 3. Empirics | Can you read a GC log and tune a heap? | `problems/gc-labs/` |
 | 4. **Write** | Your own examples, in your own words | **`quiz/08`** — do this one with a keyboard, not by reading |
@@ -63,11 +63,18 @@ in most markdown previewers it's collapsed; in a plain editor, cover the screen.
 - [`quiz/14-atdd-bdd-tdd.md`](quiz/14-atdd-bdd-tdd.md) — TDD vs ATDD vs BDD, **a worked settlement feature file**, what goes wrong with BDD, testing time-dependent logic, CI pipeline
 - [`quiz/15-post-trade-domain.md`](quiz/15-post-trade-domain.md) — trade lifecycle, T+1, clearing/CCPs, DvP and fails, netting, corporate actions, reconciliation, AMPS vs Kafka, regulations. **Domain primer — verify specifics with the team**
 
+**Core Java breadth (from the LeetCode "100 important questions" list — 85 questions):**
+- [`quiz/16-SOURCE-COVERAGE-MAP.md`](quiz/16-SOURCE-COVERAGE-MAP.md) — **read this first if you're working from that list.** Maps all 130 source questions to where they're answered, flags the ~12 duplicates, and lists the 12 topics the list omits that are asked in 2026 anyway.
+- [`quiz/16-java-core-and-oop.md`](quiz/16-java-core-and-oop.md) — `==`/`equals` + `Integer` cache, access modifiers, polymorphism vs hiding, immutability, `transient`/`serialVersionUID`, `clone`, `finalize` → `Cleaner`, classloading, `Proxy`, `MethodHandle`, **generics erasure and PECS**
+- [`quiz/17-java8-functional-and-streams.md`](quiz/17-java8-functional-and-streams.md) — lambdas vs anonymous classes, the functional interfaces, `map`/`flatMap`, **`peek` may not run**, laziness, `Optional` done properly, `parallelStream`, collectors, `Comparator`
+- [`quiz/18-concurrency-api-inventory.md`](quiz/18-concurrency-api-inventory.md) — the `java.util.concurrent` catalogue: `CompletableFuture` in depth, synchronisers, locks, concurrent collections, `BlockingQueue` family, `Executors` factories, `ThreadLocal`. **Companion to `quiz/01`–`03`, which cover the reasoning rather than the API surface.**
+- [`quiz/19-design-patterns.md`](quiz/19-design-patterns.md) — the GoF set that actually comes up, which ones dissolve in a language with lambdas, Spring's pattern map, and "name a pattern you'd argue against"
+
 ### Tools
 - [`tools/`](tools/) — `mcq_shuffle.py` regenerates randomised practice sheets (question order *and* A/B/C/D positions) so the MCQs stay reusable; `mcq_track.py` is an auto-graded drill with coverage tracking and Leitner-style review scheduling. Standard library only. See [`tools/README.md`](tools/README.md).
 
 ### MCQ drill (rapid recall)
-- [`mcq-quiz/`](mcq-quiz/) — **210 multiple-choice questions** across 14 files, mirroring `quiz/01`–`15`. Distractors are built from the real misconceptions, so the wrong answers teach the traps. Use to find gaps fast, then read the full `quiz/` entry for anything missed. **`quiz/08` and the open design questions have no MCQ version on purpose** — see the folder README.
+- [`mcq-quiz/`](mcq-quiz/) — **290 multiple-choice questions** across 18 files, mirroring `quiz/01`–`19`. Distractors are built from the real misconceptions, so the wrong answers teach the traps. Use to find gaps fast, then read the full `quiz/` entry for anything missed. **`quiz/08` and the open design questions have no MCQ version on purpose** — see the folder README.
 
 ### Code problems
 - [`problems/java/`](problems/java/) — 12 runnable problems (`java P01Counter.java`). **P12 is the DSA screen practice set with a test harness and the on-camera complexity-narration script.**

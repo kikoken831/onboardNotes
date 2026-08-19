@@ -155,7 +155,8 @@ stack trace, no graceful shutdown.
 - `MinRAMPercentage` does **not** mean "minimum heap" — it applies to *small* (<250 MB)
   total memory. Use `InitialRAMPercentage` for the `-Xms` equivalent. Genuine naming wart.
 - **CPU limits matter a lot.** `availableProcessors()` derives from the cgroup **quota**. A
-  `cpu: 500m` limit reports **1** → `ParallelGCThreads=1` and FJP common-pool parallelism 0.
+  `cpu: 500m` limit reports **1** → `ParallelGCThreads=1`, and the FJP common pool degrades to a
+  **thread per task** (measured; `getCommonPoolParallelism()` still reports 1, so metrics won't show it).
   Override with `-XX:ActiveProcessorCount=N` if wrong.
 - **CFS throttling** is the sneaky one: a 500m quota over a 100 ms period freezes **every
   thread** once you burn 50 ms. Looks exactly like a GC pause in dashboards. Watch

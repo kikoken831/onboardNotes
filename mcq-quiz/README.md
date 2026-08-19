@@ -42,11 +42,15 @@ Each answer ends with a `→ quiz/NN Qn` pointer to the full treatment.
 | [`13-event-sourcing-and-cqrs.md`](13-event-sourcing-and-cqrs.md) | `quiz/13` | 16 | **JD-critical.** ES/CQRS mechanics |
 | [`14-atdd-bdd-tdd.md`](14-atdd-bdd-tdd.md) | `quiz/14` | 10 | TDD/ATDD/BDD, feature files, CI |
 | [`15-post-trade-domain.md`](15-post-trade-domain.md) | `quiz/15` | 14 | lifecycle, T+1, clearing, settlement |
+| [`16-java-core-and-oop.md`](16-java-core-and-oop.md) | `quiz/16` | 22 | `Integer` cache, `serialVersionUID`, erasure, PECS |
+| [`17-java8-functional-and-streams.md`](17-java8-functional-and-streams.md) | `quiz/17` | 18 | lambdas, `peek`, `Optional`, collectors |
+| [`18-concurrency-api-inventory.md`](18-concurrency-api-inventory.md) | `quiz/18` | 26 | `j.u.c.` API surface, `CompletableFuture` in depth |
+| [`19-design-patterns.md`](19-design-patterns.md) | `quiz/19` | 14 | GoF set, Spring's patterns, Command → CQRS |
 
-**210 questions.**
+**290 questions.**
 
-Correct answers are distributed roughly evenly across A/B/C/D (56/50/56/48), so you can't game it
-by always picking the same letter.
+Correct answers are distributed roughly evenly across A/B/C/D (77/70/76/67), so you can't game it
+by always picking the same letter. `tools/mcq_shuffle.py` re-randomises the positions anyway.
 
 ---
 
