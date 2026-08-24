@@ -1,0 +1,4 @@
+build/
+.progress.json
+solutions/*/.attempts/
+*.class

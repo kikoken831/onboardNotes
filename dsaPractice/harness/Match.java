@@ -1,0 +1,160 @@
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Applies a Spec's comparison mode.
+ *
+ * Every method returns null when the two answers agree, or a short human-readable
+ * reason when they do not. Returning the reason rather than a boolean is what lets
+ * the judge print "duplicate triplets not skipped" instead of just "WRONG ANSWER".
+ */
+public final class Match {
+
+    private Match() {}
+
+    public static String disagree(Spec spec, Object[] input, Object yours, Object expected) {
+        // judged() reports its own contract violations as a String rather than an array.
+        if (yours instanceof String && spec.cmp == Cmp.LENGTH_AND_PREFIX) {
+            return (String) yours;
+        }
+        switch (spec.cmp) {
+            case EXACT:             return exact(yours, expected, 0.0);
+            case EPSILON:           return exact(yours, expected, spec.eps);
+            case MULTISET:          return unordered(yours, expected, false);
+            case SET_OF_SEQS:       return unordered(yours, expected, false);
+            case SET_OF_SETS:       return unordered(yours, expected, true);
+            case LENGTH_AND_PREFIX: return prefix(yours, expected);
+            case VALIDATE:
+                if (spec.validator == null) return "spec declares VALIDATE but supplies no validator";
+                return spec.validator.check(input, yours, expected);
+            default:                return exact(yours, expected, 0.0);
+        }
+    }
+
+    /** Length-and-prefix: both sides are already truncated to their returned length. */
+    private static String prefix(Object yours, Object expected) {
+        if (Deep.eq(yours, expected)) return null;
+        int ly = yours == null ? -1 : java.lang.reflect.Array.getLength(yours);
+        int le = expected == null ? -1 : java.lang.reflect.Array.getLength(expected);
+        if (ly != le) {
+            return "you returned k=" + ly + ", expected k=" + le;
+        }
+        return "returned the right length but the first " + le
+             + " element" + (le == 1 ? "" : "s") + " are wrong"
+             + " (order must match the original)";
+    }
+
+    private static String exact(Object yours, Object expected, double eps) {
+        if (Deep.eq(yours, expected, eps)) return null;
+        return shapeHint(yours, expected);
+    }
+
+    /**
+     * Order-insensitive comparison. `sortInner` also ignores order within each element,
+     * which is what subsets/3sum/combination-sum need but permutations/n-queens must not.
+     */
+    private static String unordered(Object yours, Object expected, boolean sortInner) {
+        String a = Deep.canonical(yours, sortInner, true);
+        String b = Deep.canonical(expected, sortInner, true);
+        if (a.equals(b)) return null;
+
+        List<String> ya = elements(yours, sortInner);
+        List<String> ea = elements(expected, sortInner);
+
+        List<String> missing = new ArrayList<>(ea);
+        for (String s : ya) missing.remove(s);
+        List<String> extra = new ArrayList<>(ya);
+        for (String s : ea) extra.remove(s);
+
+        StringBuilder b2 = new StringBuilder();
+        if (ya.size() != ea.size()) {
+            b2.append("count differs: yours ").append(ya.size())
+              .append(", expected ").append(ea.size());
+        }
+        if (!missing.isEmpty()) {
+            if (b2.length() > 0) b2.append("; ");
+            b2.append("missing ").append(preview(missing));
+        }
+        if (!extra.isEmpty()) {
+            if (b2.length() > 0) b2.append("; ");
+            b2.append("unexpected ").append(preview(extra));
+            if (missing.isEmpty() && ya.size() > ea.size()) {
+                b2.append("  (duplicates not de-duplicated?)");
+            }
+        }
+        return b2.length() > 0 ? b2.toString() : "same elements, different arrangement";
+    }
+
+    private static List<String> elements(Object v, boolean sortInner) {
+        List<String> out = new ArrayList<>();
+        for (Object row : Deep.asList(v)) {
+            if (sortInner && Deep.isCollection(row)) {
+                List<String> inner = new ArrayList<>();
+                for (Object x : Deep.asList(row)) inner.add(Codec.print(x));
+                java.util.Collections.sort(inner);
+                out.add("[" + String.join(",", inner) + "]");
+            } else {
+                out.add(Codec.print(row));
+            }
+        }
+        java.util.Collections.sort(out);
+        return out;
+    }
+
+    private static String preview(List<String> items) {
+        int show = Math.min(3, items.size());
+        String s = String.join(", ", items.subList(0, show));
+        return items.size() > show ? s + " (+" + (items.size() - show) + " more)" : s;
+    }
+
+    /** Cheap diagnosis of the common near-misses, so the message says something useful. */
+    private static String shapeHint(Object yours, Object expected) {
+        if (yours == null) return "returned null";
+        if (expected == null) return "expected null";
+
+        Integer ly = lengthOf(yours), le = lengthOf(expected);
+        if (ly != null && le != null && !ly.equals(le)) {
+            return "length differs: yours " + ly + ", expected " + le;
+        }
+        if (ly != null && le != null && ly.equals(le)) {
+            String rev = Deep.eq(reversed(yours), expected) ? "  (your answer is reversed)" : "";
+            if (!rev.isEmpty()) return "same elements, opposite order" + rev;
+
+            String sorted = sameMultiset(yours, expected)
+                ? "  (same elements, wrong order — did you forget to sort?)" : "";
+            if (!sorted.isEmpty()) return "order differs" + sorted;
+        }
+        if (yours instanceof Boolean && expected instanceof Boolean) {
+            return "returned " + yours + ", expected " + expected;
+        }
+        if (yours instanceof Number && expected instanceof Number) {
+            double d = ((Number) yours).doubleValue() - ((Number) expected).doubleValue();
+            if (Math.abs(d) == 1) return "off by one (" + (d > 0 ? "+1" : "-1") + ")";
+            return "off by " + Codec.print(d);
+        }
+        return null; // no useful hint; the printed values speak for themselves
+    }
+
+    private static Integer lengthOf(Object v) {
+        if (v == null) return null;
+        if (v.getClass().isArray()) return java.lang.reflect.Array.getLength(v);
+        if (v instanceof List) return ((List<?>) v).size();
+        if (v instanceof String) return ((String) v).length();
+        return null;
+    }
+
+    private static Object reversed(Object v) {
+        List<Object> l = new ArrayList<>(Deep.asList(v));
+        java.util.Collections.reverse(l);
+        return l;
+    }
+
+    private static boolean sameMultiset(Object a, Object b) {
+        List<String> x = new ArrayList<>(), y = new ArrayList<>();
+        for (Object o : Deep.asList(a)) x.add(Codec.print(o));
+        for (Object o : Deep.asList(b)) y.add(Codec.print(o));
+        java.util.Collections.sort(x);
+        java.util.Collections.sort(y);
+        return x.equals(y);
+    }
+}

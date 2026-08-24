@@ -1,0 +1,9371 @@
+{
+ "version": 1,
+ "source": "supplied 179-problem list, plus authored ramp tiers 1 and 2",
+ "id_corrections": {
+  "745": 744,
+  "746": 745,
+  "761": 759,
+  "778": 767,
+  "792": 704,
+  "800": 784,
+  "855": 828,
+  "874": 844,
+  "882": 852,
+  "893": 863,
+  "908": 876,
+  "931": 895,
+  "940": 904,
+  "1014": 973,
+  "1019": 977,
+  "1028": 986,
+  "1075": 1065,
+  "1250": 1143,
+  "2132": 2022
+ },
+ "counts": {
+  "tier1": 69,
+  "tier2": 58,
+  "tier3": 179,
+  "total": 306
+ },
+ "problems": [
+  {
+   "slug": "p-remove-value",
+   "title": "Remove every occurrence of a value",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "27, 26, 283",
+   "order": 0,
+   "companies": []
+  },
+  {
+   "slug": "p-dedupe-sorted",
+   "title": "De-duplicate a sorted array in place",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "26, 80, 83",
+   "order": 1,
+   "companies": []
+  },
+  {
+   "slug": "p-move-zeros",
+   "title": "Move zeros to the back, keep order",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "283",
+   "order": 2,
+   "companies": []
+  },
+  {
+   "slug": "p-partition-even-odd",
+   "title": "Partition into evens then odds",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "905, 75",
+   "order": 3,
+   "companies": []
+  },
+  {
+   "slug": "p-reverse-in-place",
+   "title": "Reverse an array in place",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "344, 151",
+   "order": 4,
+   "companies": []
+  },
+  {
+   "slug": "p-rotate-left-k",
+   "title": "Rotate left by k using three reversals",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Math"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "189, 61",
+   "order": 5,
+   "companies": []
+  },
+  {
+   "slug": "p-dutch-flag",
+   "title": "Three-way partition (Dutch national flag)",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sorting"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "75",
+   "order": 6,
+   "companies": []
+  },
+  {
+   "slug": "p-replace-and-remove",
+   "title": "Replace and remove, length changes",
+   "tier": 1,
+   "group": "write-index",
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "443",
+   "order": 7,
+   "companies": []
+  },
+  {
+   "slug": "p-char-frequency",
+   "title": "Count characters into int[26]",
+   "tier": 1,
+   "group": "hash-counting",
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Counting"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "242, 383, 387",
+   "order": 8,
+   "companies": []
+  },
+  {
+   "slug": "p-first-unique-char",
+   "title": "First non-repeating character",
+   "tier": 1,
+   "group": "hash-counting",
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Counting"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "387",
+   "order": 9,
+   "companies": []
+  },
+  {
+   "slug": "p-anagram-by-counts",
+   "title": "Anagram check without sorting",
+   "tier": 1,
+   "group": "hash-counting",
+   "pattern": [
+    "Hash Table",
+    "String"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "242, 49",
+   "order": 10,
+   "companies": []
+  },
+  {
+   "slug": "p-group-by-key",
+   "title": "Group values with computeIfAbsent",
+   "tier": 1,
+   "group": "hash-counting",
+   "pattern": [
+    "Hash Table"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "49",
+   "order": 11,
+   "companies": []
+  },
+  {
+   "slug": "p-two-sum-seen-map",
+   "title": "Complement lookup in one pass",
+   "tier": 1,
+   "group": "hash-counting",
+   "pattern": [
+    "Hash Table",
+    "Array"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "1, 167",
+   "order": 12,
+   "companies": []
+  },
+  {
+   "slug": "p-bs-exact",
+   "title": "Binary search, exact match",
+   "tier": 1,
+   "group": "binary-search",
+   "pattern": [
+    "Binary Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "704",
+   "order": 13,
+   "companies": []
+  },
+  {
+   "slug": "p-bs-first-ge",
+   "title": "First index with value >= x",
+   "tier": 1,
+   "group": "binary-search",
+   "pattern": [
+    "Binary Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "35, 278",
+   "order": 14,
+   "companies": []
+  },
+  {
+   "slug": "p-bs-first-gt",
+   "title": "First index with value > x",
+   "tier": 1,
+   "group": "binary-search",
+   "pattern": [
+    "Binary Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "744",
+   "order": 15,
+   "companies": []
+  },
+  {
+   "slug": "p-bs-predicate-flip",
+   "title": "First index where a predicate flips",
+   "tier": 1,
+   "group": "binary-search",
+   "pattern": [
+    "Binary Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "278, 162",
+   "order": 16,
+   "companies": []
+  },
+  {
+   "slug": "p-bs-count-occurrences",
+   "title": "Count occurrences using both bounds",
+   "tier": 1,
+   "group": "binary-search",
+   "pattern": [
+    "Binary Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "34",
+   "order": 17,
+   "companies": []
+  },
+  {
+   "slug": "p-bs-on-answer",
+   "title": "Binary search the answer, not the array",
+   "tier": 1,
+   "group": "binary-search",
+   "pattern": [
+    "Binary Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "875, 1011, 410",
+   "order": 18,
+   "companies": []
+  },
+  {
+   "slug": "p-list-build-traverse",
+   "title": "Build a list, walk it, return the values",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "everything list-shaped",
+   "order": 19,
+   "companies": []
+  },
+  {
+   "slug": "p-list-reverse",
+   "title": "Reverse a list iteratively",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "206",
+   "order": 20,
+   "companies": []
+  },
+  {
+   "slug": "p-list-delete-value",
+   "title": "Delete by value with a dummy head",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "203, 83",
+   "order": 21,
+   "companies": []
+  },
+  {
+   "slug": "p-list-kth-from-end",
+   "title": "Delete the k-th node from the end",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "19",
+   "order": 22,
+   "companies": []
+  },
+  {
+   "slug": "p-list-merge-sorted",
+   "title": "Merge two sorted lists",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "21, 23, 148",
+   "order": 23,
+   "companies": []
+  },
+  {
+   "slug": "p-list-middle",
+   "title": "Find the middle with fast and slow pointers",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "876, 234, 143",
+   "order": 24,
+   "companies": []
+  },
+  {
+   "slug": "p-list-reverse-sublist",
+   "title": "Reverse only positions m..n",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "92, 25",
+   "order": 25,
+   "companies": []
+  },
+  {
+   "slug": "p-list-partition",
+   "title": "Stable partition around a value",
+   "tier": 1,
+   "group": "linked-list",
+   "pattern": [
+    "Linked List",
+    "Two Pointers"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "86, 328",
+   "order": 26,
+   "companies": []
+  },
+  {
+   "slug": "p-rec-sum-return-up",
+   "title": "Sum by returning values up",
+   "tier": 1,
+   "group": "recursion-shape",
+   "pattern": [
+    "Recursion"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "104, 543",
+   "order": 27,
+   "companies": []
+  },
+  {
+   "slug": "p-rec-depth-thread-down",
+   "title": "Depth by threading state down",
+   "tier": 1,
+   "group": "recursion-shape",
+   "pattern": [
+    "Recursion",
+    "Tree"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "112, 129",
+   "order": 28,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-height",
+   "title": "Height of a binary tree",
+   "tier": 1,
+   "group": "recursion-shape",
+   "pattern": [
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "104, 110",
+   "order": 29,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-root-to-leaf",
+   "title": "Collect root-to-leaf paths",
+   "tier": 1,
+   "group": "recursion-shape",
+   "pattern": [
+    "Tree",
+    "Backtracking",
+    "Depth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "257, 113",
+   "order": 30,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-both-directions",
+   "title": "Carry context down, return a result up",
+   "tier": 1,
+   "group": "recursion-shape",
+   "pattern": [
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "124, 437",
+   "order": 31,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-count-matching",
+   "title": "Count nodes satisfying a predicate",
+   "tier": 1,
+   "group": "recursion-shape",
+   "pattern": [
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "938",
+   "order": 32,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-is-balanced",
+   "title": "Balanced check with a sentinel height",
+   "tier": 1,
+   "group": "recursion-shape",
+   "pattern": [
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "110",
+   "order": 33,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-preorder-iter",
+   "title": "Preorder without recursion",
+   "tier": 1,
+   "group": "iterative-traversal",
+   "pattern": [
+    "Tree",
+    "Stack"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "144",
+   "order": 34,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-inorder-iter",
+   "title": "Inorder without recursion (left spine)",
+   "tier": 1,
+   "group": "iterative-traversal",
+   "pattern": [
+    "Tree",
+    "Stack"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "94, 230, 98",
+   "order": 35,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-postorder-iter",
+   "title": "Postorder without recursion",
+   "tier": 1,
+   "group": "iterative-traversal",
+   "pattern": [
+    "Tree",
+    "Stack"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "145",
+   "order": 36,
+   "companies": []
+  },
+  {
+   "slug": "p-tree-level-order",
+   "title": "Level order with a size snapshot",
+   "tier": 1,
+   "group": "iterative-traversal",
+   "pattern": [
+    "Tree",
+    "Breadth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "102, 103, 199, 637",
+   "order": 37,
+   "companies": []
+  },
+  {
+   "slug": "p-grid-dfs-region",
+   "title": "Size of one connected region",
+   "tier": 1,
+   "group": "grid-search",
+   "pattern": [
+    "Depth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "200, 695, 733",
+   "order": 38,
+   "companies": []
+  },
+  {
+   "slug": "p-grid-bfs-shortest",
+   "title": "Shortest path on an unweighted grid",
+   "tier": 1,
+   "group": "grid-search",
+   "pattern": [
+    "Breadth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "1091, 994",
+   "order": 39,
+   "companies": []
+  },
+  {
+   "slug": "p-grid-visited-on-enqueue",
+   "title": "Mark visited at enqueue, not dequeue",
+   "tier": 1,
+   "group": "grid-search",
+   "pattern": [
+    "Breadth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "200, 994",
+   "order": 40,
+   "companies": []
+  },
+  {
+   "slug": "p-grid-flood-fill",
+   "title": "Flood fill from a starting cell",
+   "tier": 1,
+   "group": "grid-search",
+   "pattern": [
+    "Depth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "733",
+   "order": 41,
+   "companies": []
+  },
+  {
+   "slug": "p-bt-binary-strings",
+   "title": "Generate every binary string of length n",
+   "tier": 1,
+   "group": "backtracking",
+   "pattern": [
+    "Backtracking"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "78, 22",
+   "order": 42,
+   "companies": []
+  },
+  {
+   "slug": "p-bt-include-exclude",
+   "title": "Subsets by include/exclude recursion",
+   "tier": 1,
+   "group": "backtracking",
+   "pattern": [
+    "Backtracking",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "78, 90",
+   "order": 43,
+   "companies": []
+  },
+  {
+   "slug": "p-bt-subset-sum",
+   "title": "Does any subset reach the target?",
+   "tier": 1,
+   "group": "backtracking",
+   "pattern": [
+    "Backtracking",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "39, 416, 494",
+   "order": 44,
+   "companies": []
+  },
+  {
+   "slug": "p-bt-subset-no-adjacent",
+   "title": "Subsets with no two adjacent elements",
+   "tier": 1,
+   "group": "backtracking",
+   "pattern": [
+    "Backtracking"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "198, 213",
+   "order": 45,
+   "companies": []
+  },
+  {
+   "slug": "p-bt-permutations-swap",
+   "title": "Permutations by swapping in place",
+   "tier": 1,
+   "group": "backtracking",
+   "pattern": [
+    "Backtracking"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "46, 47",
+   "order": 46,
+   "companies": []
+  },
+  {
+   "slug": "p-bt-combinations",
+   "title": "Choose k of n, copying at the leaf",
+   "tier": 1,
+   "group": "backtracking",
+   "pattern": [
+    "Backtracking"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "77, 39, 216",
+   "order": 47,
+   "companies": []
+  },
+  {
+   "slug": "p-trie-insert-search",
+   "title": "Insert and search with a 26-child trie",
+   "tier": 1,
+   "group": "trie",
+   "pattern": [
+    "Trie",
+    "Design"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "208",
+   "order": 48,
+   "companies": []
+  },
+  {
+   "slug": "p-trie-prefix-count",
+   "title": "Count words sharing a prefix",
+   "tier": 1,
+   "group": "trie",
+   "pattern": [
+    "Trie"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "208, 1268",
+   "order": 49,
+   "companies": []
+  },
+  {
+   "slug": "p-trie-collect-prefix",
+   "title": "Collect every word under a prefix",
+   "tier": 1,
+   "group": "trie",
+   "pattern": [
+    "Trie",
+    "Depth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "211, 212, 720",
+   "order": 50,
+   "companies": []
+  },
+  {
+   "slug": "p-dsu-naive",
+   "title": "Find and union with no optimisation",
+   "tier": 1,
+   "group": "union-find",
+   "pattern": [
+    "Union-Find"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "547, 323",
+   "order": 51,
+   "companies": []
+  },
+  {
+   "slug": "p-dsu-optimised",
+   "title": "Path compression and union by size",
+   "tier": 1,
+   "group": "union-find",
+   "pattern": [
+    "Union-Find"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "684, 721, 128",
+   "order": 52,
+   "companies": []
+  },
+  {
+   "slug": "p-dsu-count-components",
+   "title": "Count connected components",
+   "tier": 1,
+   "group": "union-find",
+   "pattern": [
+    "Union-Find",
+    "Graph Theory"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "323, 547, 261",
+   "order": 53,
+   "companies": []
+  },
+  {
+   "slug": "p-topo-kahn",
+   "title": "Kahn's algorithm with in-degrees",
+   "tier": 1,
+   "group": "topological-sort",
+   "pattern": [
+    "Topological Sort",
+    "Breadth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "207, 210",
+   "order": 54,
+   "companies": []
+  },
+  {
+   "slug": "p-topo-dfs-cycle",
+   "title": "DFS post-order topo sort with cycle detection",
+   "tier": 1,
+   "group": "topological-sort",
+   "pattern": [
+    "Topological Sort",
+    "Depth-First Search"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "207, 210, 269",
+   "order": 55,
+   "companies": []
+  },
+  {
+   "slug": "p-mono-next-greater",
+   "title": "Next greater element to the right",
+   "tier": 1,
+   "group": "monotonic-stack",
+   "pattern": [
+    "Stack",
+    "Monotonic Stack"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "496, 739",
+   "order": 56,
+   "companies": []
+  },
+  {
+   "slug": "p-mono-prev-smaller",
+   "title": "Previous smaller element to the left",
+   "tier": 1,
+   "group": "monotonic-stack",
+   "pattern": [
+    "Stack",
+    "Monotonic Stack"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "84, 42",
+   "order": 57,
+   "companies": []
+  },
+  {
+   "slug": "p-mono-sentinel",
+   "title": "Flush a monotonic stack with a sentinel",
+   "tier": 1,
+   "group": "monotonic-stack",
+   "pattern": [
+    "Stack",
+    "Monotonic Stack"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "84, 42, 654",
+   "order": 58,
+   "companies": []
+  },
+  {
+   "slug": "p-prefix-build-query",
+   "title": "Prefix sums with the +1 offset",
+   "tier": 1,
+   "group": "prefix-sum",
+   "pattern": [
+    "Prefix Sum",
+    "Array"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "303, 1480",
+   "order": 59,
+   "companies": []
+  },
+  {
+   "slug": "p-prefix-count-target",
+   "title": "Count subarrays summing to k",
+   "tier": 1,
+   "group": "prefix-sum",
+   "pattern": [
+    "Prefix Sum",
+    "Hash Table"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "560, 437",
+   "order": 60,
+   "companies": []
+  },
+  {
+   "slug": "p-prefix-2d",
+   "title": "Two-dimensional prefix sums",
+   "tier": 1,
+   "group": "prefix-sum",
+   "pattern": [
+    "Prefix Sum",
+    "Matrix"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "304",
+   "order": 61,
+   "companies": []
+  },
+  {
+   "slug": "p-heap-k-smallest",
+   "title": "K smallest with a bounded max-heap",
+   "tier": 1,
+   "group": "heap",
+   "pattern": [
+    "Heap (Priority Queue)"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "215, 973, 347",
+   "order": 62,
+   "companies": []
+  },
+  {
+   "slug": "p-heap-comparator",
+   "title": "PriorityQueue over int[] with a comparator",
+   "tier": 1,
+   "group": "heap",
+   "pattern": [
+    "Heap (Priority Queue)"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "973, 253, 1046",
+   "order": 63,
+   "companies": []
+  },
+  {
+   "slug": "p-heap-merge-k",
+   "title": "Merge k sorted arrays with a heap",
+   "tier": 1,
+   "group": "heap",
+   "pattern": [
+    "Heap (Priority Queue)",
+    "Merge Sort"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "23, 373, 632",
+   "order": 64,
+   "companies": []
+  },
+  {
+   "slug": "p-dp-fib-memo-then-table",
+   "title": "Memoise, then tabulate",
+   "tier": 1,
+   "group": "dynamic-programming",
+   "pattern": [
+    "Dynamic Programming",
+    "Memoization"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "509, 70, 1137",
+   "order": 65,
+   "companies": []
+  },
+  {
+   "slug": "p-dp-climb-cost",
+   "title": "Minimum cost to climb",
+   "tier": 1,
+   "group": "dynamic-programming",
+   "pattern": [
+    "Dynamic Programming"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "746, 70, 198",
+   "order": 66,
+   "companies": []
+  },
+  {
+   "slug": "p-dp-knapsack-bool",
+   "title": "Reachable-sum knapsack table",
+   "tier": 1,
+   "group": "dynamic-programming",
+   "pattern": [
+    "Dynamic Programming",
+    "0-1 Knapsack"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "416, 494, 698",
+   "order": 67,
+   "companies": []
+  },
+  {
+   "slug": "p-dp-lis-quadratic",
+   "title": "Longest increasing subsequence, O(n^2)",
+   "tier": 1,
+   "group": "dynamic-programming",
+   "pattern": [
+    "Dynamic Programming",
+    "Longest Increasing Subsequence"
+   ],
+   "difficulty": "Drill",
+   "premium": false,
+   "unlocks": "300, 673",
+   "order": 68,
+   "companies": []
+  },
+  {
+   "slug": "concatenation-of-array",
+   "title": "Concatenation of Array",
+   "tier": 2,
+   "lc_id": 1929,
+   "id": 1929,
+   "pattern": [
+    "Array"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 69,
+   "companies": []
+  },
+  {
+   "slug": "build-array-from-permutation",
+   "title": "Build Array from Permutation",
+   "tier": 2,
+   "lc_id": 1920,
+   "id": 1920,
+   "pattern": [
+    "Array",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 70,
+   "companies": []
+  },
+  {
+   "slug": "shuffle-the-array",
+   "title": "Shuffle the Array",
+   "tier": 2,
+   "lc_id": 1470,
+   "id": 1470,
+   "pattern": [
+    "Array"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 71,
+   "companies": []
+  },
+  {
+   "slug": "kids-with-the-greatest-number-of-candies",
+   "title": "Kids With the Greatest Number of Candies",
+   "tier": 2,
+   "lc_id": 1431,
+   "id": 1431,
+   "pattern": [
+    "Array"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 72,
+   "companies": []
+  },
+  {
+   "slug": "reverse-string",
+   "title": "Reverse String",
+   "tier": 2,
+   "lc_id": 344,
+   "id": 344,
+   "pattern": [
+    "Two Pointers",
+    "String",
+    "Recursion"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 73,
+   "companies": []
+  },
+  {
+   "slug": "remove-duplicates-from-sorted-array",
+   "title": "Remove Duplicates from Sorted Array",
+   "tier": 2,
+   "lc_id": 26,
+   "id": 26,
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 74,
+   "companies": []
+  },
+  {
+   "slug": "remove-element",
+   "title": "Remove Element",
+   "tier": 2,
+   "lc_id": 27,
+   "id": 27,
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 75,
+   "companies": []
+  },
+  {
+   "slug": "merge-sorted-array",
+   "title": "Merge Sorted Array",
+   "tier": 2,
+   "lc_id": 88,
+   "id": 88,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 76,
+   "companies": []
+  },
+  {
+   "slug": "sort-array-by-parity",
+   "title": "Sort Array By Parity",
+   "tier": 2,
+   "lc_id": 905,
+   "id": 905,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 77,
+   "companies": []
+  },
+  {
+   "slug": "jewels-and-stones",
+   "title": "Jewels and Stones",
+   "tier": 2,
+   "lc_id": 771,
+   "id": 771,
+   "pattern": [
+    "Hash Table",
+    "String"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 78,
+   "companies": []
+  },
+  {
+   "slug": "number-of-good-pairs",
+   "title": "Number of Good Pairs",
+   "tier": 2,
+   "lc_id": 1512,
+   "id": 1512,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Counting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 79,
+   "companies": []
+  },
+  {
+   "slug": "intersection-of-two-arrays",
+   "title": "Intersection of Two Arrays",
+   "tier": 2,
+   "lc_id": 349,
+   "id": 349,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 80,
+   "companies": []
+  },
+  {
+   "slug": "ransom-note",
+   "title": "Ransom Note",
+   "tier": 2,
+   "lc_id": 383,
+   "id": 383,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Counting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 81,
+   "companies": []
+  },
+  {
+   "slug": "first-unique-character-in-a-string",
+   "title": "First Unique Character in a String",
+   "tier": 2,
+   "lc_id": 387,
+   "id": 387,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Counting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 82,
+   "companies": []
+  },
+  {
+   "slug": "how-many-numbers-are-smaller-than-the-current-number",
+   "title": "How Many Numbers Are Smaller Than the Current Number",
+   "tier": 2,
+   "lc_id": 1365,
+   "id": 1365,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Counting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 83,
+   "companies": []
+  },
+  {
+   "slug": "merge-strings-alternately",
+   "title": "Merge Strings Alternately",
+   "tier": 2,
+   "lc_id": 1768,
+   "id": 1768,
+   "pattern": [
+    "Two Pointers",
+    "String"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 84,
+   "companies": []
+  },
+  {
+   "slug": "longest-palindrome",
+   "title": "Longest Palindrome",
+   "tier": 2,
+   "lc_id": 409,
+   "id": 409,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Greedy"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 85,
+   "companies": []
+  },
+  {
+   "slug": "goal-parser-interpretation",
+   "title": "Goal Parser Interpretation",
+   "tier": 2,
+   "lc_id": 1678,
+   "id": 1678,
+   "pattern": [
+    "String",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 86,
+   "companies": []
+  },
+  {
+   "slug": "maximum-number-of-words-found-in-sentences",
+   "title": "Maximum Number of Words Found in Sentences",
+   "tier": 2,
+   "lc_id": 2114,
+   "id": 2114,
+   "pattern": [
+    "Array",
+    "String"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 87,
+   "companies": []
+  },
+  {
+   "slug": "running-sum-of-1d-array",
+   "title": "Running Sum of 1d Array",
+   "tier": 2,
+   "lc_id": 1480,
+   "id": 1480,
+   "pattern": [
+    "Array",
+    "Prefix Sum"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 88,
+   "companies": []
+  },
+  {
+   "slug": "find-pivot-index",
+   "title": "Find Pivot Index",
+   "tier": 2,
+   "lc_id": 724,
+   "id": 724,
+   "pattern": [
+    "Array",
+    "Prefix Sum"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 89,
+   "companies": []
+  },
+  {
+   "slug": "search-insert-position",
+   "title": "Search Insert Position",
+   "tier": 2,
+   "lc_id": 35,
+   "id": 35,
+   "pattern": [
+    "Array",
+    "Binary Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 90,
+   "companies": []
+  },
+  {
+   "slug": "guess-number-higher-or-lower",
+   "title": "Guess Number Higher or Lower",
+   "tier": 2,
+   "lc_id": 374,
+   "id": 374,
+   "pattern": [
+    "Binary Search",
+    "Interactive"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 91,
+   "companies": []
+  },
+  {
+   "slug": "arranging-coins",
+   "title": "Arranging Coins",
+   "tier": 2,
+   "lc_id": 441,
+   "id": 441,
+   "pattern": [
+    "Math",
+    "Binary Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 92,
+   "companies": []
+  },
+  {
+   "slug": "sqrtx",
+   "title": "Sqrt(x)",
+   "tier": 2,
+   "lc_id": 69,
+   "id": 69,
+   "pattern": [
+    "Math",
+    "Binary Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 93,
+   "companies": []
+  },
+  {
+   "slug": "valid-perfect-square",
+   "title": "Valid Perfect Square",
+   "tier": 2,
+   "lc_id": 367,
+   "id": 367,
+   "pattern": [
+    "Math",
+    "Binary Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 94,
+   "companies": []
+  },
+  {
+   "slug": "baseball-game",
+   "title": "Baseball Game",
+   "tier": 2,
+   "lc_id": 682,
+   "id": 682,
+   "pattern": [
+    "Array",
+    "Stack",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 95,
+   "companies": []
+  },
+  {
+   "slug": "implement-queue-using-stacks",
+   "title": "Implement Queue using Stacks",
+   "tier": 2,
+   "lc_id": 232,
+   "id": 232,
+   "pattern": [
+    "Stack",
+    "Design",
+    "Queue"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 96,
+   "companies": []
+  },
+  {
+   "slug": "implement-stack-using-queues",
+   "title": "Implement Stack using Queues",
+   "tier": 2,
+   "lc_id": 225,
+   "id": 225,
+   "pattern": [
+    "Stack",
+    "Design",
+    "Queue"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 97,
+   "companies": []
+  },
+  {
+   "slug": "remove-all-adjacent-duplicates-in-string",
+   "title": "Remove All Adjacent Duplicates In String",
+   "tier": 2,
+   "lc_id": 1047,
+   "id": 1047,
+   "pattern": [
+    "String",
+    "Stack"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 98,
+   "companies": []
+  },
+  {
+   "slug": "number-of-recent-calls",
+   "title": "Number of Recent Calls",
+   "tier": 2,
+   "lc_id": 933,
+   "id": 933,
+   "pattern": [
+    "Design",
+    "Queue",
+    "Data Stream"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 99,
+   "companies": []
+  },
+  {
+   "slug": "binary-tree-inorder-traversal",
+   "title": "Binary Tree Inorder Traversal",
+   "tier": 2,
+   "lc_id": 94,
+   "id": 94,
+   "pattern": [
+    "Stack",
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 100,
+   "companies": []
+  },
+  {
+   "slug": "binary-tree-preorder-traversal",
+   "title": "Binary Tree Preorder Traversal",
+   "tier": 2,
+   "lc_id": 144,
+   "id": 144,
+   "pattern": [
+    "Stack",
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 101,
+   "companies": []
+  },
+  {
+   "slug": "binary-tree-postorder-traversal",
+   "title": "Binary Tree Postorder Traversal",
+   "tier": 2,
+   "lc_id": 145,
+   "id": 145,
+   "pattern": [
+    "Stack",
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 102,
+   "companies": []
+  },
+  {
+   "slug": "diameter-of-binary-tree",
+   "title": "Diameter of Binary Tree",
+   "tier": 2,
+   "lc_id": 543,
+   "id": 543,
+   "pattern": [
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 103,
+   "companies": []
+  },
+  {
+   "slug": "balanced-binary-tree",
+   "title": "Balanced Binary Tree",
+   "tier": 2,
+   "lc_id": 110,
+   "id": 110,
+   "pattern": [
+    "Tree",
+    "Depth-First Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 104,
+   "companies": []
+  },
+  {
+   "slug": "symmetric-tree",
+   "title": "Symmetric Tree",
+   "tier": 2,
+   "lc_id": 101,
+   "id": 101,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 105,
+   "companies": []
+  },
+  {
+   "slug": "search-in-a-binary-search-tree",
+   "title": "Search in a Binary Search Tree",
+   "tier": 2,
+   "lc_id": 700,
+   "id": 700,
+   "pattern": [
+    "Tree",
+    "Binary Search Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 106,
+   "companies": []
+  },
+  {
+   "slug": "range-sum-of-bst",
+   "title": "Range Sum of BST",
+   "tier": 2,
+   "lc_id": 938,
+   "id": 938,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Binary Search Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 107,
+   "companies": []
+  },
+  {
+   "slug": "island-perimeter",
+   "title": "Island Perimeter",
+   "tier": 2,
+   "lc_id": 463,
+   "id": 463,
+   "pattern": [
+    "Array",
+    "Depth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 108,
+   "companies": []
+  },
+  {
+   "slug": "flood-fill",
+   "title": "Flood Fill",
+   "tier": 2,
+   "lc_id": 733,
+   "id": 733,
+   "pattern": [
+    "Array",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 109,
+   "companies": []
+  },
+  {
+   "slug": "find-if-path-exists-in-graph",
+   "title": "Find if Path Exists in Graph",
+   "tier": 2,
+   "lc_id": 1971,
+   "id": 1971,
+   "pattern": [
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Union-Find",
+    "Graph Theory"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 110,
+   "companies": []
+  },
+  {
+   "slug": "find-the-town-judge",
+   "title": "Find the Town Judge",
+   "tier": 2,
+   "lc_id": 997,
+   "id": 997,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Graph Theory"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 111,
+   "companies": []
+  },
+  {
+   "slug": "assign-cookies",
+   "title": "Assign Cookies",
+   "tier": 2,
+   "lc_id": 455,
+   "id": 455,
+   "pattern": [
+    "Array",
+    "Greedy",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 112,
+   "companies": []
+  },
+  {
+   "slug": "lemonade-change",
+   "title": "Lemonade Change",
+   "tier": 2,
+   "lc_id": 860,
+   "id": 860,
+   "pattern": [
+    "Array",
+    "Greedy"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 113,
+   "companies": []
+  },
+  {
+   "slug": "last-stone-weight",
+   "title": "Last Stone Weight",
+   "tier": 2,
+   "lc_id": 1046,
+   "id": 1046,
+   "pattern": [
+    "Array",
+    "Heap (Priority Queue)"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 114,
+   "companies": []
+  },
+  {
+   "slug": "kth-largest-element-in-a-stream",
+   "title": "Kth Largest Element in a Stream",
+   "tier": 2,
+   "lc_id": 703,
+   "id": 703,
+   "pattern": [
+    "Design",
+    "Heap (Priority Queue)",
+    "Data Stream"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 115,
+   "companies": []
+  },
+  {
+   "slug": "flipping-an-image",
+   "title": "Flipping an Image",
+   "tier": 2,
+   "lc_id": 832,
+   "id": 832,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Matrix"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 116,
+   "companies": []
+  },
+  {
+   "slug": "transpose-matrix",
+   "title": "Transpose Matrix",
+   "tier": 2,
+   "lc_id": 867,
+   "id": 867,
+   "pattern": [
+    "Array",
+    "Matrix",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 117,
+   "companies": []
+  },
+  {
+   "slug": "reshape-the-matrix",
+   "title": "Reshape the Matrix",
+   "tier": 2,
+   "lc_id": 566,
+   "id": 566,
+   "pattern": [
+    "Array",
+    "Matrix",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 118,
+   "companies": []
+  },
+  {
+   "slug": "richest-customer-wealth",
+   "title": "Richest Customer Wealth",
+   "tier": 2,
+   "lc_id": 1672,
+   "id": 1672,
+   "pattern": [
+    "Array",
+    "Matrix"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 119,
+   "companies": []
+  },
+  {
+   "slug": "design-parking-system",
+   "title": "Design Parking System",
+   "tier": 2,
+   "lc_id": 1603,
+   "id": 1603,
+   "pattern": [
+    "Design",
+    "Counting",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 120,
+   "companies": []
+  },
+  {
+   "slug": "design-hashset",
+   "title": "Design HashSet",
+   "tier": 2,
+   "lc_id": 705,
+   "id": 705,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Design"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 121,
+   "companies": []
+  },
+  {
+   "slug": "design-hashmap",
+   "title": "Design HashMap",
+   "tier": 2,
+   "lc_id": 706,
+   "id": 706,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Design"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 122,
+   "companies": []
+  },
+  {
+   "slug": "fibonacci-number",
+   "title": "Fibonacci Number",
+   "tier": 2,
+   "lc_id": 509,
+   "id": 509,
+   "pattern": [
+    "Math",
+    "Dynamic Programming",
+    "Memoization"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 123,
+   "companies": []
+  },
+  {
+   "slug": "n-th-tribonacci-number",
+   "title": "N-th Tribonacci Number",
+   "tier": 2,
+   "lc_id": 1137,
+   "id": 1137,
+   "pattern": [
+    "Math",
+    "Dynamic Programming",
+    "Memoization"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 124,
+   "companies": []
+  },
+  {
+   "slug": "min-cost-climbing-stairs",
+   "title": "Min Cost Climbing Stairs",
+   "tier": 2,
+   "lc_id": 746,
+   "id": 746,
+   "pattern": [
+    "Array",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 125,
+   "companies": []
+  },
+  {
+   "slug": "power-of-two",
+   "title": "Power of Two",
+   "tier": 2,
+   "lc_id": 231,
+   "id": 231,
+   "pattern": [
+    "Math",
+    "Bit Manipulation",
+    "Recursion"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 126,
+   "companies": []
+  },
+  {
+   "slug": "two-sum",
+   "title": "Two Sum",
+   "tier": 3,
+   "id": 1,
+   "lc_id": 1,
+   "pattern": [
+    "Array",
+    "Hash Table"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 127,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 209
+    },
+    {
+     "slug": "amazon",
+     "frequency": 95
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 42
+    },
+    {
+     "slug": "facebook",
+     "frequency": 37
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 24
+    },
+    {
+     "slug": "tcs",
+     "frequency": 13
+    },
+    {
+     "slug": "infosys",
+     "frequency": 6
+    },
+    {
+     "slug": "ibm",
+     "frequency": 4
+    },
+    {
+     "slug": "deloitte",
+     "frequency": 4
+    },
+    {
+     "slug": "netapp",
+     "frequency": 4
+    },
+    {
+     "slug": "capgemini",
+     "frequency": 4
+    },
+    {
+     "slug": "apple",
+     "frequency": 3
+    },
+    {
+     "slug": "jpmorgan",
+     "frequency": 3
+    },
+    {
+     "slug": "oracle",
+     "frequency": 3
+    },
+    {
+     "slug": "expedia",
+     "frequency": 3
+    },
+    {
+     "slug": "cognizant",
+     "frequency": 2
+    },
+    {
+     "slug": "altimetrik",
+     "frequency": 2
+    },
+    {
+     "slug": "flipkart",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "add-two-numbers",
+   "title": "Add Two Numbers",
+   "tier": 3,
+   "id": 2,
+   "lc_id": 2,
+   "pattern": [
+    "Linked List",
+    "Math",
+    "Recursion"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 128,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 54
+    },
+    {
+     "slug": "amazon",
+     "frequency": 31
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 15
+    },
+    {
+     "slug": "facebook",
+     "frequency": 12
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 7
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "palo-alto-networks",
+     "frequency": 2
+    },
+    {
+     "slug": "jane-street",
+     "frequency": 2
+    },
+    {
+     "slug": "earnin",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "longest-substring-without-repeating-characters",
+   "title": "Longest Substring Without Repeating Characters",
+   "tier": 3,
+   "id": 3,
+   "lc_id": 3,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Sliding Window"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 129,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 40
+    },
+    {
+     "slug": "google",
+     "frequency": 36
+    },
+    {
+     "slug": "facebook",
+     "frequency": 14
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 12
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 10
+    },
+    {
+     "slug": "tcs",
+     "frequency": 5
+    },
+    {
+     "slug": "infosys",
+     "frequency": 4
+    },
+    {
+     "slug": "apple",
+     "frequency": 4
+    },
+    {
+     "slug": "zoho",
+     "frequency": 4
+    },
+    {
+     "slug": "visa",
+     "frequency": 4
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 3
+    },
+    {
+     "slug": "cognizant",
+     "frequency": 3
+    },
+    {
+     "slug": "spotify",
+     "frequency": 3
+    },
+    {
+     "slug": "jpmorgan",
+     "frequency": 3
+    },
+    {
+     "slug": "deloitte",
+     "frequency": 3
+    },
+    {
+     "slug": "epam-systems",
+     "frequency": 3
+    },
+    {
+     "slug": "netflix",
+     "frequency": 3
+    },
+    {
+     "slug": "yandex",
+     "frequency": 3
+    },
+    {
+     "slug": "qualcomm",
+     "frequency": 3
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "median-of-two-sorted-arrays",
+   "title": "Median of Two Sorted Arrays",
+   "tier": 3,
+   "id": 4,
+   "lc_id": 4,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Divide and Conquer"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 130,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 36
+    },
+    {
+     "slug": "amazon",
+     "frequency": 23
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 11
+    },
+    {
+     "slug": "facebook",
+     "frequency": 10
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "rippling",
+     "frequency": 5
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    },
+    {
+     "slug": "ebay",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "zoho",
+     "frequency": 2
+    },
+    {
+     "slug": "de-shaw",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "longest-palindromic-substring",
+   "title": "Longest Palindromic Substring",
+   "tier": 3,
+   "id": 5,
+   "lc_id": 5,
+   "pattern": [
+    "Two Pointers",
+    "String",
+    "Dynamic Programming",
+    "Manacher"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 131,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 24
+    },
+    {
+     "slug": "google",
+     "frequency": 21
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 17
+    },
+    {
+     "slug": "tcs",
+     "frequency": 10
+    },
+    {
+     "slug": "facebook",
+     "frequency": 7
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 7
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "tinkoff",
+     "frequency": 2
+    },
+    {
+     "slug": "visa",
+     "frequency": 2
+    },
+    {
+     "slug": "yandex",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "flipkart",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    },
+    {
+     "slug": "tekion",
+     "frequency": 2
+    },
+    {
+     "slug": "uber",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "container-with-most-water",
+   "title": "Container With Most Water",
+   "tier": 3,
+   "id": 11,
+   "lc_id": 11,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Greedy"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 132,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 26
+    },
+    {
+     "slug": "amazon",
+     "frequency": 19
+    },
+    {
+     "slug": "tcs",
+     "frequency": 14
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 11
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 10
+    },
+    {
+     "slug": "facebook",
+     "frequency": 7
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "3sum",
+   "title": "3Sum",
+   "tier": 3,
+   "id": 15,
+   "lc_id": 15,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 133,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 40
+    },
+    {
+     "slug": "amazon",
+     "frequency": 26
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 10
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 9
+    },
+    {
+     "slug": "facebook",
+     "frequency": 8
+    },
+    {
+     "slug": "quince",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "apple",
+     "frequency": 3
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "cisco",
+     "frequency": 2
+    },
+    {
+     "slug": "visa",
+     "frequency": 2
+    },
+    {
+     "slug": "accenture",
+     "frequency": 2
+    },
+    {
+     "slug": "ebay",
+     "frequency": 2
+    },
+    {
+     "slug": "wissen",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "3sum-closest",
+   "title": "3Sum Closest",
+   "tier": 3,
+   "id": 16,
+   "lc_id": 16,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 134,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 13
+    },
+    {
+     "slug": "amazon",
+     "frequency": 12
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "letter-combinations-of-a-phone-number",
+   "title": "Letter Combinations of a Phone Number",
+   "tier": 3,
+   "id": 17,
+   "lc_id": 17,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Backtracking"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 135,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 13
+    },
+    {
+     "slug": "google",
+     "frequency": 12
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "remove-nth-node-from-end-of-list",
+   "title": "Remove Nth Node From End of List",
+   "tier": 3,
+   "id": 19,
+   "lc_id": 19,
+   "pattern": [
+    "Linked List",
+    "Two Pointers"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 136,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 9
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "merge-two-sorted-lists",
+   "title": "Merge Two Sorted Lists",
+   "tier": 3,
+   "id": 21,
+   "lc_id": 21,
+   "pattern": [
+    "Linked List",
+    "Recursion"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 137,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 17
+    },
+    {
+     "slug": "amazon",
+     "frequency": 11
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "accenture",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "generate-parentheses",
+   "title": "Generate Parentheses",
+   "tier": 3,
+   "id": 22,
+   "lc_id": 22,
+   "pattern": [
+    "String",
+    "Dynamic Programming",
+    "Backtracking",
+    "Bracket Sequences"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 138,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 12
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "shift-technology",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "merge-k-sorted-lists",
+   "title": "Merge k Sorted Lists",
+   "tier": 3,
+   "id": 23,
+   "lc_id": 23,
+   "pattern": [
+    "Linked List",
+    "Divide and Conquer",
+    "Heap (Priority Queue)",
+    "Merge Sort",
+    "Tournament Sort"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 139,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 12
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "apple",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "deloitte",
+     "frequency": 2
+    },
+    {
+     "slug": "snapchat",
+     "frequency": 2
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 2
+    },
+    {
+     "slug": "freshworks",
+     "frequency": 2
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "swap-nodes-in-pairs",
+   "title": "Swap Nodes in Pairs",
+   "tier": 3,
+   "id": 24,
+   "lc_id": 24,
+   "pattern": [
+    "Linked List",
+    "Recursion"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 140,
+   "companies": [
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "reverse-nodes-in-k-group",
+   "title": "Reverse Nodes in k-Group",
+   "tier": 3,
+   "id": 25,
+   "lc_id": 25,
+   "pattern": [
+    "Linked List",
+    "Recursion"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 141,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 7
+    },
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "qualcomm",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    },
+    {
+     "slug": "zopsmart",
+     "frequency": 2
+    },
+    {
+     "slug": "palo-alto-networks",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "substring-with-concatenation-of-all-words",
+   "title": "Substring with Concatenation of All Words",
+   "tier": 3,
+   "id": 30,
+   "lc_id": 30,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Sliding Window"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 142,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "search-in-rotated-sorted-array",
+   "title": "Search in Rotated Sorted Array",
+   "tier": 3,
+   "id": 33,
+   "lc_id": 33,
+   "pattern": [
+    "Array",
+    "Binary Search"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 143,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 18
+    },
+    {
+     "slug": "google",
+     "frequency": 14
+    },
+    {
+     "slug": "facebook",
+     "frequency": 7
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 7
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 3
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 3
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "oracle",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "yandex",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "sudoku-solver",
+   "title": "Sudoku Solver",
+   "tier": 3,
+   "id": 37,
+   "lc_id": 37,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Backtracking",
+    "Matrix",
+    "Algorithm X",
+    "Dancing Links"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 144,
+   "companies": [
+    {
+     "slug": "confluent",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "combination-sum",
+   "title": "Combination Sum",
+   "tier": 3,
+   "id": 39,
+   "lc_id": 39,
+   "pattern": [
+    "Array",
+    "Backtracking"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 145,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 8
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "combination-sum-ii",
+   "title": "Combination Sum II",
+   "tier": 3,
+   "id": 40,
+   "lc_id": 40,
+   "pattern": [
+    "Array",
+    "Backtracking"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 146,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "first-missing-positive",
+   "title": "First Missing Positive",
+   "tier": 3,
+   "id": 41,
+   "lc_id": 41,
+   "pattern": [
+    "Array",
+    "Hash Table"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 147,
+   "companies": [
+    {
+     "slug": "tcs",
+     "frequency": 13
+    },
+    {
+     "slug": "google",
+     "frequency": 11
+    },
+    {
+     "slug": "amazon",
+     "frequency": 9
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "zoho",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "trapping-rain-water",
+   "title": "Trapping Rain Water",
+   "tier": 3,
+   "id": 42,
+   "lc_id": 42,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Dynamic Programming",
+    "Stack",
+    "Monotonic Stack"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 148,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 44
+    },
+    {
+     "slug": "google",
+     "frequency": 40
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 13
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 12
+    },
+    {
+     "slug": "facebook",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "snowflake",
+     "frequency": 4
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 2
+    },
+    {
+     "slug": "docusign",
+     "frequency": 2
+    },
+    {
+     "slug": "qualcomm",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "permutations",
+   "title": "Permutations",
+   "tier": 3,
+   "id": 46,
+   "lc_id": 46,
+   "pattern": [
+    "Array",
+    "Backtracking"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 149,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 11
+    },
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "permutations-ii",
+   "title": "Permutations II",
+   "tier": 3,
+   "id": 47,
+   "lc_id": 47,
+   "pattern": [
+    "Array",
+    "Backtracking",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 150,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    }
+   ]
+  },
+  {
+   "slug": "rotate-image",
+   "title": "Rotate Image",
+   "tier": 3,
+   "id": 48,
+   "lc_id": 48,
+   "pattern": [
+    "Array",
+    "Math",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 151,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 14
+    },
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 6
+    },
+    {
+     "slug": "apple",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "jpmorgan",
+     "frequency": 2
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    },
+    {
+     "slug": "capital-one",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "n-queens",
+   "title": "N-Queens",
+   "tier": 3,
+   "id": 51,
+   "lc_id": 51,
+   "pattern": [
+    "Array",
+    "Backtracking",
+    "Algorithm X"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 152,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 14
+    },
+    {
+     "slug": "amazon",
+     "frequency": 7
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "maximum-subarray",
+   "title": "Maximum Subarray",
+   "tier": 3,
+   "id": 53,
+   "lc_id": 53,
+   "pattern": [
+    "Array",
+    "Divide and Conquer",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 153,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 17
+    },
+    {
+     "slug": "amazon",
+     "frequency": 16
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 11
+    },
+    {
+     "slug": "facebook",
+     "frequency": 8
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 8
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "infosys",
+     "frequency": 4
+    },
+    {
+     "slug": "upstart",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "spiral-matrix",
+   "title": "Spiral Matrix",
+   "tier": 3,
+   "id": 54,
+   "lc_id": 54,
+   "pattern": [
+    "Array",
+    "Matrix",
+    "Simulation"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 154,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 11
+    },
+    {
+     "slug": "amazon",
+     "frequency": 7
+    },
+    {
+     "slug": "tcs",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "apple",
+     "frequency": 4
+    },
+    {
+     "slug": "capital-one",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "jump-game",
+   "title": "Jump Game",
+   "tier": 3,
+   "id": 55,
+   "lc_id": 55,
+   "pattern": [
+    "Array",
+    "Dynamic Programming",
+    "Greedy"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 155,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 10
+    },
+    {
+     "slug": "amazon",
+     "frequency": 9
+    },
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "tomtom",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "merge-intervals",
+   "title": "Merge Intervals",
+   "tier": 3,
+   "id": 56,
+   "lc_id": 56,
+   "pattern": [
+    "Array",
+    "Sorting",
+    "Quicksort"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 156,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 21
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 11
+    },
+    {
+     "slug": "google",
+     "frequency": 9
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 8
+    },
+    {
+     "slug": "facebook",
+     "frequency": 6
+    },
+    {
+     "slug": "apple",
+     "frequency": 6
+    },
+    {
+     "slug": "infosys",
+     "frequency": 5
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 5
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 5
+    },
+    {
+     "slug": "palo-alto-networks",
+     "frequency": 4
+    },
+    {
+     "slug": "ibm",
+     "frequency": 4
+    },
+    {
+     "slug": "visa",
+     "frequency": 4
+    },
+    {
+     "slug": "micro1",
+     "frequency": 4
+    },
+    {
+     "slug": "yandex",
+     "frequency": 3
+    },
+    {
+     "slug": "morgan-stanley",
+     "frequency": 3
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 3
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 3
+    },
+    {
+     "slug": "uber",
+     "frequency": 3
+    },
+    {
+     "slug": "expedia",
+     "frequency": 3
+    },
+    {
+     "slug": "nextdoor",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "insert-interval",
+   "title": "Insert Interval",
+   "tier": 3,
+   "id": 57,
+   "lc_id": 57,
+   "pattern": [
+    "Array"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 157,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "rotate-list",
+   "title": "Rotate List",
+   "tier": 3,
+   "id": 61,
+   "lc_id": 61,
+   "pattern": [
+    "Linked List",
+    "Two Pointers"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 158,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "unique-paths",
+   "title": "Unique Paths",
+   "tier": 3,
+   "id": 62,
+   "lc_id": 62,
+   "pattern": [
+    "Math",
+    "Dynamic Programming",
+    "Combinatorics"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 159,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 9
+    },
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "climbing-stairs",
+   "title": "Climbing Stairs",
+   "tier": 3,
+   "id": 70,
+   "lc_id": 70,
+   "pattern": [
+    "Math",
+    "Dynamic Programming",
+    "Memoization"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 160,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 14
+    },
+    {
+     "slug": "amazon",
+     "frequency": 11
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 9
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "infosys",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "intuit",
+     "frequency": 2
+    },
+    {
+     "slug": "deloitte",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "set-matrix-zeroes",
+   "title": "Set Matrix Zeroes",
+   "tier": 3,
+   "id": 73,
+   "lc_id": 73,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 161,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "search-a-2d-matrix",
+   "title": "Search a 2D Matrix",
+   "tier": 3,
+   "id": 74,
+   "lc_id": 74,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 162,
+   "companies": [
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "sap",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "sort-colors",
+   "title": "Sort Colors",
+   "tier": 3,
+   "id": 75,
+   "lc_id": 75,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sorting",
+    "Quicksort",
+    "Bubble Sort"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 163,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 15
+    },
+    {
+     "slug": "google",
+     "frequency": 7
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "agoda",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "minimum-window-substring",
+   "title": "Minimum Window Substring",
+   "tier": 3,
+   "id": 76,
+   "lc_id": 76,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Sliding Window"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 164,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 18
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "lyft",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "oracle",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "combinations",
+   "title": "Combinations",
+   "tier": 3,
+   "id": 77,
+   "lc_id": 77,
+   "pattern": [
+    "Backtracking"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 165,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 7
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "subsets",
+   "title": "Subsets",
+   "tier": 3,
+   "id": 78,
+   "lc_id": 78,
+   "pattern": [
+    "Array",
+    "Backtracking",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 166,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 15
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 3
+    },
+    {
+     "slug": "agoda",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "word-search",
+   "title": "Word Search",
+   "tier": 3,
+   "id": 79,
+   "lc_id": 79,
+   "pattern": [
+    "Array",
+    "String",
+    "Backtracking",
+    "Depth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 167,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 7
+    },
+    {
+     "slug": "uber",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "grammarly",
+     "frequency": 2
+    },
+    {
+     "slug": "faire",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "search-in-rotated-sorted-array-ii",
+   "title": "Search in Rotated Sorted Array II",
+   "tier": 3,
+   "id": 81,
+   "lc_id": 81,
+   "pattern": [
+    "Array",
+    "Binary Search"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 168,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 7
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "remove-duplicates-from-sorted-list",
+   "title": "Remove Duplicates from Sorted List",
+   "tier": 3,
+   "id": 83,
+   "lc_id": 83,
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 169,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "subsets-ii",
+   "title": "Subsets II",
+   "tier": 3,
+   "id": 90,
+   "lc_id": 90,
+   "pattern": [
+    "Array",
+    "Backtracking",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 170,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "decode-ways",
+   "title": "Decode Ways",
+   "tier": 3,
+   "id": 91,
+   "lc_id": 91,
+   "pattern": [
+    "String",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 171,
+   "companies": [
+    {
+     "slug": "epam-systems",
+     "frequency": 5
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "oscar-health",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "reverse-linked-list-ii",
+   "title": "Reverse Linked List II",
+   "tier": 3,
+   "id": 92,
+   "lc_id": 92,
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 172,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "validate-binary-search-tree",
+   "title": "Validate Binary Search Tree",
+   "tier": 3,
+   "id": 98,
+   "lc_id": 98,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Binary Search Tree",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 173,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "same-tree",
+   "title": "Same Tree",
+   "tier": 3,
+   "id": 100,
+   "lc_id": 100,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 174,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "binary-tree-level-order-traversal",
+   "title": "Binary Tree Level Order Traversal",
+   "tier": 3,
+   "id": 102,
+   "lc_id": 102,
+   "pattern": [
+    "Tree",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 175,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 8
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "binary-tree-zigzag-level-order-traversal",
+   "title": "Binary Tree Zigzag Level Order Traversal",
+   "tier": 3,
+   "id": 103,
+   "lc_id": 103,
+   "pattern": [
+    "Tree",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 176,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "maximum-depth-of-binary-tree",
+   "title": "Maximum Depth of Binary Tree",
+   "tier": 3,
+   "id": 104,
+   "lc_id": 104,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 177,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 9
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
+   "title": "Construct Binary Tree from Preorder and Inorder Traversal",
+   "tier": 3,
+   "id": 105,
+   "lc_id": 105,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Divide and Conquer",
+    "Tree",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 178,
+   "companies": [
+    {
+     "slug": "microsoft",
+     "frequency": 7
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "medianet",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "binary-tree-level-order-traversal-ii",
+   "title": "Binary Tree Level Order Traversal II",
+   "tier": 3,
+   "id": 107,
+   "lc_id": 107,
+   "pattern": [
+    "Tree",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 179,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "minimum-depth-of-binary-tree",
+   "title": "Minimum Depth of Binary Tree",
+   "tier": 3,
+   "id": 111,
+   "lc_id": 111,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 180,
+   "companies": [
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "path-sum",
+   "title": "Path Sum",
+   "tier": 3,
+   "id": 112,
+   "lc_id": 112,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 181,
+   "companies": []
+  },
+  {
+   "slug": "path-sum-ii",
+   "title": "Path Sum II",
+   "tier": 3,
+   "id": 113,
+   "lc_id": 113,
+   "pattern": [
+    "Backtracking",
+    "Tree",
+    "Depth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 182,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "best-time-to-buy-and-sell-stock",
+   "title": "Best Time to Buy and Sell Stock",
+   "tier": 3,
+   "id": 121,
+   "lc_id": 121,
+   "pattern": [
+    "Array",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 183,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 40
+    },
+    {
+     "slug": "google",
+     "frequency": 36
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 12
+    },
+    {
+     "slug": "facebook",
+     "frequency": 10
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 7
+    },
+    {
+     "slug": "infosys",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 4
+    },
+    {
+     "slug": "atlassian",
+     "frequency": 3
+    },
+    {
+     "slug": "ibm",
+     "frequency": 3
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 3
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 2
+    },
+    {
+     "slug": "jpmorgan",
+     "frequency": 2
+    },
+    {
+     "slug": "adobe",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    },
+    {
+     "slug": "accenture",
+     "frequency": 2
+    },
+    {
+     "slug": "medianet",
+     "frequency": 2
+    },
+    {
+     "slug": "mastercard",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "binary-tree-maximum-path-sum",
+   "title": "Binary Tree Maximum Path Sum",
+   "tier": 3,
+   "id": 124,
+   "lc_id": 124,
+   "pattern": [
+    "Dynamic Programming",
+    "Tree",
+    "Depth-First Search",
+    "Binary Tree",
+    "DP on Trees"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 184,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "adobe",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "longest-consecutive-sequence",
+   "title": "Longest Consecutive Sequence",
+   "tier": 3,
+   "id": 128,
+   "lc_id": 128,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Union-Find"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 185,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 26
+    },
+    {
+     "slug": "amazon",
+     "frequency": 18
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 7
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 7
+    },
+    {
+     "slug": "tcs",
+     "frequency": 5
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 2
+    },
+    {
+     "slug": "paytm",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "palindrome-partitioning",
+   "title": "Palindrome Partitioning",
+   "tier": 3,
+   "id": 131,
+   "lc_id": 131,
+   "pattern": [
+    "String",
+    "Dynamic Programming",
+    "Backtracking"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 186,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 2
+    },
+    {
+     "slug": "visa",
+     "frequency": 2
+    },
+    {
+     "slug": "scaler",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "gas-station",
+   "title": "Gas Station",
+   "tier": 3,
+   "id": 134,
+   "lc_id": 134,
+   "pattern": [
+    "Array",
+    "Greedy"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 187,
+   "companies": [
+    {
+     "slug": "sprinklr",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    },
+    {
+     "slug": "adobe",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "single-number",
+   "title": "Single Number",
+   "tier": 3,
+   "id": 136,
+   "lc_id": 136,
+   "pattern": [
+    "Array",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 188,
+   "companies": [
+    {
+     "slug": "bloomberg",
+     "frequency": 7
+    },
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "word-break",
+   "title": "Word Break",
+   "tier": 3,
+   "id": 139,
+   "lc_id": 139,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "String",
+    "Dynamic Programming",
+    "Trie",
+    "Memoization",
+    "Brute-Force Search"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 189,
+   "companies": [
+    {
+     "slug": "bloomberg",
+     "frequency": 6
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "sonatus",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "intuit",
+     "frequency": 2
+    },
+    {
+     "slug": "hexaware",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "linked-list-cycle",
+   "title": "Linked List Cycle",
+   "tier": 3,
+   "id": 141,
+   "lc_id": 141,
+   "pattern": [
+    "Hash Table",
+    "Linked List",
+    "Two Pointers",
+    "Floyd's Cycle Finding Algorithm"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 190,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "linked-list-cycle-ii",
+   "title": "Linked List Cycle II",
+   "tier": 3,
+   "id": 142,
+   "lc_id": 142,
+   "pattern": [
+    "Hash Table",
+    "Linked List",
+    "Two Pointers",
+    "Floyd's Cycle Finding Algorithm"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 191,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "reorder-list",
+   "title": "Reorder List",
+   "tier": 3,
+   "id": 143,
+   "lc_id": 143,
+   "pattern": [
+    "Linked List",
+    "Two Pointers",
+    "Stack",
+    "Recursion"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 192,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "sort-list",
+   "title": "Sort List",
+   "tier": 3,
+   "id": 148,
+   "lc_id": 148,
+   "pattern": [
+    "Linked List",
+    "Two Pointers",
+    "Divide and Conquer",
+    "Sorting",
+    "Merge Sort"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 193,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 9
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "maximum-product-subarray",
+   "title": "Maximum Product Subarray",
+   "tier": 3,
+   "id": 152,
+   "lc_id": 152,
+   "pattern": [
+    "Array",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 194,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 8
+    },
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "tcs",
+     "frequency": 7
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "juspay",
+     "frequency": 2
+    },
+    {
+     "slug": "de-shaw",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "find-minimum-in-rotated-sorted-array",
+   "title": "Find Minimum in Rotated Sorted Array",
+   "tier": 3,
+   "id": 153,
+   "lc_id": 153,
+   "pattern": [
+    "Array",
+    "Binary Search"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 195,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "find-peak-element",
+   "title": "Find Peak Element",
+   "tier": 3,
+   "id": 162,
+   "lc_id": 162,
+   "pattern": [
+    "Array",
+    "Binary Search"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 196,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 8
+    },
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "uber",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "majority-element",
+   "title": "Majority Element",
+   "tier": 3,
+   "id": 169,
+   "lc_id": 169,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Divide and Conquer",
+    "Sorting",
+    "Counting",
+    "Boyer-Moore Majority Vote Algorithm"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 197,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 26
+    },
+    {
+     "slug": "amazon",
+     "frequency": 20
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 9
+    },
+    {
+     "slug": "facebook",
+     "frequency": 7
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "odoo",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "rotate-array",
+   "title": "Rotate Array",
+   "tier": 3,
+   "id": 189,
+   "lc_id": 189,
+   "pattern": [
+    "Array",
+    "Math",
+    "Two Pointers"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 198,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 16
+    },
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "box",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "reverse-bits",
+   "title": "Reverse Bits",
+   "tier": 3,
+   "id": 190,
+   "lc_id": 190,
+   "pattern": [
+    "Divide and Conquer",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 199,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "number-of-1-bits",
+   "title": "Number of 1 Bits",
+   "tier": 3,
+   "id": 191,
+   "lc_id": 191,
+   "pattern": [
+    "Divide and Conquer",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 200,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "house-robber",
+   "title": "House Robber",
+   "tier": 3,
+   "id": 198,
+   "lc_id": 198,
+   "pattern": [
+    "Array",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 201,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 12
+    },
+    {
+     "slug": "amazon",
+     "frequency": 10
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "infosys",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "agoda",
+     "frequency": 2
+    },
+    {
+     "slug": "freecharge",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "binary-tree-right-side-view",
+   "title": "Binary Tree Right Side View",
+   "tier": 3,
+   "id": 199,
+   "lc_id": 199,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 202,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 12
+    },
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "nebius",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "yandex",
+     "frequency": 2
+    },
+    {
+     "slug": "oracle",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "number-of-islands",
+   "title": "Number of Islands",
+   "tier": 3,
+   "id": 200,
+   "lc_id": 200,
+   "pattern": [
+    "Array",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Union-Find",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 203,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 25
+    },
+    {
+     "slug": "google",
+     "frequency": 15
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "anduril",
+     "frequency": 5
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 5
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 4
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 4
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 4
+    },
+    {
+     "slug": "snapchat",
+     "frequency": 4
+    },
+    {
+     "slug": "waymo",
+     "frequency": 4
+    },
+    {
+     "slug": "apple",
+     "frequency": 3
+    },
+    {
+     "slug": "uber",
+     "frequency": 3
+    },
+    {
+     "slug": "bytedance",
+     "frequency": 3
+    },
+    {
+     "slug": "visa",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "oracle",
+     "frequency": 2
+    },
+    {
+     "slug": "autodesk",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "remove-linked-list-elements",
+   "title": "Remove Linked List Elements",
+   "tier": 3,
+   "id": 203,
+   "lc_id": 203,
+   "pattern": [
+    "Linked List",
+    "Recursion"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 204,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "reverse-linked-list",
+   "title": "Reverse Linked List",
+   "tier": 3,
+   "id": 206,
+   "lc_id": 206,
+   "pattern": [
+    "Linked List",
+    "Recursion"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 205,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 13
+    },
+    {
+     "slug": "amazon",
+     "frequency": 7
+    },
+    {
+     "slug": "apple",
+     "frequency": 7
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "nokia",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "course-schedule",
+   "title": "Course Schedule",
+   "tier": 3,
+   "id": 207,
+   "lc_id": 207,
+   "pattern": [
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Graph Theory",
+    "Topological Sort",
+    "Directed Acyclic Graph"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 206,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 17
+    },
+    {
+     "slug": "google",
+     "frequency": 7
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "apple",
+     "frequency": 3
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "bytedance",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    },
+    {
+     "slug": "anduril",
+     "frequency": 2
+    },
+    {
+     "slug": "snowflake",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "implement-trie-prefix-tree",
+   "title": "Implement Trie (Prefix Tree)",
+   "tier": 3,
+   "id": 208,
+   "lc_id": 208,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Design",
+    "Trie"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 207,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "minimum-size-subarray-sum",
+   "title": "Minimum Size Subarray Sum",
+   "tier": 3,
+   "id": 209,
+   "lc_id": 209,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Sliding Window",
+    "Prefix Sum"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 208,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 10
+    },
+    {
+     "slug": "facebook",
+     "frequency": 8
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "course-schedule-ii",
+   "title": "Course Schedule II",
+   "tier": 3,
+   "id": 210,
+   "lc_id": 210,
+   "pattern": [
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Graph Theory",
+    "Topological Sort"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 209,
+   "companies": [
+    {
+     "slug": "anduril",
+     "frequency": 6
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "snowflake",
+     "frequency": 5
+    },
+    {
+     "slug": "netflix",
+     "frequency": 4
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "apple",
+     "frequency": 3
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "uber",
+     "frequency": 3
+    },
+    {
+     "slug": "aurora",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "doordash",
+     "frequency": 2
+    },
+    {
+     "slug": "audible",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "design-add-and-search-words-data-structure",
+   "title": "Design Add and Search Words Data Structure",
+   "tier": 3,
+   "id": 211,
+   "lc_id": 211,
+   "pattern": [
+    "String",
+    "Depth-First Search",
+    "Design",
+    "Trie"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 210,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "snowflake",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "word-search-ii",
+   "title": "Word Search II",
+   "tier": 3,
+   "id": 212,
+   "lc_id": 212,
+   "pattern": [
+    "Array",
+    "String",
+    "Backtracking",
+    "Trie",
+    "Matrix"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 211,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "uber",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "house-robber-ii",
+   "title": "House Robber II",
+   "tier": 3,
+   "id": 213,
+   "lc_id": 213,
+   "pattern": [
+    "Array",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 212,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "kth-largest-element-in-an-array",
+   "title": "Kth Largest Element in an Array",
+   "tier": 3,
+   "id": 215,
+   "lc_id": 215,
+   "pattern": [
+    "Array",
+    "Divide and Conquer",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Quickselect"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 213,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 10
+    },
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "ibm",
+     "frequency": 3
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "spotify",
+     "frequency": 2
+    },
+    {
+     "slug": "flipkart",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "combination-sum-iii",
+   "title": "Combination Sum III",
+   "tier": 3,
+   "id": 216,
+   "lc_id": 216,
+   "pattern": [
+    "Array",
+    "Backtracking"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 214,
+   "companies": [
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "contains-duplicate",
+   "title": "Contains Duplicate",
+   "tier": 3,
+   "id": 217,
+   "lc_id": 217,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 215,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 11
+    },
+    {
+     "slug": "amazon",
+     "frequency": 11
+    },
+    {
+     "slug": "facebook",
+     "frequency": 7
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "invert-binary-tree",
+   "title": "Invert Binary Tree",
+   "tier": 3,
+   "id": 226,
+   "lc_id": 226,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 216,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "kth-smallest-element-in-a-bst",
+   "title": "Kth Smallest Element in a BST",
+   "tier": 3,
+   "id": 230,
+   "lc_id": 230,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Binary Search Tree",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 217,
+   "companies": [
+    {
+     "slug": "uber",
+     "frequency": 6
+    },
+    {
+     "slug": "tcs",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "palindrome-linked-list",
+   "title": "Palindrome Linked List",
+   "tier": 3,
+   "id": 234,
+   "lc_id": 234,
+   "pattern": [
+    "Linked List",
+    "Two Pointers",
+    "Stack",
+    "Recursion"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 218,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 7
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 7
+    },
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+   "title": "Lowest Common Ancestor of a Binary Search Tree",
+   "tier": 3,
+   "id": 235,
+   "lc_id": 235,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Binary Search Tree",
+    "Binary Tree",
+    "Binary Lifting",
+    "Lowest Common Ancestor"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 219,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "blackrock",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "lowest-common-ancestor-of-a-binary-tree",
+   "title": "Lowest Common Ancestor of a Binary Tree",
+   "tier": 3,
+   "id": 236,
+   "lc_id": 236,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Binary Tree",
+    "Binary Lifting",
+    "Lowest Common Ancestor"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 220,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 12
+    },
+    {
+     "slug": "facebook",
+     "frequency": 9
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "blackrock",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "product-of-array-except-self",
+   "title": "Product of Array Except Self",
+   "tier": 3,
+   "id": 238,
+   "lc_id": 238,
+   "pattern": [
+    "Array",
+    "Prefix Sum"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 221,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 11
+    },
+    {
+     "slug": "google",
+     "frequency": 10
+    },
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "asana",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "sliding-window-maximum",
+   "title": "Sliding Window Maximum",
+   "tier": 3,
+   "id": 239,
+   "lc_id": 239,
+   "pattern": [
+    "Array",
+    "Queue",
+    "Sliding Window",
+    "Heap (Priority Queue)",
+    "Monotonic Queue",
+    "Range Minimum/Maximum Query"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 222,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 12
+    },
+    {
+     "slug": "amazon",
+     "frequency": 12
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "de-shaw",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "faire",
+     "frequency": 2
+    },
+    {
+     "slug": "juspay",
+     "frequency": 2
+    },
+    {
+     "slug": "expedia",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "search-a-2d-matrix-ii",
+   "title": "Search a 2D Matrix II",
+   "tier": 3,
+   "id": 240,
+   "lc_id": 240,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Divide and Conquer",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 223,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "valid-anagram",
+   "title": "Valid Anagram",
+   "tier": 3,
+   "id": 242,
+   "lc_id": 242,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 224,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 20
+    },
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "facebook",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 6
+    },
+    {
+     "slug": "tcs",
+     "frequency": 5
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "deloitte",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "meeting-rooms",
+   "title": "Meeting Rooms",
+   "tier": 3,
+   "id": 252,
+   "lc_id": 252,
+   "pattern": [
+    "Array",
+    "Sorting",
+    "Quicksort"
+   ],
+   "difficulty": "Easy",
+   "premium": true,
+   "order": 225,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "apple",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "meeting-rooms-ii",
+   "title": "Meeting Rooms II",
+   "tier": 3,
+   "id": 253,
+   "lc_id": 253,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Greedy",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Prefix Sum"
+   ],
+   "difficulty": "Medium",
+   "premium": true,
+   "order": 226,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 9
+    },
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 8
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 6
+    },
+    {
+     "slug": "jpmorgan",
+     "frequency": 6
+    },
+    {
+     "slug": "snapchat",
+     "frequency": 2
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    },
+    {
+     "slug": "uber",
+     "frequency": 2
+    },
+    {
+     "slug": "anduril",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "factor-combinations",
+   "title": "Factor Combinations",
+   "tier": 3,
+   "id": 254,
+   "lc_id": 254,
+   "pattern": [
+    "Backtracking",
+    "Prime Factorization"
+   ],
+   "difficulty": "Medium",
+   "premium": true,
+   "order": 227,
+   "companies": []
+  },
+  {
+   "slug": "binary-tree-paths",
+   "title": "Binary Tree Paths",
+   "tier": 3,
+   "id": 257,
+   "lc_id": 257,
+   "pattern": [
+    "String",
+    "Backtracking",
+    "Tree",
+    "Depth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 228,
+   "companies": [
+    {
+     "slug": "capital-one",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "graph-valid-tree",
+   "title": "Graph Valid Tree",
+   "tier": 3,
+   "id": 261,
+   "lc_id": 261,
+   "pattern": [
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Union-Find",
+    "Graph Theory"
+   ],
+   "difficulty": "Medium",
+   "premium": true,
+   "order": 229,
+   "companies": []
+  },
+  {
+   "slug": "missing-number",
+   "title": "Missing Number",
+   "tier": 3,
+   "id": 268,
+   "lc_id": 268,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Math",
+    "Binary Search",
+    "Bit Manipulation",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 230,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 13
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "alien-dictionary",
+   "title": "Alien Dictionary",
+   "tier": 3,
+   "id": 269,
+   "lc_id": 269,
+   "pattern": [
+    "Array",
+    "String",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Graph Theory",
+    "Topological Sort",
+    "Directed Acyclic Graph"
+   ],
+   "difficulty": "Hard",
+   "premium": true,
+   "order": 231,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "uber",
+     "frequency": 2
+    },
+    {
+     "slug": "intuit",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "waymo",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "encode-and-decode-strings",
+   "title": "Encode and Decode Strings",
+   "tier": 3,
+   "id": 271,
+   "lc_id": 271,
+   "pattern": [
+    "Array",
+    "String",
+    "Design"
+   ],
+   "difficulty": "Medium",
+   "premium": true,
+   "order": 232,
+   "companies": []
+  },
+  {
+   "slug": "move-zeroes",
+   "title": "Move Zeroes",
+   "tier": 3,
+   "id": 283,
+   "lc_id": 283,
+   "pattern": [
+    "Array",
+    "Two Pointers"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 233,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 11
+    },
+    {
+     "slug": "facebook",
+     "frequency": 9
+    },
+    {
+     "slug": "amazon",
+     "frequency": 7
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "epam-systems",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "cognizant",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "accenture",
+     "frequency": 2
+    },
+    {
+     "slug": "chewy",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "find-the-duplicate-number",
+   "title": "Find the Duplicate Number",
+   "tier": 3,
+   "id": 287,
+   "lc_id": 287,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Binary Search",
+    "Bit Manipulation",
+    "Pigeonhole Principle",
+    "Floyd's Cycle Finding Algorithm"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 234,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 11
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "find-median-from-data-stream",
+   "title": "Find Median from Data Stream",
+   "tier": 3,
+   "id": 295,
+   "lc_id": 295,
+   "pattern": [
+    "Two Pointers",
+    "Design",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Data Stream"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 235,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 8
+    },
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "intuit",
+     "frequency": 4
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "ixl",
+     "frequency": 3
+    },
+    {
+     "slug": "spotify",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "de-shaw",
+     "frequency": 2
+    },
+    {
+     "slug": "uber",
+     "frequency": 2
+    },
+    {
+     "slug": "citadel",
+     "frequency": 2
+    },
+    {
+     "slug": "tinder",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "serialize-and-deserialize-binary-tree",
+   "title": "Serialize and Deserialize Binary Tree",
+   "tier": 3,
+   "id": 297,
+   "lc_id": 297,
+   "pattern": [
+    "String",
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Design",
+    "Binary Tree"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 236,
+   "companies": [
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "uber",
+     "frequency": 2
+    },
+    {
+     "slug": "quora",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "longest-increasing-subsequence",
+   "title": "Longest Increasing Subsequence",
+   "tier": 3,
+   "id": 300,
+   "lc_id": 300,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Dynamic Programming",
+    "Longest Increasing Subsequence"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 237,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "revolut",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bytedance",
+     "frequency": 2
+    },
+    {
+     "slug": "paypal",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "range-sum-query-immutable",
+   "title": "Range Sum Query - Immutable",
+   "tier": 3,
+   "id": 303,
+   "lc_id": 303,
+   "pattern": [
+    "Array",
+    "Design",
+    "Prefix Sum"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 238,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "best-time-to-buy-and-sell-stock-with-cooldown",
+   "title": "Best Time to Buy and Sell Stock with Cooldown",
+   "tier": 3,
+   "id": 309,
+   "lc_id": 309,
+   "pattern": [
+    "Array",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 239,
+   "companies": [
+    {
+     "slug": "apple",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "minimum-height-trees",
+   "title": "Minimum Height Trees",
+   "tier": 3,
+   "id": 310,
+   "lc_id": 310,
+   "pattern": [
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Graph Theory",
+    "Topological Sort"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 240,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "generalized-abbreviation",
+   "title": "Generalized Abbreviation",
+   "tier": 3,
+   "id": 320,
+   "lc_id": 320,
+   "pattern": [
+    "String",
+    "Backtracking",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Medium",
+   "premium": true,
+   "order": 241,
+   "companies": []
+  },
+  {
+   "slug": "coin-change",
+   "title": "Coin Change",
+   "tier": 3,
+   "id": 322,
+   "lc_id": 322,
+   "pattern": [
+    "Array",
+    "Dynamic Programming",
+    "Breadth-First Search",
+    "Knapsack Problem",
+    "Complete Knapsack"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 242,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 8
+    },
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "facebook",
+     "frequency": 6
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "intuit",
+     "frequency": 3
+    },
+    {
+     "slug": "pinterest",
+     "frequency": 3
+    },
+    {
+     "slug": "rupeek",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "number-of-connected-components-in-an-undirected-graph",
+   "title": "Number of Connected Components in an Undirected Graph",
+   "tier": 3,
+   "id": 323,
+   "lc_id": 323,
+   "pattern": [
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Union-Find",
+    "Graph Theory"
+   ],
+   "difficulty": "Medium",
+   "premium": true,
+   "order": 243,
+   "companies": []
+  },
+  {
+   "slug": "count-of-range-sum",
+   "title": "Count of Range Sum",
+   "tier": 3,
+   "id": 327,
+   "lc_id": 327,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Divide and Conquer",
+    "Binary Indexed Tree",
+    "Segment Tree",
+    "Merge Sort",
+    "Ordered Set",
+    "Treap"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 244,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "odd-even-linked-list",
+   "title": "Odd Even Linked List",
+   "tier": 3,
+   "id": 328,
+   "lc_id": 328,
+   "pattern": [
+    "Linked List"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 245,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "counting-bits",
+   "title": "Counting Bits",
+   "tier": 3,
+   "id": 338,
+   "lc_id": 338,
+   "pattern": [
+    "Dynamic Programming",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 246,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "top-k-frequent-elements",
+   "title": "Top K Frequent Elements",
+   "tier": 3,
+   "id": 347,
+   "lc_id": 347,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Divide and Conquer",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Bucket Sort",
+    "Counting",
+    "Quickselect"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 247,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 19
+    },
+    {
+     "slug": "google",
+     "frequency": 9
+    },
+    {
+     "slug": "facebook",
+     "frequency": 7
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "snapchat",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    },
+    {
+     "slug": "sofi",
+     "frequency": 2
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 2
+    },
+    {
+     "slug": "visa",
+     "frequency": 2
+    },
+    {
+     "slug": "snowflake",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "rearrange-string-k-distance-apart",
+   "title": "Rearrange String k Distance Apart",
+   "tier": 3,
+   "id": 358,
+   "lc_id": 358,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Greedy",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Counting"
+   ],
+   "difficulty": "Hard",
+   "premium": true,
+   "order": 248,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "sum-of-two-integers",
+   "title": "Sum of Two Integers",
+   "tier": 3,
+   "id": 371,
+   "lc_id": 371,
+   "pattern": [
+    "Math",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 249,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "find-k-pairs-with-smallest-sums",
+   "title": "Find K Pairs with Smallest Sums",
+   "tier": 3,
+   "id": 373,
+   "lc_id": 373,
+   "pattern": [
+    "Array",
+    "Heap (Priority Queue)"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 250,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "combination-sum-iv",
+   "title": "Combination Sum IV",
+   "tier": 3,
+   "id": 377,
+   "lc_id": 377,
+   "pattern": [
+    "Array",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 251,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "kth-smallest-element-in-a-sorted-matrix",
+   "title": "Kth Smallest Element in a Sorted Matrix",
+   "tier": 3,
+   "id": 378,
+   "lc_id": 378,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 252,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "is-subsequence",
+   "title": "Is Subsequence",
+   "tier": 3,
+   "id": 392,
+   "lc_id": 392,
+   "pattern": [
+    "Two Pointers",
+    "String",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 253,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "partition-equal-subset-sum",
+   "title": "Partition Equal Subset Sum",
+   "tier": 3,
+   "id": 416,
+   "lc_id": 416,
+   "pattern": [
+    "Array",
+    "Dynamic Programming",
+    "Knapsack Problem",
+    "0-1 Knapsack"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 254,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 9
+    },
+    {
+     "slug": "amazon",
+     "frequency": 6
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "toyota",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "pacific-atlantic-water-flow",
+   "title": "Pacific Atlantic Water Flow",
+   "tier": 3,
+   "id": 417,
+   "lc_id": 417,
+   "pattern": [
+    "Array",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Matrix"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 255,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "longest-repeating-character-replacement",
+   "title": "Longest Repeating Character Replacement",
+   "tier": 3,
+   "id": 424,
+   "lc_id": 424,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Sliding Window"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 256,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 10
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "de-shaw",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "zoho",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "word-squares",
+   "title": "Word Squares",
+   "tier": 3,
+   "id": 425,
+   "lc_id": 425,
+   "pattern": [
+    "Array",
+    "String",
+    "Backtracking",
+    "Trie"
+   ],
+   "difficulty": "Hard",
+   "premium": true,
+   "order": 257,
+   "companies": []
+  },
+  {
+   "slug": "non-overlapping-intervals",
+   "title": "Non-overlapping Intervals",
+   "tier": 3,
+   "id": 435,
+   "lc_id": 435,
+   "pattern": [
+    "Array",
+    "Dynamic Programming",
+    "Greedy",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 258,
+   "companies": [
+    {
+     "slug": "grammarly",
+     "frequency": 8
+    },
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "path-sum-iii",
+   "title": "Path Sum III",
+   "tier": 3,
+   "id": 437,
+   "lc_id": 437,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 259,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "find-all-duplicates-in-an-array",
+   "title": "Find All Duplicates in an Array",
+   "tier": 3,
+   "id": 442,
+   "lc_id": 442,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 260,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "find-all-numbers-disappeared-in-an-array",
+   "title": "Find All Numbers Disappeared in an Array",
+   "tier": 3,
+   "id": 448,
+   "lc_id": 448,
+   "pattern": [
+    "Array",
+    "Hash Table"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 261,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "sort-characters-by-frequency",
+   "title": "Sort Characters By Frequency",
+   "tier": 3,
+   "id": 451,
+   "lc_id": 451,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Bucket Sort",
+    "Counting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 262,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "minimum-number-of-arrows-to-burst-balloons",
+   "title": "Minimum Number of Arrows to Burst Balloons",
+   "tier": 3,
+   "id": 452,
+   "lc_id": 452,
+   "pattern": [
+    "Array",
+    "Greedy",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 263,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "concatenated-words",
+   "title": "Concatenated Words",
+   "tier": 3,
+   "id": 472,
+   "lc_id": 472,
+   "pattern": [
+    "Array",
+    "String",
+    "Dynamic Programming",
+    "Depth-First Search",
+    "Trie",
+    "Sorting"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 264,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "sliding-window-median",
+   "title": "Sliding Window Median",
+   "tier": 3,
+   "id": 480,
+   "lc_id": 480,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Sliding Window",
+    "Heap (Priority Queue)",
+    "Treap"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 265,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "target-sum",
+   "title": "Target Sum",
+   "tier": 3,
+   "id": 494,
+   "lc_id": 494,
+   "pattern": [
+    "Array",
+    "Dynamic Programming",
+    "Backtracking",
+    "Knapsack Problem",
+    "0-1 Knapsack"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 266,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "permutation-in-string",
+   "title": "Permutation in String",
+   "tier": 3,
+   "id": 567,
+   "lc_id": 567,
+   "pattern": [
+    "Hash Table",
+    "Two Pointers",
+    "String",
+    "Sliding Window"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 267,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "subtree-of-another-tree",
+   "title": "Subtree of Another Tree",
+   "tier": 3,
+   "id": 572,
+   "lc_id": 572,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "String Matching",
+    "Binary Tree",
+    "Hash Function"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 268,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "merge-two-binary-trees",
+   "title": "Merge Two Binary Trees",
+   "tier": 3,
+   "id": 617,
+   "lc_id": 617,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 269,
+   "companies": []
+  },
+  {
+   "slug": "task-scheduler",
+   "title": "Task Scheduler",
+   "tier": 3,
+   "id": 621,
+   "lc_id": 621,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Greedy",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Counting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 270,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    },
+    {
+     "slug": "tcs",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "smallest-range-covering-elements-from-k-lists",
+   "title": "Smallest Range Covering Elements from K Lists",
+   "tier": 3,
+   "id": 632,
+   "lc_id": 632,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Greedy",
+    "Sliding Window",
+    "Sorting",
+    "Heap (Priority Queue)"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 271,
+   "companies": [
+    {
+     "slug": "tcs",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "average-of-levels-in-binary-tree",
+   "title": "Average of Levels in Binary Tree",
+   "tier": 3,
+   "id": 637,
+   "lc_id": 637,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 272,
+   "companies": []
+  },
+  {
+   "slug": "design-search-autocomplete-system",
+   "title": "Design Search Autocomplete System",
+   "tier": 3,
+   "id": 642,
+   "lc_id": 642,
+   "pattern": [
+    "String",
+    "Depth-First Search",
+    "Design",
+    "Trie",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Data Stream"
+   ],
+   "difficulty": "Hard",
+   "premium": true,
+   "order": 273,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "pinterest",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "maximum-average-subarray-i",
+   "title": "Maximum Average Subarray I",
+   "tier": 3,
+   "id": 643,
+   "lc_id": 643,
+   "pattern": [
+    "Array",
+    "Sliding Window"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 274,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "google",
+     "frequency": 7
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 7
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "palindromic-substrings",
+   "title": "Palindromic Substrings",
+   "tier": 3,
+   "id": 647,
+   "lc_id": 647,
+   "pattern": [
+    "Two Pointers",
+    "String",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 275,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 8
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    },
+    {
+     "slug": "akamai",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "maximum-binary-tree",
+   "title": "Maximum Binary Tree",
+   "tier": 3,
+   "id": 654,
+   "lc_id": 654,
+   "pattern": [
+    "Array",
+    "Divide and Conquer",
+    "Stack",
+    "Tree",
+    "Monotonic Stack",
+    "Binary Tree",
+    "Cartesian Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 276,
+   "companies": []
+  },
+  {
+   "slug": "find-k-closest-elements",
+   "title": "Find K Closest Elements",
+   "tier": 3,
+   "id": 658,
+   "lc_id": 658,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Binary Search",
+    "Sliding Window",
+    "Sorting",
+    "Heap (Priority Queue)"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 277,
+   "companies": [
+    {
+     "slug": "yandex",
+     "frequency": 5
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "maximum-width-of-binary-tree",
+   "title": "Maximum Width of Binary Tree",
+   "tier": 3,
+   "id": 662,
+   "lc_id": 662,
+   "pattern": [
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 278,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "number-of-longest-increasing-subsequence",
+   "title": "Number of Longest Increasing Subsequence",
+   "tier": 3,
+   "id": 673,
+   "lc_id": 673,
+   "pattern": [
+    "Array",
+    "Dynamic Programming",
+    "Binary Indexed Tree",
+    "Segment Tree",
+    "Longest Increasing Subsequence"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 279,
+   "companies": [
+    {
+     "slug": "bloomberg",
+     "frequency": 3
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "partition-to-k-equal-sum-subsets",
+   "title": "Partition to K Equal Sum Subsets",
+   "tier": 3,
+   "id": 698,
+   "lc_id": 698,
+   "pattern": [
+    "Array",
+    "Dynamic Programming",
+    "Backtracking",
+    "Bit Manipulation",
+    "Memoization",
+    "Bitmask"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 280,
+   "companies": [
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "subarray-product-less-than-k",
+   "title": "Subarray Product Less Than K",
+   "tier": 3,
+   "id": 713,
+   "lc_id": 713,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Sliding Window",
+    "Prefix Sum"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 281,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "apple",
+     "frequency": 6
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "meesho",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "longest-word-in-dictionary",
+   "title": "Longest Word in Dictionary",
+   "tier": 3,
+   "id": 720,
+   "lc_id": 720,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "String",
+    "Trie",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 282,
+   "companies": []
+  },
+  {
+   "slug": "find-smallest-letter-greater-than-target",
+   "title": "Find Smallest Letter Greater Than Target",
+   "tier": 3,
+   "id": 745,
+   "lc_id": 744,
+   "pattern": [
+    "Array",
+    "Binary Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 283,
+   "companies": [
+    {
+     "slug": "linkedin",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "prefix-and-suffix-search",
+   "title": "Prefix and Suffix Search",
+   "tier": 3,
+   "id": 746,
+   "lc_id": 745,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "String",
+    "Design",
+    "Trie"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 284,
+   "companies": []
+  },
+  {
+   "slug": "employee-free-time",
+   "title": "Employee Free Time",
+   "tier": 3,
+   "id": 761,
+   "lc_id": 759,
+   "pattern": [
+    "Array",
+    "Sweep Line",
+    "Sorting",
+    "Heap (Priority Queue)"
+   ],
+   "difficulty": "Hard",
+   "premium": true,
+   "order": 285,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "reorganize-string",
+   "title": "Reorganize String",
+   "tier": 3,
+   "id": 778,
+   "lc_id": 767,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Greedy",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Counting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 286,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 19
+    },
+    {
+     "slug": "google",
+     "frequency": 6
+    },
+    {
+     "slug": "de-shaw",
+     "frequency": 3
+    },
+    {
+     "slug": "tesla",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "binary-search",
+   "title": "Binary Search",
+   "tier": 3,
+   "id": 792,
+   "lc_id": 704,
+   "pattern": [
+    "Array",
+    "Binary Search"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 287,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 13
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "letter-case-permutation",
+   "title": "Letter Case Permutation",
+   "tier": 3,
+   "id": 800,
+   "lc_id": 784,
+   "pattern": [
+    "String",
+    "Backtracking",
+    "Bit Manipulation"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 288,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "count-unique-characters-of-all-substrings-of-a-given-string",
+   "title": "Count Unique Characters of All Substrings of a Given String",
+   "tier": 3,
+   "id": 855,
+   "lc_id": 828,
+   "pattern": [
+    "Hash Table",
+    "String",
+    "Dynamic Programming"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 289,
+   "companies": []
+  },
+  {
+   "slug": "backspace-string-compare",
+   "title": "Backspace String Compare",
+   "tier": 3,
+   "id": 874,
+   "lc_id": 844,
+   "pattern": [
+    "Two Pointers",
+    "String",
+    "Stack",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 290,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "peak-index-in-a-mountain-array",
+   "title": "Peak Index in a Mountain Array",
+   "tier": 3,
+   "id": 882,
+   "lc_id": 852,
+   "pattern": [
+    "Array",
+    "Binary Search",
+    "Ternary Search"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 291,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 8
+    },
+    {
+     "slug": "google",
+     "frequency": 5
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "qualcomm",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "all-nodes-distance-k-in-binary-tree",
+   "title": "All Nodes Distance K in Binary Tree",
+   "tier": 3,
+   "id": 893,
+   "lc_id": 863,
+   "pattern": [
+    "Hash Table",
+    "Tree",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Binary Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 292,
+   "companies": [
+    {
+     "slug": "microsoft",
+     "frequency": 5
+    },
+    {
+     "slug": "amazon",
+     "frequency": 4
+    },
+    {
+     "slug": "google",
+     "frequency": 3
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    },
+    {
+     "slug": "zepto",
+     "frequency": 2
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 2
+    },
+    {
+     "slug": "apple",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "middle-of-the-linked-list",
+   "title": "Middle of the Linked List",
+   "tier": 3,
+   "id": 908,
+   "lc_id": 876,
+   "pattern": [
+    "Linked List",
+    "Two Pointers"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 293,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 8
+    },
+    {
+     "slug": "amazon",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "ibm",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "maximum-frequency-stack",
+   "title": "Maximum Frequency Stack",
+   "tier": 3,
+   "id": 931,
+   "lc_id": 895,
+   "pattern": [
+    "Hash Table",
+    "Stack",
+    "Design",
+    "Ordered Set"
+   ],
+   "difficulty": "Hard",
+   "premium": false,
+   "order": 294,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "expedia",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "fruit-into-baskets",
+   "title": "Fruit Into Baskets",
+   "tier": 3,
+   "id": 940,
+   "lc_id": 904,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "Sliding Window"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 295,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 27
+    },
+    {
+     "slug": "google",
+     "frequency": 11
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    },
+    {
+     "slug": "salesforce",
+     "frequency": 2
+    },
+    {
+     "slug": "tiktok",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "k-closest-points-to-origin",
+   "title": "K Closest Points to Origin",
+   "tier": 3,
+   "id": 1014,
+   "lc_id": 973,
+   "pattern": [
+    "Array",
+    "Math",
+    "Divide and Conquer",
+    "Geometry",
+    "Sorting",
+    "Heap (Priority Queue)",
+    "Quickselect",
+    "K-D Tree"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 296,
+   "companies": [
+    {
+     "slug": "facebook",
+     "frequency": 6
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "squares-of-a-sorted-array",
+   "title": "Squares of a Sorted Array",
+   "tier": 3,
+   "id": 1019,
+   "lc_id": 977,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sorting"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 297,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 7
+    },
+    {
+     "slug": "amazon",
+     "frequency": 7
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 4
+    },
+    {
+     "slug": "uber",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 4
+    },
+    {
+     "slug": "instacart",
+     "frequency": 2
+    },
+    {
+     "slug": "yandex",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "interval-list-intersections",
+   "title": "Interval List Intersections",
+   "tier": 3,
+   "id": 1028,
+   "lc_id": 986,
+   "pattern": [
+    "Array",
+    "Two Pointers",
+    "Sweep Line"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 298,
+   "companies": [
+    {
+     "slug": "verkada",
+     "frequency": 5
+    },
+    {
+     "slug": "facebook",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "yandex",
+     "frequency": 3
+    },
+    {
+     "slug": "oscar-health",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "index-pairs-of-a-string",
+   "title": "Index Pairs of a String",
+   "tier": 3,
+   "id": 1075,
+   "lc_id": 1065,
+   "pattern": [
+    "Array",
+    "String",
+    "Trie",
+    "Sorting",
+    "Aho-Corasick Algorithm"
+   ],
+   "difficulty": "Easy",
+   "premium": true,
+   "order": 299,
+   "companies": []
+  },
+  {
+   "slug": "longest-common-subsequence",
+   "title": "Longest Common Subsequence",
+   "tier": 3,
+   "id": 1250,
+   "lc_id": 1143,
+   "pattern": [
+    "String",
+    "Dynamic Programming",
+    "Longest Common Subsequence"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 300,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 4
+    },
+    {
+     "slug": "facebook",
+     "frequency": 4
+    },
+    {
+     "slug": "amazon",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "convert-1d-array-into-2d-array",
+   "title": "Convert 1D Array Into 2D Array",
+   "tier": 3,
+   "id": 2132,
+   "lc_id": 2022,
+   "pattern": [
+    "Array",
+    "Matrix",
+    "Simulation"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 301,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 3
+    }
+   ]
+  },
+  {
+   "slug": "group-anagrams",
+   "title": "Group Anagrams",
+   "tier": 3,
+   "id": 49,
+   "lc_id": 49,
+   "pattern": [
+    "Array",
+    "Hash Table",
+    "String",
+    "Sorting"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 302,
+   "companies": [
+    {
+     "slug": "amazon",
+     "frequency": 30
+    },
+    {
+     "slug": "google",
+     "frequency": 14
+    },
+    {
+     "slug": "facebook",
+     "frequency": 10
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 10
+    },
+    {
+     "slug": "apple",
+     "frequency": 5
+    },
+    {
+     "slug": "tcs",
+     "frequency": 4
+    },
+    {
+     "slug": "adobe",
+     "frequency": 4
+    },
+    {
+     "slug": "deloitte",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 3
+    },
+    {
+     "slug": "goldman-sachs",
+     "frequency": 3
+    },
+    {
+     "slug": "hashedin",
+     "frequency": 3
+    },
+    {
+     "slug": "expedia",
+     "frequency": 3
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 2
+    },
+    {
+     "slug": "jpmorgan",
+     "frequency": 2
+    },
+    {
+     "slug": "walmart-labs",
+     "frequency": 2
+    },
+    {
+     "slug": "oracle",
+     "frequency": 2
+    },
+    {
+     "slug": "epam-systems",
+     "frequency": 2
+    },
+    {
+     "slug": "zoho",
+     "frequency": 2
+    },
+    {
+     "slug": "wipro",
+     "frequency": 2
+    },
+    {
+     "slug": "nvidia",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "valid-palindrome",
+   "title": "Valid Palindrome",
+   "tier": 3,
+   "id": 125,
+   "lc_id": 125,
+   "pattern": [
+    "Two Pointers",
+    "String"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 303,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 11
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 11
+    },
+    {
+     "slug": "amazon",
+     "frequency": 9
+    },
+    {
+     "slug": "facebook",
+     "frequency": 5
+    },
+    {
+     "slug": "apple",
+     "frequency": 4
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 3
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "infosys",
+     "frequency": 2
+    },
+    {
+     "slug": "deloitte",
+     "frequency": 2
+    },
+    {
+     "slug": "cognizant",
+     "frequency": 2
+    },
+    {
+     "slug": "axon",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "valid-parentheses",
+   "title": "Valid Parentheses",
+   "tier": 3,
+   "id": 20,
+   "lc_id": 20,
+   "pattern": [
+    "String",
+    "Stack",
+    "Bracket Sequences"
+   ],
+   "difficulty": "Easy",
+   "premium": false,
+   "order": 304,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 21
+    },
+    {
+     "slug": "amazon",
+     "frequency": 10
+    },
+    {
+     "slug": "facebook",
+     "frequency": 8
+    },
+    {
+     "slug": "linkedin",
+     "frequency": 8
+    },
+    {
+     "slug": "bloomberg",
+     "frequency": 7
+    },
+    {
+     "slug": "blackrock",
+     "frequency": 7
+    },
+    {
+     "slug": "ibm",
+     "frequency": 7
+    },
+    {
+     "slug": "microsoft",
+     "frequency": 6
+    },
+    {
+     "slug": "tripadvisor",
+     "frequency": 4
+    },
+    {
+     "slug": "tcs",
+     "frequency": 3
+    },
+    {
+     "slug": "intuit",
+     "frequency": 3
+    },
+    {
+     "slug": "accolite",
+     "frequency": 2
+    },
+    {
+     "slug": "criteo",
+     "frequency": 2
+    },
+    {
+     "slug": "epic-systems",
+     "frequency": 2
+    },
+    {
+     "slug": "autodesk",
+     "frequency": 2
+    },
+    {
+     "slug": "odoo",
+     "frequency": 2
+    },
+    {
+     "slug": "virtu",
+     "frequency": 2
+    }
+   ]
+  },
+  {
+   "slug": "clone-graph",
+   "title": "Clone Graph",
+   "tier": 3,
+   "id": 133,
+   "lc_id": 133,
+   "pattern": [
+    "Hash Table",
+    "Depth-First Search",
+    "Breadth-First Search",
+    "Graph Theory"
+   ],
+   "difficulty": "Medium",
+   "premium": false,
+   "order": 305,
+   "companies": [
+    {
+     "slug": "google",
+     "frequency": 2
+    },
+    {
+     "slug": "amazon",
+     "frequency": 2
+    },
+    {
+     "slug": "facebook",
+     "frequency": 2
+    }
+   ]
+  }
+ ]
+}
