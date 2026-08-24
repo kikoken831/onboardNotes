@@ -17,6 +17,12 @@ public final class Match {
         if (yours instanceof String && spec.cmp == Cmp.LENGTH_AND_PREFIX) {
             return (String) yours;
         }
+        // A returned list containing a cycle is always wrong, and saying so plainly
+        // beats letting the value comparison report a confusing length mismatch. It
+        // also stops a cyclic answer from hanging a later traversal.
+        String cyc = cycleCheck(yours);
+        if (cyc != null) return cyc;
+
         switch (spec.cmp) {
             case EXACT:             return exact(yours, expected, 0.0);
             case EPSILON:           return exact(yours, expected, spec.eps);
@@ -29,6 +35,28 @@ public final class Match {
                 return spec.validator.check(input, yours, expected);
             default:                return exact(yours, expected, 0.0);
         }
+    }
+
+    /**
+     * Detect a cycle in a returned linked list.
+     *
+     * The usual cause is forgetting to null-terminate a list you rebuilt by splicing
+     * nodes out of the input — the last node still points at whatever followed it
+     * originally. Naming that failure directly saves a long debugging session.
+     */
+    private static String cycleCheck(Object v) {
+        if (!(v instanceof ListNode)) return null;
+        ListNode slow = (ListNode) v, fast = (ListNode) v;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                return "the list you returned contains a CYCLE — "
+                     + "did you forget to null-terminate a list you rebuilt? "
+                     + Codec.printList((ListNode) v);
+            }
+        }
+        return null;
     }
 
     /** Length-and-prefix: both sides are already truncated to their returned length. */

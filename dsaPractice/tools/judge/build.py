@@ -85,12 +85,44 @@ def solution(problem, force=False):
     _touch(p["build_sol"], ".stamp")
 
 
-def run_judge(problem, mode, iterations, seed):
+def reference_as_solution(problem, force=False):
+    """
+    Compile the reference as if it were your Solution, for the self-test.
+
+    Renames the class and hides spec() so the file becomes a plain Solution. Used by
+    `judge selftest` to run every reference against itself: any disagreement means a
+    nondeterministic generator or an unstable comparison mode, i.e. a judge bug.
+    """
+    import re
+    p = catalogue.paths(problem)
+    if not os.path.exists(p["ref"]):
+        raise CompileError("no reference for '%s'" % problem["slug"], "")
+
+    out_dir = os.path.join(catalogue.ROOT, "build", "selftest", problem["slug"])
+    src_dir = os.path.join(out_dir, "src")
+    os.makedirs(src_dir, exist_ok=True)
+
+    with open(p["ref"]) as f:
+        body = f.read()
+    body = re.sub(r"\bclass\s+Ref\s+implements\s+Problem\s*\{", "class Solution {", body)
+    body = body.replace("public Spec spec() {", "private Spec unusedSpec() {")
+
+    src = os.path.join(src_dir, "Solution.java")
+    with open(src, "w") as f:
+        f.write(body)
+
+    _javac(["-cp", BUILD_HARNESS, "-d", out_dir, src],
+           "the reference-as-solution for " + problem["slug"])
+    _touch(out_dir, ".stamp")
+    return out_dir
+
+
+def run_judge(problem, mode, iterations, seed, sol_dir=None):
     """Invoke the Java judge. Returns (verdict, stdout)."""
     p = catalogue.paths(problem)
     r = subprocess.run(
         ["java", "-cp", BUILD_HARNESS, "Judge",
-         problem["slug"], p["build_ref"], p["build_sol"],
+         problem["slug"], p["build_ref"], sol_dir or p["build_sol"],
          mode, str(iterations), str(seed)],
         capture_output=True, text=True)
 
