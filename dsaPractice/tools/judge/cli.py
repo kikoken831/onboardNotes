@@ -351,6 +351,58 @@ def cmd_verify(args):
 
 # ----------------------------------------------------------------------- next
 
+def cmd_selftest(args):
+    """
+    Run every reference against ITSELF under stress.
+
+    Any failure is a judge bug, not a solution bug: either a generator that produces
+    different values on the same seed, or a comparison mode that does not consider a
+    value equal to itself. Worth running after touching anything in harness/.
+    """
+    try:
+        build.harness()
+    except build.CompileError as e:
+        die(str(e), e.output)
+
+    problems = [p for p in catalogue.all_problems() if catalogue.is_implemented(p)]
+    if args.tier is not None:
+        problems = [p for p in problems if p["tier"] == args.tier]
+
+    print()
+    print("  self-testing %d reference%s at %d iterations each"
+          % (len(problems), "" if len(problems) == 1 else "s", args.n))
+    print()
+
+    bad = []
+    for p in problems:
+        try:
+            build.reference(p)
+            sol_dir = build.reference_as_solution(p)
+        except build.CompileError as e:
+            bad.append(p["slug"])
+            print("  %s %s %s" % (red("✗"), p["slug"], dim("(compile)")))
+            for line in e.output.splitlines()[:4]:
+                print("      " + dim(line))
+            continue
+
+        verdict, out = build.run_judge(p, "stress", args.n, args.seed, sol_dir=sol_dir)
+        if verdict == "ACCEPTED":
+            print("  %s %s" % (green("✓"), p["slug"]))
+        else:
+            bad.append(p["slug"])
+            print("  %s %s %s" % (red("✗"), p["slug"], dim(verdict or "no verdict")))
+            for line in out.splitlines():
+                if line.strip():
+                    print("    " + line)
+
+    print()
+    if bad:
+        print(red("  %d reference%s inconsistent with itself — this is a judge bug"
+                  % (len(bad), "" if len(bad) == 1 else "s")))
+        sys.exit(1)
+    print(green("  all %d references self-consistent" % len(problems)))
+
+
 def cmd_next(args):
     state = progress.load()
     due = progress.due_now(state)
@@ -530,6 +582,13 @@ def main(argv=None):
     p = sub.add_parser("verify", help="check every reference against its pinned examples")
     p.add_argument("--tier", type=int)
     p.set_defaults(func=cmd_verify)
+
+    p = sub.add_parser("selftest",
+                       help="run every reference against itself (catches judge bugs)")
+    p.add_argument("--tier", type=int)
+    p.add_argument("-n", type=int, default=1500)
+    p.add_argument("--seed", type=int, default=99)
+    p.set_defaults(func=cmd_selftest)
 
     p = sub.add_parser("next", help="what to work on now")
     p.add_argument("--tier", type=int)

@@ -68,11 +68,25 @@ public final class Gen {
 
     public double nextDouble() { return rnd.nextDouble(); }
 
-    /** Size scaled between min and max, biased small early in a run. */
+    /**
+     * Size scaled between min and max, biased small early in a run.
+     *
+     * The ramp is deliberately fast: `scale` reaches useful sizes within the first
+     * few percent of a run rather than climbing linearly. A linear ramp spends the
+     * first half of a stress run on inputs of length 0 and 1, which are too small to
+     * exercise anything, and bugs that need a handful of elements survive thousands
+     * of iterations. sqrt(scale) plus a floor fixes that.
+     */
     public int size(int min, int max) {
         if (forcedSize >= 0) return Math.max(min, forcedSize);
-        int top = (int) Math.max(min, Math.round(min + (max - min) * scale));
-        return nextInt(min, Math.max(min, top));
+        if (max <= min) return min;
+        double ramp = Math.sqrt(Math.max(0.0, Math.min(1.0, scale)));
+        int top = (int) Math.round(min + (max - min) * ramp);
+        // Keep a floor of ~4 elements once past the very start of the run, so that
+        // degenerate-but-tiny inputs do not crowd out everything else.
+        int floor = scale > 0.02 ? Math.min(max, min + 3) : min;
+        top = Math.max(top, floor);
+        return nextInt(Math.min(min, top), Math.max(min, top));
     }
 
     // ---------------------------------------------------------------- arrays
