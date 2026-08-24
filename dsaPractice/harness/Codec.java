@@ -370,10 +370,13 @@ public final class Codec {
 
     public static String printTree(TreeNode root) {
         List<String> out = new ArrayList<>();
-        java.util.ArrayDeque<TreeNode> q = new java.util.ArrayDeque<>();
+        // A plain ArrayList as the queue, not ArrayDeque: the level-order encoding
+        // needs null placeholders for absent children, and ArrayDeque rejects nulls
+        // with a NullPointerException.
+        List<TreeNode> q = new ArrayList<>();
         if (root != null) q.add(root);
-        while (!q.isEmpty()) {
-            TreeNode n = q.poll();
+        for (int i = 0; i < q.size(); i++) {
+            TreeNode n = q.get(i);
             if (n == null) { out.add("null"); continue; }
             out.add(String.valueOf(n.val));
             q.add(n.left);
