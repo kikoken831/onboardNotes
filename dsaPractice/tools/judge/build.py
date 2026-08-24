@@ -106,6 +106,9 @@ def reference_as_solution(problem, force=False):
         body = f.read()
     body = re.sub(r"\bclass\s+Ref\s+implements\s+Problem\s*\{", "class Solution {", body)
     body = body.replace("public Spec spec() {", "private Spec unusedSpec() {")
+    # A reference that names its own class -- Ref::method, Ref.CONSTANT, new Ref() --
+    # would not compile after the rename.
+    body = re.sub(r"\bRef\b(?=\s*[.:(])", "Solution", body)
 
     src = os.path.join(src_dir, "Solution.java")
     with open(src, "w") as f:

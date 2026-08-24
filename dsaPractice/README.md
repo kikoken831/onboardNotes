@@ -47,7 +47,12 @@ that, which is why `judge verify` exists and why subtle problems carry more pins
 
 ```bash
 ./judge verify        # every reference against every pinned example
+./judge selftest      # every reference against itself under stress
 ```
+
+`selftest` compiles each reference as its own solution and stress-runs it. A failure
+there means a nondeterministic generator or an unstable comparison mode — a judge bug,
+not a solution bug. Run it after touching anything in `harness/`.
 
 ---
 
@@ -58,16 +63,40 @@ problem in it is already Medium. LeetCode "Easy" also spans a 5× acceptance-rat
 (17.5%–91%), so "I can't do Easy" is often a sampling problem rather than a capability
 one. Hence four tiers:
 
-| Tier | What | Count |
-|---|---|---|
-| **0** | Java mechanics — measured JVM traps, predict-then-run | 20 items |
-| **1** | Authored primitives — one mechanical sub-skill each, 5–15 lines | 69 drills |
-| **2** | Real LeetCode Easy below the target list's floor | 58 problems |
-| **3** | The supplied target list | 179 problems |
+| Tier | What | Count | Status |
+|---|---|---|---|
+| **0** | Java mechanics — measured JVM traps, predict-then-run | 20 items | ready |
+| **1** | Authored primitives — one mechanical sub-skill each, 5–15 lines | 69 drills | **ready** |
+| **2** | Real LeetCode Easy below the target list's floor | 58 problems | catalogued |
+| **3** | The supplied target list | 179 problems | catalogued |
+
+Tier 1 is complete and is where to start. Tiers 2 and 3 are in the catalogue with
+statements and references still to be written; `judge list --ready` shows what is
+actually runnable today.
 
 Tier 1 is mandatory rather than optional for five patterns — **backtracking, trie,
 topological sort, union-find, and LIS/knapsack DP have no Easy entry point on LeetCode
 at all**. There is nothing to warm up on, so the warm-up had to be written.
+
+### The 15 Tier 1 groups
+
+| Group | Drills | The sub-skill |
+|---|---|---|
+| write-index | 8 | read pointer and write pointer are not the same pointer |
+| hash-counting | 5 | `int[26]`, count-then-decide, `computeIfAbsent` |
+| binary-search | 6 | four distinct templates, not one you mutate |
+| linked-list | 8 | dummy head, save `next` first, return `dummy.next` |
+| recursion-shape | 7 | return up / thread down / both |
+| iterative-traversal | 4 | left spine, `lastVisited`, size snapshot |
+| grid-search | 4 | bounds first, mark before recursing, mark on enqueue |
+| backtracking ⚠️ | 6 | choose / recurse / un-choose, copy at the leaf |
+| trie ⚠️ | 3 | 26-child nodes, `isWord`, augment for O(1) queries |
+| union-find ⚠️ | 3 | link roots not elements, path halving, count down from n |
+| topological-sort ⚠️ | 2 | in-degree count is the cycle check; three-colour DFS |
+| monotonic-stack | 3 | push indices, pop condition, sentinel flush |
+| prefix-sum | 3 | size `n+1`, look up before inserting, inclusion–exclusion |
+| heap | 3 | max-heap to keep the k smallest, `int[]` comparators |
+| dynamic-programming ⚠️ | 4 | naive → memoise → tabulate; define the state first |
 
 Start here:
 
