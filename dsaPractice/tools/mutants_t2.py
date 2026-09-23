@@ -521,3 +521,276 @@ MUTANTS["last-stone-weight"] = [
         return l.isEmpty() ? 0 : l.get(0);
     }""", LIST)),
 ]
+
+# --------------------------------------------------------------- group D: trees
+
+MUTANTS["binary-tree-inorder-traversal"] = [
+    ("actually-preorder", "reject", S("""
+    public List<Integer> inorderTraversal(TreeNode r) { List<Integer> o = new ArrayList<>(); go(r, o); return o; }
+    void go(TreeNode n, List<Integer> o) { if (n == null) return; o.add(n.val); go(n.left, o); go(n.right, o); }""", LIST)),
+    ("iterative-left-spine", "accept", S("""
+    public List<Integer> inorderTraversal(TreeNode r) {
+        List<Integer> o = new ArrayList<>(); Deque<TreeNode> s = new ArrayDeque<>(); TreeNode c = r;
+        while (c != null || !s.isEmpty()) { while (c != null) { s.push(c); c = c.left; } c = s.pop(); o.add(c.val); c = c.right; }
+        return o;
+    }""", LIST)),
+]
+
+MUTANTS["binary-tree-preorder-traversal"] = [
+    ("left-pushed-first", "reject", S("""
+    public List<Integer> preorderTraversal(TreeNode r) {
+        List<Integer> o = new ArrayList<>(); Deque<TreeNode> s = new ArrayDeque<>(); if (r != null) s.push(r);
+        while (!s.isEmpty()) { TreeNode n = s.pop(); o.add(n.val); if (n.left != null) s.push(n.left); if (n.right != null) s.push(n.right); }
+        return o;
+    }""", LIST)),
+    ("recursive", "accept", S("""
+    public List<Integer> preorderTraversal(TreeNode r) { List<Integer> o = new ArrayList<>(); go(r, o); return o; }
+    void go(TreeNode n, List<Integer> o) { if (n == null) return; o.add(n.val); go(n.left, o); go(n.right, o); }""", LIST)),
+]
+
+MUTANTS["binary-tree-postorder-traversal"] = [
+    ("reversed-preorder-not-mirrored", "reject", S("""
+    public List<Integer> postorderTraversal(TreeNode r) {
+        List<Integer> o = new ArrayList<>(); Deque<TreeNode> s = new ArrayDeque<>(); if (r != null) s.push(r);
+        while (!s.isEmpty()) { TreeNode n = s.pop(); o.add(n.val); if (n.right != null) s.push(n.right); if (n.left != null) s.push(n.left); }
+        Collections.reverse(o); return o;
+    }""", LIST)),
+    ("mirrored-preorder-reversed", "accept", S("""
+    public List<Integer> postorderTraversal(TreeNode r) {
+        List<Integer> o = new ArrayList<>(); Deque<TreeNode> s = new ArrayDeque<>(); if (r != null) s.push(r);
+        while (!s.isEmpty()) { TreeNode n = s.pop(); o.add(n.val); if (n.left != null) s.push(n.left); if (n.right != null) s.push(n.right); }
+        Collections.reverse(o); return o;
+    }""", LIST)),
+]
+
+MUTANTS["diameter-of-binary-tree"] = [
+    ("through-root-only", "reject", S("""
+    public int diameterOfBinaryTree(TreeNode r) { return h(r.left) + h(r.right); }
+    int h(TreeNode n) { return n == null ? 0 : 1 + Math.max(h(n.left), h(n.right)); }""")),
+    ("counts-nodes", "reject", S("""
+    int best = 0;
+    public int diameterOfBinaryTree(TreeNode r) { best = 0; h(r); return best; }
+    int h(TreeNode n) { if (n == null) return 0; int l = h(n.left), rr = h(n.right); best = Math.max(best, l + rr + 1); return 1 + Math.max(l, rr); }""")),
+    ("quadratic-per-node", "accept", S("""
+    public int diameterOfBinaryTree(TreeNode r) {
+        if (r == null) return 0;
+        return Math.max(h(r.left) + h(r.right), Math.max(diameterOfBinaryTree(r.left), diameterOfBinaryTree(r.right)));
+    }
+    int h(TreeNode n) { return n == null ? 0 : 1 + Math.max(h(n.left), h(n.right)); }""")),
+]
+
+MUTANTS["balanced-binary-tree"] = [
+    ("root-only", "reject", S("""
+    public boolean isBalanced(TreeNode r) { return r == null || Math.abs(h(r.left) - h(r.right)) <= 1; }
+    int h(TreeNode n) { return n == null ? 0 : 1 + Math.max(h(n.left), h(n.right)); }""")),
+    ("top-down-recompute", "accept", S("""
+    public boolean isBalanced(TreeNode r) {
+        return r == null || (Math.abs(h(r.left) - h(r.right)) <= 1 && isBalanced(r.left) && isBalanced(r.right));
+    }
+    int h(TreeNode n) { return n == null ? 0 : 1 + Math.max(h(n.left), h(n.right)); }""")),
+]
+
+MUTANTS["symmetric-tree"] = [
+    ("not-crossed", "reject", S("""
+    public boolean isSymmetric(TreeNode r) { return m(r.left, r.right); }
+    boolean m(TreeNode a, TreeNode b) { if (a == null || b == null) return a == b; return a.val == b.val && m(a.left, b.left) && m(a.right, b.right); }""")),
+    ("level-palindrome-ignores-nulls", "reject", S("""
+    public boolean isSymmetric(TreeNode r) {
+        List<TreeNode> lvl = new ArrayList<>(); lvl.add(r);
+        while (!lvl.isEmpty()) {
+            List<Integer> v = new ArrayList<>(); List<TreeNode> nx = new ArrayList<>();
+            for (TreeNode n : lvl) { v.add(n.val); if (n.left != null) nx.add(n.left); if (n.right != null) nx.add(n.right); }
+            for (int i = 0, j = v.size() - 1; i < j; i++, j--) if (!v.get(i).equals(v.get(j))) return false;
+            lvl = nx;
+        }
+        return true;
+    }""", LIST)),
+    ("iterative-pairs", "accept", S("""
+    public boolean isSymmetric(TreeNode r) {
+        Deque<TreeNode[]> q = new ArrayDeque<>(); q.add(new TreeNode[]{ r.left, r.right });
+        while (!q.isEmpty()) {
+            TreeNode[] p = q.poll(); TreeNode a = p[0], b = p[1];
+            if (a == null && b == null) continue; if (a == null || b == null || a.val != b.val) return false;
+            q.add(new TreeNode[]{ a.left, b.right }); q.add(new TreeNode[]{ a.right, b.left });
+        }
+        return true;
+    }""", LIST)),
+]
+
+MUTANTS["search-in-a-binary-search-tree"] = [
+    ("wrong-direction", "reject", S("""
+    public TreeNode searchBST(TreeNode n, int v) { while (n != null && n.val != v) n = v > n.val ? n.left : n.right; return n; }""")),
+    ("returns-copy-of-node-only", "reject", S("""
+    public TreeNode searchBST(TreeNode n, int v) { while (n != null && n.val != v) n = v < n.val ? n.left : n.right; return n == null ? null : new TreeNode(n.val); }""")),
+    ("full-dfs", "accept", S("""
+    public TreeNode searchBST(TreeNode n, int v) { if (n == null || n.val == v) return n; TreeNode l = searchBST(n.left, v); return l != null ? l : searchBST(n.right, v); }""")),
+]
+
+MUTANTS["range-sum-of-bst"] = [
+    ("exclusive-bounds", "reject", S("""
+    public int rangeSumBST(TreeNode n, int lo, int hi) { if (n == null) return 0; return (n.val > lo && n.val < hi ? n.val : 0) + rangeSumBST(n.left, lo, hi) + rangeSumBST(n.right, lo, hi); }""")),
+    ("prunes-wrong-side", "reject", S("""
+    public int rangeSumBST(TreeNode n, int lo, int hi) {
+        if (n == null) return 0; if (n.val < lo) return rangeSumBST(n.left, lo, hi); if (n.val > hi) return rangeSumBST(n.right, lo, hi);
+        return n.val + rangeSumBST(n.left, lo, hi) + rangeSumBST(n.right, lo, hi);
+    }""")),
+    ("visit-everything", "accept", S("""
+    public int rangeSumBST(TreeNode n, int lo, int hi) { if (n == null) return 0; return (n.val >= lo && n.val <= hi ? n.val : 0) + rangeSumBST(n.left, lo, hi) + rangeSumBST(n.right, lo, hi); }""")),
+]
+
+# ------------------------------------------------- group E/F: grids, graphs, matrix
+
+MUTANTS["island-perimeter"] = [
+    ("ignores-grid-edge", "reject", S("""
+    public int islandPerimeter(int[][] g) {
+        int p = 0, r = g.length, c = g[0].length;
+        for (int i = 0; i < r; i++) for (int j = 0; j < c; j++) if (g[i][j] == 1) {
+            if (i > 0 && g[i-1][j] == 0) p++; if (i < r-1 && g[i+1][j] == 0) p++;
+            if (j > 0 && g[i][j-1] == 0) p++; if (j < c-1 && g[i][j+1] == 0) p++;
+        }
+        return p;
+    }""")),
+    ("counts-each-adjacency-twice", "reject", S("""
+    public int islandPerimeter(int[][] g) {
+        int land = 0, sh = 0, r = g.length, c = g[0].length;
+        for (int i = 0; i < r; i++) for (int j = 0; j < c; j++) if (g[i][j] == 1) {
+            land++; if (i > 0 && g[i-1][j] == 1) sh++; if (i < r-1 && g[i+1][j] == 1) sh++;
+            if (j > 0 && g[i][j-1] == 1) sh++; if (j < c-1 && g[i][j+1] == 1) sh++;
+        }
+        return 4 * land - 2 * sh;
+    }""")),
+    ("dfs-edges-to-water", "accept", S("""
+    public int islandPerimeter(int[][] g) {
+        for (int i = 0; i < g.length; i++) for (int j = 0; j < g[0].length; j++) if (g[i][j] == 1) return dfs(g, i, j);
+        return 0;
+    }
+    int dfs(int[][] g, int i, int j) {
+        if (i < 0 || j < 0 || i >= g.length || j >= g[0].length || g[i][j] == 0) return 1;
+        if (g[i][j] == 2) return 0; g[i][j] = 2;
+        return dfs(g, i+1, j) + dfs(g, i-1, j) + dfs(g, i, j+1) + dfs(g, i, j-1);
+    }""")),
+]
+
+MUTANTS["flood-fill"] = [
+    ("no-same-colour-guard", "reject", S("""
+    public int[][] floodFill(int[][] a, int sr, int sc, int color) { go(a, sr, sc, a[sr][sc], color); return a; }
+    void go(int[][] a, int i, int j, int from, int to) {
+        if (i < 0 || j < 0 || i >= a.length || j >= a[0].length || a[i][j] != from) return;
+        a[i][j] = to; go(a, i+1, j, from, to); go(a, i-1, j, from, to); go(a, i, j+1, from, to); go(a, i, j-1, from, to);
+    }""")),
+    ("spreads-diagonally", "reject", S("""
+    public int[][] floodFill(int[][] a, int sr, int sc, int color) { if (a[sr][sc] != color) go(a, sr, sc, a[sr][sc], color); return a; }
+    void go(int[][] a, int i, int j, int from, int to) {
+        if (i < 0 || j < 0 || i >= a.length || j >= a[0].length || a[i][j] != from) return;
+        a[i][j] = to; for (int di = -1; di <= 1; di++) for (int dj = -1; dj <= 1; dj++) if (di != 0 || dj != 0) go(a, i+di, j+dj, from, to);
+    }""")),
+    ("dfs-with-guard", "accept", S("""
+    public int[][] floodFill(int[][] a, int sr, int sc, int color) { if (a[sr][sc] != color) go(a, sr, sc, a[sr][sc], color); return a; }
+    void go(int[][] a, int i, int j, int from, int to) {
+        if (i < 0 || j < 0 || i >= a.length || j >= a[0].length || a[i][j] != from) return;
+        a[i][j] = to; go(a, i+1, j, from, to); go(a, i-1, j, from, to); go(a, i, j+1, from, to); go(a, i, j-1, from, to);
+    }""")),
+]
+
+MUTANTS["find-if-path-exists-in-graph"] = [
+    ("directed-edges", "reject", S("""
+    public boolean validPath(int n, int[][] e, int s, int d) {
+        List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>());
+        for (int[] x : e) g.get(x[0]).add(x[1]);
+        boolean[] seen = new boolean[n]; Deque<Integer> q = new ArrayDeque<>(); q.add(s); seen[s] = true;
+        while (!q.isEmpty()) { int u = q.poll(); if (u == d) return true; for (int v : g.get(u)) if (!seen[v]) { seen[v] = true; q.add(v); } }
+        return false;
+    }""", LIST)),
+    ("source-equals-dest-false", "reject", S("""
+    public boolean validPath(int n, int[][] e, int s, int d) {
+        List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>());
+        for (int[] x : e) { g.get(x[0]).add(x[1]); g.get(x[1]).add(x[0]); }
+        boolean[] seen = new boolean[n]; Deque<Integer> q = new ArrayDeque<>(); q.add(s); seen[s] = true;
+        while (!q.isEmpty()) { int u = q.poll(); for (int v : g.get(u)) { if (v == d) return true; if (!seen[v]) { seen[v] = true; q.add(v); } } }
+        return false;
+    }""", LIST)),
+    ("union-find", "accept", S("""
+    int[] p;
+    int find(int x) { while (p[x] != x) x = p[x] = p[p[x]]; return x; }
+    public boolean validPath(int n, int[][] e, int s, int d) {
+        p = new int[n]; for (int i = 0; i < n; i++) p[i] = i;
+        for (int[] x : e) p[find(x[0])] = find(x[1]);
+        return find(s) == find(d);
+    }""")),
+]
+
+MUTANTS["find-the-town-judge"] = [
+    ("in-degree-only", "reject", S("""
+    public int findJudge(int n, int[][] t) {
+        int[] in = new int[n + 1]; for (int[] x : t) in[x[1]]++;
+        for (int p = 1; p <= n; p++) if (in[p] == n - 1) return p; return -1;
+    }""")),
+    ("n-equals-1-returns-minus-1", "reject", S("""
+    public int findJudge(int n, int[][] t) {
+        if (t.length == 0) return -1; int[] s = new int[n + 1]; for (int[] x : t) { s[x[0]]--; s[x[1]]++; }
+        for (int p = 1; p <= n; p++) if (s[p] == n - 1) return p; return -1;
+    }""")),
+    ("two-arrays", "accept", S("""
+    public int findJudge(int n, int[][] t) {
+        int[] in = new int[n + 1], out = new int[n + 1]; for (int[] x : t) { out[x[0]]++; in[x[1]]++; }
+        for (int p = 1; p <= n; p++) if (in[p] == n - 1 && out[p] == 0) return p; return -1;
+    }""")),
+]
+
+MUTANTS["flipping-an-image"] = [
+    ("middle-inverted-twice", "reject", S("""
+    public int[][] flipAndInvertImage(int[][] a) {
+        int n = a.length;
+        for (int[] r : a) for (int i = 0, j = n - 1; i <= j; i++, j--) { int t = r[i] ^ 1; r[i] = r[j] ^ 1; r[j] = t; if (i == j) r[i] ^= 1; }
+        return a;
+    }""")),
+    ("flip-only", "reject", S("""
+    public int[][] flipAndInvertImage(int[][] a) {
+        int n = a.length; for (int[] r : a) for (int i = 0, j = n - 1; i < j; i++, j--) { int t = r[i]; r[i] = r[j]; r[j] = t; } return a;
+    }""")),
+    ("in-place-swap-invert", "accept", S("""
+    public int[][] flipAndInvertImage(int[][] a) {
+        int n = a.length; for (int[] r : a) for (int i = 0, j = n - 1; i <= j; i++, j--) { int t = r[i] ^ 1; r[i] = r[j] ^ 1; r[j] = t; } return a;
+    }""")),
+]
+
+MUTANTS["transpose-matrix"] = [
+    ("square-in-place-swap", "reject", S("""
+    public int[][] transpose(int[][] a) {
+        int m = a.length, n = a[0].length, k = Math.min(m, n);
+        for (int i = 0; i < k; i++) for (int j = i + 1; j < k; j++) { int t = a[i][j]; a[i][j] = a[j][i]; a[j][i] = t; } return a;
+    }""")),
+    ("streams", "accept", S("""
+    public int[][] transpose(int[][] a) {
+        int m = a.length, n = a[0].length; int[][] t = new int[n][m];
+        for (int j = 0; j < n; j++) for (int i = 0; i < m; i++) t[j][i] = a[i][j]; return t;
+    }""")),
+]
+
+MUTANTS["reshape-the-matrix"] = [
+    ("wrong-divisor", "reject", S("""
+    public int[][] matrixReshape(int[][] a, int r, int c) {
+        int m = a.length, n = a[0].length; if (r * c != m * n) return a; int[][] o = new int[r][c];
+        for (int k = 0; k < m * n; k++) o[k / c][k % c] = a[k / c % m][k % n]; return o;
+    }""")),
+    ("returns-null-when-impossible", "reject", S("""
+    public int[][] matrixReshape(int[][] a, int r, int c) {
+        int m = a.length, n = a[0].length; if (r * c != m * n) return null; int[][] o = new int[r][c];
+        for (int k = 0; k < m * n; k++) o[k / c][k % c] = a[k / n][k % n]; return o;
+    }""")),
+    ("queue-of-values", "accept", S("""
+    public int[][] matrixReshape(int[][] a, int r, int c) {
+        int m = a.length, n = a[0].length; if (r * c != m * n) return a;
+        Deque<Integer> q = new ArrayDeque<>(); for (int[] row : a) for (int x : row) q.add(x);
+        int[][] o = new int[r][c]; for (int i = 0; i < r; i++) for (int j = 0; j < c; j++) o[i][j] = q.poll(); return o;
+    }""", LIST)),
+]
+
+MUTANTS["richest-customer-wealth"] = [
+    ("sums-columns", "reject", S("""
+    public int maximumWealth(int[][] a) {
+        int best = 0; for (int j = 0; j < a[0].length; j++) { int s = 0; for (int[] r : a) s += r[j]; best = Math.max(best, s); } return best;
+    }""")),
+    ("streams", "accept", S("""
+    public int maximumWealth(int[][] a) { return Arrays.stream(a).mapToInt(r -> Arrays.stream(r).sum()).max().getAsInt(); }""", LIST)),
+]
