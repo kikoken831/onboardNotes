@@ -126,6 +126,13 @@ public final class Gen {
         return a;
     }
 
+    /** Distinct values from [lo, hi] in random order. */
+    public int[] distinctInts(int minLen, int maxLen, int lo, int hi) {
+        int[] a = strictlySortedInts(minLen, maxLen, lo, hi);
+        shuffle(a);
+        return a;
+    }
+
     /** A permutation of 0..n-1. */
     public int[] permutation(int n) {
         List<Integer> l = new ArrayList<>(n);
