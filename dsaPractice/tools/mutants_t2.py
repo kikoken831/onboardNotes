@@ -794,3 +794,210 @@ MUTANTS["richest-customer-wealth"] = [
     ("streams", "accept", S("""
     public int maximumWealth(int[][] a) { return Arrays.stream(a).mapToInt(r -> Arrays.stream(r).sum()).max().getAsInt(); }""", LIST)),
 ]
+
+# ------------------------------------------------ group G: design and interactive
+# Design mutants are the class itself (class MyQueue ...), not a Solution.
+
+
+def D(src):
+    return LIST + "\n" + src + "\n"
+
+
+MUTANTS["implement-queue-using-stacks"] = [
+    ("transfers-while-out-nonempty", "reject", D("""
+class MyQueue {
+    Deque<Integer> in = new ArrayDeque<>(), out = new ArrayDeque<>();
+    public void push(int x) { in.push(x); }
+    public int pop()  { while (!in.isEmpty()) out.push(in.pop()); return out.pop(); }
+    public int peek() { while (!in.isEmpty()) out.push(in.pop()); return out.peek(); }
+    public boolean empty() { return in.isEmpty() && out.isEmpty(); }
+}""")),
+    ("empty-checks-one-stack", "reject", D("""
+class MyQueue {
+    Deque<Integer> in = new ArrayDeque<>(), out = new ArrayDeque<>();
+    public void push(int x) { in.push(x); }
+    void sh() { if (out.isEmpty()) while (!in.isEmpty()) out.push(in.pop()); }
+    public int pop()  { sh(); return out.pop(); }
+    public int peek() { sh(); return out.peek(); }
+    public boolean empty() { return in.isEmpty(); }
+}""")),
+    ("transfer-back-each-time", "accept", D("""
+class MyQueue {
+    Deque<Integer> s = new ArrayDeque<>(), t = new ArrayDeque<>();
+    public void push(int x) { while (!s.isEmpty()) t.push(s.pop()); s.push(x); while (!t.isEmpty()) s.push(t.pop()); }
+    public int pop() { return s.pop(); }
+    public int peek() { return s.peek(); }
+    public boolean empty() { return s.isEmpty(); }
+}""")),
+]
+
+MUTANTS["implement-stack-using-queues"] = [
+    ("fifo-not-lifo", "reject", D("""
+class MyStack {
+    Queue<Integer> q = new ArrayDeque<>();
+    public void push(int x) { q.add(x); }
+    public int pop() { return q.poll(); }
+    public int top() { return q.peek(); }
+    public boolean empty() { return q.isEmpty(); }
+}""")),
+    ("rotates-once-too-many", "reject", D("""
+class MyStack {
+    Queue<Integer> q = new ArrayDeque<>();
+    public void push(int x) { q.add(x); for (int i = 0; i < q.size(); i++) q.add(q.poll()); }
+    public int pop() { return q.poll(); }
+    public int top() { return q.peek(); }
+    public boolean empty() { return q.isEmpty(); }
+}""")),
+    ("two-queues-costly-pop", "accept", D("""
+class MyStack {
+    Queue<Integer> a = new ArrayDeque<>(), b = new ArrayDeque<>();
+    public void push(int x) { a.add(x); }
+    public int pop() { while (a.size() > 1) b.add(a.poll()); int v = a.poll(); Queue<Integer> t = a; a = b; b = t; return v; }
+    public int top() { int v = pop(); a.add(v); return v; }
+    public boolean empty() { return a.isEmpty(); }
+}""")),
+]
+
+MUTANTS["number-of-recent-calls"] = [
+    ("exclusive-window", "reject", D("""
+class RecentCounter {
+    Deque<Integer> q = new ArrayDeque<>();
+    public int ping(int t) { q.add(t); while (q.peek() <= t - 3000) q.poll(); return q.size(); }
+}""")),
+    ("counts-everything", "reject", D("""
+class RecentCounter {
+    int n = 0;
+    public int ping(int t) { return ++n; }
+}""")),
+    ("list-binary-search", "accept", D("""
+class RecentCounter {
+    List<Integer> l = new ArrayList<>();
+    public int ping(int t) {
+        l.add(t); int lo = 0, hi = l.size() - 1;
+        while (lo < hi) { int m = (lo + hi) / 2; if (l.get(m) < t - 3000) lo = m + 1; else hi = m; }
+        return l.size() - lo;
+    }
+}""")),
+]
+
+MUTANTS["kth-largest-element-in-a-stream"] = [
+    ("max-heap-returns-largest", "reject", D("""
+class KthLargest {
+    PriorityQueue<Integer> h = new PriorityQueue<>(Collections.reverseOrder());
+    public KthLargest(int k, int[] nums) { for (int x : nums) h.add(x); }
+    public int add(int v) { h.add(v); return h.peek(); }
+}""")),
+    ("heap-size-k-plus-1", "reject", D("""
+class KthLargest {
+    PriorityQueue<Integer> h = new PriorityQueue<>(); int k;
+    public KthLargest(int k, int[] nums) { this.k = k; for (int x : nums) { h.add(x); if (h.size() > k + 1) h.poll(); } }
+    public int add(int v) { h.add(v); if (h.size() > k + 1) h.poll(); return h.peek(); }
+}""")),
+    ("sort-every-add", "accept", D("""
+class KthLargest {
+    List<Integer> l = new ArrayList<>(); int k;
+    public KthLargest(int k, int[] nums) { this.k = k; for (int x : nums) l.add(x); }
+    public int add(int v) { l.add(v); l.sort(Collections.reverseOrder()); return l.get(k - 1); }
+}""")),
+]
+
+MUTANTS["design-parking-system"] = [
+    ("big-can-take-any-car", "reject", D("""
+class ParkingSystem {
+    int[] f = new int[4];
+    public ParkingSystem(int b, int m, int s) { f[1] = b; f[2] = m; f[3] = s; }
+    public boolean addCar(int c) { for (int t = c; t >= 1; t--) if (f[t] > 0) { f[t]--; return true; } return false; }
+}""")),
+    ("never-decrements", "reject", D("""
+class ParkingSystem {
+    int[] f = new int[4];
+    public ParkingSystem(int b, int m, int s) { f[1] = b; f[2] = m; f[3] = s; }
+    public boolean addCar(int c) { return f[c] > 0; }
+}""")),
+    ("three-fields", "accept", D("""
+class ParkingSystem {
+    int b, m, s;
+    public ParkingSystem(int b, int m, int s) { this.b = b; this.m = m; this.s = s; }
+    public boolean addCar(int c) {
+        if (c == 1) return b-- > 0; if (c == 2) return m-- > 0; return s-- > 0;
+    }
+}""")),
+]
+
+MUTANTS["design-hashset"] = [
+    ("array-one-too-small", "reject", D("""
+class MyHashSet {
+    boolean[] a = new boolean[1_000_000];
+    public void add(int k) { a[k] = true; }
+    public void remove(int k) { a[k] = false; }
+    public boolean contains(int k) { return a[k]; }
+}""")),
+    ("remove-only-first-bucket-entry", "reject", D("""
+class MyHashSet {
+    List<Integer>[] b = new List[16];
+    List<Integer> at(int k) { int h = k % 16; if (b[h] == null) b[h] = new ArrayList<>(); return b[h]; }
+    public void add(int k) { at(k).add(k); }
+    public void remove(int k) { at(k).remove(Integer.valueOf(k)); }
+    public boolean contains(int k) { return at(k).contains(k); }
+}""")),
+    ("direct-address", "accept", D("""
+class MyHashSet {
+    boolean[] a = new boolean[1_000_001];
+    public void add(int k) { a[k] = true; }
+    public void remove(int k) { a[k] = false; }
+    public boolean contains(int k) { return a[k]; }
+}""")),
+]
+
+MUTANTS["design-hashmap"] = [
+    ("zero-means-absent", "reject", D("""
+class MyHashMap {
+    int[] a = new int[1_000_001];
+    public void put(int k, int v) { a[k] = v; }
+    public int get(int k) { return a[k] == 0 ? -1 : a[k]; }
+    public void remove(int k) { a[k] = 0; }
+}""")),
+    ("put-appends-duplicates", "reject", D("""
+class MyHashMap {
+    List<int[]>[] b = new List[64];
+    List<int[]> at(int k) { int h = k % 64; if (b[h] == null) b[h] = new ArrayList<>(); return b[h]; }
+    public void put(int k, int v) { at(k).add(new int[]{ k, v }); }
+    public int get(int k) { for (int[] e : at(k)) if (e[0] == k) return e[1]; return -1; }
+    public void remove(int k) { for (int[] e : at(k)) if (e[0] == k) { at(k).remove(e); return; } }
+}""")),
+    ("direct-address-filled", "accept", D("""
+class MyHashMap {
+    int[] a = new int[1_000_001];
+    MyHashMap() { Arrays.fill(a, -1); }
+    public void put(int k, int v) { a[k] = v; }
+    public int get(int k) { return a[k]; }
+    public void remove(int k) { a[k] = -1; }
+}""")),
+]
+
+MUTANTS["guess-number-higher-or-lower"] = [
+    ("sign-inverted", "reject", D("""
+public class Solution extends GuessGame {
+    public int guessNumber(int n) {
+        int lo = 1, hi = n;
+        while (lo <= hi) { int m = lo + (hi - lo) / 2; int g = guess(m); if (g == 0) return m; if (g < 0) lo = m + 1; else hi = m - 1; }
+        return -1;
+    }
+}""")),
+    ("mid-overflows", "reject", D("""
+public class Solution extends GuessGame {
+    public int guessNumber(int n) {
+        int lo = 1, hi = n;
+        while (lo <= hi) { int m = (lo + hi) / 2; int g = guess(m); if (g == 0) return m; if (g < 0) hi = m - 1; else lo = m + 1; }
+        return -1;
+    }
+}""")),
+    ("closed-interval", "accept", D("""
+public class Solution extends GuessGame {
+    public int guessNumber(int n) {
+        int lo = 1, hi = n;
+        while (lo <= hi) { int m = lo + (hi - lo) / 2; int g = guess(m); if (g == 0) return m; if (g < 0) hi = m - 1; else lo = m + 1; }
+        return -1;
+    }
+}""")),
+]
