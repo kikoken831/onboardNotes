@@ -143,7 +143,7 @@ def _stub(problem):
                                   dim("") and "" or "")]
     lines = ["/*"]
     lines.append(" * %s" % problem.get("title", problem["slug"]))
-    if problem["tier"] == 3:
+    if problem["tier"] >= 2:
         lines.append(" * LeetCode %s · %s" % (problem.get("lc_id", problem.get("id")),
                                               problem.get("difficulty", "")))
         lines.append(" * https://leetcode.com/problems/%s/" % problem["slug"])
@@ -157,6 +157,11 @@ def _stub(problem):
     lines.append(" * Patterns: %s" % ", ".join(problem.get("pattern", [])))
     lines.append(" * Full statement and hints:  judge show %s" % problem["slug"])
     lines.append(" */")
+    lines.append("")
+    # leetcode.com auto-imports java.util.*, so a signature like List<List<Integer>>
+    # compiles there without an import. Mirror that, or a faithful solution won't
+    # compile here.
+    lines.append("import java.util.*;")
     lines.append("")
     lines.append("class Solution {")
     lines.append("    %s {" % signature)
