@@ -36,6 +36,7 @@ public final class Deep {
         Object hit = seen.get(v);
         if (hit != null) return hit;
 
+        if (v instanceof Calls)     return ((Calls) v).deepCopy();
         if (v instanceof int[])     { int[] a = (int[]) v;         return a.clone(); }
         if (v instanceof long[])    { long[] a = (long[]) v;       return a.clone(); }
         if (v instanceof double[])  { double[] a = (double[]) v;   return a.clone(); }

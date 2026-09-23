@@ -163,6 +163,11 @@ def _stub(problem):
     # compile here.
     lines.append("import java.util.*;")
     lines.append("")
+    if isinstance(signature, list):
+        # Design and interactive problems: the statement supplies the whole class
+        # skeleton (class MyQueue { ... }, or Solution extends GuessGame).
+        lines.extend(signature)
+        return "\n".join(lines) + "\n"
     lines.append("class Solution {")
     lines.append("    %s {" % signature)
     lines.append("        ")
@@ -185,7 +190,13 @@ def _statement_parts(statement_path):
         text = f.read()
 
     header = _section(text, "## Brief")
-    sig_block = _section(text, "## Signature")
+    # Only the FIRST fenced block is the signature. A Signature section may carry
+    # further blocks for reference -- e.g. the ListNode definition -- which must not
+    # end up in the stub.
+    code = _first_code_block(text, "## Signature")
+    if any(l.strip().startswith(("class ", "public class ")) for l in code):
+        return [l for l in header if l.strip() or True], code
+    sig_block = code or _section(text, "## Signature")
     signature = "void solve()"
     for line in sig_block:
         s = line.strip()
@@ -193,6 +204,27 @@ def _statement_parts(statement_path):
             signature = s.rstrip("{").strip()
             break
     return [l for l in header if l.strip() or True], signature
+
+
+def _first_code_block(text, heading):
+    """Lines inside the first ``` fence after `heading`, before the next heading."""
+    out, in_section, in_code = [], False, False
+    for line in text.splitlines():
+        if line.strip() == heading:
+            in_section = True
+            continue
+        if not in_section:
+            continue
+        if line.startswith("## "):
+            break
+        if line.strip().startswith("```"):
+            if in_code:
+                return out
+            in_code = True
+            continue
+        if in_code:
+            out.append(line)
+    return out
 
 
 def _section(text, heading):
