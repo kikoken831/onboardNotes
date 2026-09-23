@@ -117,11 +117,22 @@ public final class Shrink {
             return out;
         }
 
+        if (v instanceof ListNode[]) {
+            ListNode[] a = (ListNode[]) v;
+            for (int i = 0; i < a.length && i < 24; i++) {
+                ListNode[] c = new ListNode[a.length - 1];
+                System.arraycopy(a, 0, c, 0, i);
+                System.arraycopy(a, i + 1, c, i, a.length - i - 1);
+                out.add(c);
+            }
+            return out;
+        }
+
         if (v instanceof ListNode) {
             // Acyclic only: shrinking a cyclic list would change what is being tested.
             int[] vals = listVals((ListNode) v);
             if (vals == null) return out;
-            for (Object c : candidates(vals)) out.add(Codec.buildList((int[]) c));
+            for (Object c : candidates(vals)) out.add(LcCodec.buildList((int[]) c));
             return out;
         }
 

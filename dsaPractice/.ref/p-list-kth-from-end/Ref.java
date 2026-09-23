@@ -11,7 +11,7 @@ class Ref implements Problem {
             .gen(g -> {
                 int n = g.size(1, 40);
                 int[] vals = g.ints(n, -20, 20);
-                return new Object[]{ Codec.buildList(vals), g.nextInt(1, n) };
+                return new Object[]{ LcCodec.buildList(vals), g.nextInt(1, n) };
             })
             .patterns("Linked List", "Two Pointers")
             .limitMs(2000)

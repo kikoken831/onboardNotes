@@ -166,11 +166,11 @@ public final class Gen {
     // --------------------------------------------------------------- structures
 
     public ListNode list(int minLen, int maxLen, int lo, int hi) {
-        return Codec.buildList(ints(minLen, maxLen, lo, hi));
+        return LcCodec.buildList(ints(minLen, maxLen, lo, hi));
     }
 
     public ListNode sortedList(int minLen, int maxLen, int lo, int hi) {
-        return Codec.buildList(sortedInts(minLen, maxLen, lo, hi));
+        return LcCodec.buildList(sortedInts(minLen, maxLen, lo, hi));
     }
 
     /** Random-shaped binary tree (not necessarily balanced). Returns null sometimes. */
@@ -307,7 +307,7 @@ public final class Gen {
     public Object[] listMaybeCycle(int minLen, int maxLen, int lo, int hi) {
         int n = Math.max(1, size(minLen, maxLen));
         int[] vals = ints(n, lo, hi);
-        ListNode head = Codec.buildList(vals);
+        ListNode head = LcCodec.buildList(vals);
         int pos = chance(0.5) ? nextInt(0, n - 1) : -1;
         if (pos >= 0) {
             ListNode tail = head, at = head;

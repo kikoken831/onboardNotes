@@ -15,9 +15,9 @@ import java.util.List;
  * null / List&lt;Object&gt;) and is then coerced to the declared type. That keeps the
  * grammar in one place and the type-specific logic in another.
  */
-public final class Codec {
+public final class LcCodec {
 
-    private Codec() {}
+    private LcCodec() {}
 
     // ---------------------------------------------------------------- parsing
 
@@ -310,6 +310,18 @@ public final class Codec {
             }
 
             case LIST_NODE: return buildList((List<Object>) raw);
+            case LIST_NODE_ARRAY: {
+                List<Object> l = (List<Object>) raw;
+                ListNode[] a = new ListNode[l.size()];
+                for (int k = 0; k < a.length; k++) a[k] = buildList((List<Object>) l.get(k));
+                return a;
+            }
+            case INT_ARRAY_3D: {
+                List<Object> l = (List<Object>) raw;
+                int[][][] a = new int[l.size()][][];
+                for (int k = 0; k < a.length; k++) a[k] = (int[][]) coerce(l.get(k), T.INT_ARRAY_2D);
+                return a;
+            }
             case TREE_NODE: return buildTree((List<Object>) raw);
 
             case VOID: return null;

@@ -39,10 +39,14 @@ def run_one(problem, name, expect, source):
         src = os.path.join(tmp, "Solution.java")
         with open(src, "w") as f:
             f.write(source)
-        r = subprocess.run(["javac", "-cp", build.BUILD_HARNESS, "-d", tmp, src],
+        r = subprocess.run(["javac", "-cp", build.classpath(problem), "-d", tmp, src],
                            capture_output=True, text=True)
         if r.returncode != 0:
             return False, "mutant does not compile:\n" + (r.stdout + r.stderr)[:600]
+        try:
+            build.check_no_shadowing(problem, tmp, "mutant")
+        except build.CompileError as e:
+            return False, str(e)
         verdict, out = build.run_judge(problem, "stress", ITERATIONS, SEED, sol_dir=tmp,
                                         timeout=MUTANT_TIMEOUT_S)
 
