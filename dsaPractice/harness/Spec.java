@@ -43,6 +43,13 @@ public final class Spec {
      */
     public int prefixArg = -1;
 
+    /**
+     * For LENGTH_AND_PREFIX: compare the first k elements as a multiset rather than a
+     * sequence. LC 27 (Remove Element) explicitly allows any order, and LeetCode's own
+     * checker sorts the prefix before comparing.
+     */
+    public boolean prefixUnordered = false;
+
     public final List<Example> examples = new ArrayList<>();
     public Function<Gen, Object[]> gen;
     public String[] patterns = new String[0];
@@ -71,6 +78,12 @@ public final class Spec {
     public Spec lengthAndPrefix(int argIndex) {
         this.prefixArg = argIndex;
         this.cmp = Cmp.LENGTH_AND_PREFIX;
+        return this;
+    }
+    /** As lengthAndPrefix, but the order of the first k elements does not matter. */
+    public Spec lengthAndPrefixAnyOrder(int argIndex) {
+        lengthAndPrefix(argIndex);
+        this.prefixUnordered = true;
         return this;
     }
     public Spec gen(Function<Gen, Object[]> g) { this.gen = g; return this; }

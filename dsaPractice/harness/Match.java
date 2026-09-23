@@ -29,7 +29,7 @@ public final class Match {
             case MULTISET:          return unordered(yours, expected, false);
             case SET_OF_SEQS:       return unordered(yours, expected, false);
             case SET_OF_SETS:       return unordered(yours, expected, true);
-            case LENGTH_AND_PREFIX: return prefix(yours, expected);
+            case LENGTH_AND_PREFIX: return prefix(yours, expected, spec.prefixUnordered);
             case VALIDATE:
                 if (spec.validator == null) return "spec declares VALIDATE but supplies no validator";
                 return spec.validator.check(input, yours, expected);
@@ -60,7 +60,16 @@ public final class Match {
     }
 
     /** Length-and-prefix: both sides are already truncated to their returned length. */
-    private static String prefix(Object yours, Object expected) {
+    private static String prefix(Object yours, Object expected, boolean anyOrder) {
+        if (anyOrder && yours instanceof int[] && expected instanceof int[]) {
+            int[] y = ((int[]) yours).clone(), e = ((int[]) expected).clone();
+            java.util.Arrays.sort(y);
+            java.util.Arrays.sort(e);
+            if (java.util.Arrays.equals(y, e)) return null;
+            if (y.length != e.length) return "you returned k=" + y.length + ", expected k=" + e.length;
+            return "returned the right length but the first " + e.length
+                 + " elements are not the right values (any order is fine here)";
+        }
         if (Deep.eq(yours, expected)) return null;
         int ly = yours == null ? -1 : java.lang.reflect.Array.getLength(yours);
         int le = expected == null ? -1 : java.lang.reflect.Array.getLength(expected);
@@ -74,7 +83,28 @@ public final class Match {
 
     private static String exact(Object yours, Object expected, double eps) {
         if (Deep.eq(yours, expected, eps)) return null;
-        return shapeHint(yours, expected);
+        // shapeHint returns null when it has nothing clever to say. That null must
+        // NEVER escape: callers read null as "the answers agree". Before this guard, any
+        // wrong answer of the right length that was not a reversal or reordering of the
+        // expected one -- [7,0] for [7,7], a wrong cell in a grid -- was ACCEPTED.
+        String hint = shapeHint(yours, expected);
+        return hint != null ? hint : firstDifference(yours, expected, eps);
+    }
+
+    /** Where two same-shaped answers first diverge. Always returns a non-null reason. */
+    private static String firstDifference(Object yours, Object expected, double eps) {
+        Integer ly = lengthOf(yours), le = lengthOf(expected);
+        if (ly != null && le != null && ly.equals(le)
+                && !(yours instanceof String) && !(expected instanceof String)) {
+            List<Object> a = Deep.asList(yours), b = Deep.asList(expected);
+            for (int i = 0; i < a.size(); i++) {
+                if (!Deep.eq(a.get(i), b.get(i), eps)) {
+                    return "first difference at index " + i + ": yours "
+                         + Codec.print(a.get(i)) + ", expected " + Codec.print(b.get(i));
+                }
+            }
+        }
+        return "values differ";
     }
 
     /**
