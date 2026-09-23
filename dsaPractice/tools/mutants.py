@@ -28,6 +28,9 @@ sys.path.insert(0, HERE)
 
 from judge import build, catalogue  # noqa: E402
 from mutants_t2 import MUTANTS  # noqa: E402
+from mutants_t3 import MUTANTS as _T3  # noqa: E402
+
+MUTANTS.update(_T3)
 
 ITERATIONS = 1500
 SEED = 1
