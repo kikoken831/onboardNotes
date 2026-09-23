@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -51,6 +54,43 @@ public final class Spec {
     public boolean prefixUnordered = false;
 
     public final List<Example> examples = new ArrayList<>();
+
+    // ------------------------------------------------------------ design problems
+
+    /** One operation of a design class: its return type and parameter types. */
+    public static final class Op {
+        public final T ret;
+        public final T[] params;
+        Op(T ret, T[] params) { this.ret = ret; this.params = params; }
+    }
+
+    /**
+     * Non-null for a design problem (LC 232, 705, 703...): the name of the class you
+     * implement, instead of a method on Solution. Examples are LeetCode's
+     * ops/args/expected triple, and the generator returns a single Calls value.
+     */
+    public String designClass;
+    public T[] ctorParams = new T[0];
+    public final Map<String, Op> ops = new LinkedHashMap<>();
+
+    /** A pinned LeetCode design example: ops, args and expected output, as literals. */
+    public static final class CallsExample {
+        public final String ops, args, expected;
+        CallsExample(String ops, String args, String expected) {
+            this.ops = ops; this.args = args; this.expected = expected;
+        }
+    }
+    public final List<CallsExample> callExamples = new ArrayList<>();
+
+    // --------------------------------------------------------- interactive problems
+
+    /**
+     * For interactive problems (LC 374): the trailing `hidden.length` generated
+     * arguments are NOT passed to the method. They are handed to `install` before
+     * every call instead -- e.g. to set the pick behind GuessGame.guess().
+     */
+    public T[] hidden = new T[0];
+    public Consumer<Object[]> install;
     public Function<Gen, Object[]> gen;
     public String[] patterns = new String[0];
     public long limitMs = 4000;
@@ -64,6 +104,37 @@ public final class Spec {
     }
 
     public static Spec method(String name, T... params) { return new Spec(name, params); }
+
+    /** A design problem: you implement class `className`, constructed with `ctorParams`. */
+    public static Spec design(String className, T... ctorParams) {
+        Spec s = new Spec(className, new T[0]);
+        s.designClass = className;
+        s.ctorParams = ctorParams;
+        return s;
+    }
+
+    public Spec op(String name, T ret, T... params) { ops.put(name, new Op(ret, params)); return this; }
+
+    public Spec exampleCalls(String ops, String args, String expected) {
+        callExamples.add(new CallsExample(ops, args, expected));
+        return this;
+    }
+
+    /** Trailing arguments installed before each call rather than passed to it. */
+    public Spec hidden(Consumer<Object[]> install, T... types) {
+        this.install = install;
+        this.hidden = types;
+        return this;
+    }
+
+    /** Visible parameters followed by hidden ones: the shape of a pinned example's args. */
+    public T[] allParams() {
+        T[] all = java.util.Arrays.copyOf(params, params.length + hidden.length);
+        System.arraycopy(hidden, 0, all, params.length, hidden.length);
+        return all;
+    }
+
+    public boolean isDesign() { return designClass != null; }
 
     public Spec returns(T t)              { this.ret = t; return this; }
     public Spec compare(Cmp c)            { this.cmp = c; return this; }

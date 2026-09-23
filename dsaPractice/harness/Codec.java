@@ -27,6 +27,48 @@ public final class Codec {
         return coerce(raw, type);
     }
 
+    /** Parse an LC literal into the neutral intermediate (Long/Double/String/Boolean/List). */
+    public static Object parseRaw(String src) { return new P(src).value(true); }
+
+    /** Coerce a neutral intermediate to a declared type. `null` stays `null`. */
+    public static Object coerceTo(Object raw, T type) { return raw == null ? null : coerce(raw, type); }
+
+    /**
+     * Parse a LeetCode design example -- ["MyQueue","push"] / [[],[1]] -- into Calls,
+     * coercing each call's arguments to that operation's declared parameter types.
+     */
+    @SuppressWarnings("unchecked")
+    public static Calls parseCalls(String opsSrc, String argsSrc, Spec spec) {
+        List<Object> ops = (List<Object>) parseRaw(opsSrc);
+        List<Object> args = (List<Object>) parseRaw(argsSrc);
+        if (ops.size() != args.size() || ops.isEmpty()) {
+            throw new IllegalArgumentException("design example: ops and args differ in length");
+        }
+        if (!spec.designClass.equals(ops.get(0))) {
+            throw new IllegalArgumentException("design example must start with " + spec.designClass);
+        }
+        Object[] ctor = coerceAll((List<Object>) args.get(0), spec.ctorParams, spec.designClass);
+        List<String> names = new ArrayList<>();
+        List<Object[]> callArgs = new ArrayList<>();
+        for (int i = 1; i < ops.size(); i++) {
+            String name = (String) ops.get(i);
+            Spec.Op op = spec.ops.get(name);
+            if (op == null) throw new IllegalArgumentException("undeclared operation: " + name);
+            names.add(name);
+            callArgs.add(coerceAll((List<Object>) args.get(i), op.params, name));
+        }
+        return new Calls(spec.designClass, ctor, names, callArgs);
+    }
+
+    private static Object[] coerceAll(List<Object> raw, T[] types, String what) {
+        if (raw.size() != types.length) {
+            throw new IllegalArgumentException(what + " takes " + types.length + " args, got " + raw.size());
+        }
+        Object[] out = new Object[types.length];
+        for (int i = 0; i < types.length; i++) out[i] = coerceTo(raw.get(i), types[i]);
+        return out;
+    }
+
     /**
      * Split a comma-separated argument list at top level, respecting nesting and
      * quotes, then parse each piece as its declared type.

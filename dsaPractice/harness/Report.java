@@ -118,6 +118,8 @@ public final class Report {
                 }
             } else if (v instanceof java.util.List) {
                 total += ((java.util.List<?>) v).size();
+            } else if (v instanceof Calls) {
+                total += ((Calls) v).size();
             } else if (v instanceof String) {
                 total += ((String) v).length();
             } else if (v instanceof ListNode) {

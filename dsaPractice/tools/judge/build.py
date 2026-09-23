@@ -104,7 +104,9 @@ def reference_as_solution(problem, force=False):
 
     with open(p["ref"]) as f:
         body = f.read()
-    body = re.sub(r"\bclass\s+Ref\s+implements\s+Problem\s*\{", "class Solution {", body)
+    # Keep any superclass: LC 374's reference is `class Ref extends GuessGame implements Problem`.
+    body = re.sub(r"\bclass\s+Ref\b([^{]*?)\s*implements\s+Problem\s*\{",
+                  lambda m: "class Solution%s {" % m.group(1), body)
     body = body.replace("public Spec spec() {", "private Spec unusedSpec() {")
     # A reference that names its own class -- Ref::method, Ref.CONSTANT, new Ref() --
     # would not compile after the rename.

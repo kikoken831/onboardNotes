@@ -50,6 +50,17 @@ public final class Shrink {
         List<Object> out = new ArrayList<>();
         if (v == null) return out;
 
+        if (v instanceof Calls) {
+            // Truncating is the big win (a failure at call 40 rarely needs calls 41+);
+            // then drop single calls, latest first, so setup calls survive longest.
+            Calls c = (Calls) v;
+            int n = c.size();
+            if (n > 1) out.add(c.prefix(n / 2));
+            if (n > 0) out.add(c.prefix(n - 1));
+            for (int i = n - 1; i >= 0 && i >= n - 40; i--) out.add(c.without(i));
+            return out;
+        }
+
         if (v instanceof int[]) {
             int[] a = (int[]) v;
             if (a.length > 1) {
