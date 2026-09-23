@@ -151,11 +151,11 @@ public final class Deep {
         for (Object row : outer) {
             if (sortInner && isCollection(row)) {
                 List<String> inner = new ArrayList<>();
-                for (Object x : asList(row)) inner.add(Codec.print(x));
+                for (Object x : asList(row)) inner.add(LcCodec.print(x));
                 java.util.Collections.sort(inner);
                 rendered.add("[" + String.join(",", inner) + "]");
             } else {
-                rendered.add(Codec.print(row));
+                rendered.add(LcCodec.print(row));
             }
         }
         if (sortOuter) java.util.Collections.sort(rendered);

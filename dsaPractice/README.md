@@ -178,7 +178,7 @@ invariant:
 ```
 judge                        the CLI
 problems.json                catalogue (generated — see tools/make_catalogue.py)
-harness/                     the Java judge: Codec, Match, Shrink, Gen, Judge, Calls
+harness/                     the Java judge: LcCodec, Match, Shrink, Gen, Judge, Calls
 drills/<slug>/statement.md   tier 0 and 1 statements
 statements/<slug>/           tier 2 and 3 statements
 solutions/<slug>/            YOUR code

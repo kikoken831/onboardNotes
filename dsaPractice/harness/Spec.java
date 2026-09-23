@@ -91,6 +91,35 @@ public final class Spec {
      */
     public T[] hidden = new T[0];
     public Consumer<Object[]> install;
+
+    /**
+     * Rewires the (already copied) arguments before every call. For problems whose
+     * real arguments can't be written as a literal: LC 142's cycle is `pos`, which must
+     * be turned into an actual back-pointer; LC 236's `p` and `q` must be the very node
+     * objects inside the tree being passed, found by value. Runs on each call's private
+     * copy, so the reference and your solution each get their own wiring.
+     */
+    public Consumer<Object[]> prepare;
+
+    /**
+     * Converts what the method returned into what the judge compares. Receives the
+     * prepared arguments too, so it can map a returned node back to its index in the
+     * input (LC 142) or check that a "clone" shares no node with the original (LC 133).
+     */
+    public java.util.function.BiFunction<Object[], Object, Object> judgeAs;
+    public T judgeAsType;
+
+    // ---------------------------------------------------------------- driven problems
+
+    /** Runs a problem that exercises several methods of your class, e.g. a codec round trip. */
+    public interface Driver { Object run(Fresh fresh, Object[] args) throws Throwable; }
+
+    /** A new instance of the class under test (LeetCode builds separate ser and deser objects). */
+    public interface Fresh { Object get() throws Exception; }
+
+    /** Non-null for a driven problem: the class you implement (e.g. "Codec"), not Solution. */
+    public String drivenClass;
+    public Driver driver;
     public Function<Gen, Object[]> gen;
     public String[] patterns = new String[0];
     public long limitMs = 4000;
@@ -135,6 +164,30 @@ public final class Spec {
     }
 
     public boolean isDesign() { return designClass != null; }
+
+    public boolean isDriven() { return drivenClass != null; }
+
+    public Spec prepare(Consumer<Object[]> p) { this.prepare = p; return this; }
+
+    /** Judge `fn(preparedArgs, returnValue)` instead of the return value, parsed as `type`. */
+    public Spec judgeAs(T type, java.util.function.BiFunction<Object[], Object, Object> fn) {
+        this.judgeAs = fn;
+        this.judgeAsType = type;
+        return this;
+    }
+
+    /**
+     * A problem where you implement class `className` and the judge drives several of
+     * its methods itself -- LC 297's `deser.deserialize(ser.serialize(root))`. `params`
+     * are the literal types of the test input; `driver` performs the calls.
+     */
+    public static Spec driven(String className, T... params) {
+        Spec s = new Spec(className, params);
+        s.drivenClass = className;
+        return s;
+    }
+
+    public Spec driver(Driver d) { this.driver = d; return this; }
 
     public Spec returns(T t)              { this.ret = t; return this; }
     public Spec compare(Cmp c)            { this.cmp = c; return this; }
@@ -183,6 +236,7 @@ public final class Spec {
      * which is exactly LeetCode's "don't care beyond k" rule.
      */
     Object judged(Object[] argsAfterCall, Object returnValue) {
+        if (judgeAs != null) return judgeAs.apply(argsAfterCall, returnValue);
         if (cmp == Cmp.LENGTH_AND_PREFIX) {
             int k = returnValue instanceof Number ? ((Number) returnValue).intValue() : -1;
             Object arr = argsAfterCall[prefixArg];
@@ -199,6 +253,7 @@ public final class Spec {
 
     /** Type of the judged value, for parsing pinned examples. */
     T judgedType() {
+        if (judgeAs != null) return judgeAsType;
         if (cmp == Cmp.LENGTH_AND_PREFIX) return params[prefixArg];
         return inPlaceArg >= 0 ? params[inPlaceArg] : ret;
     }

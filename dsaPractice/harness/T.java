@@ -11,7 +11,8 @@ public enum T {
     INT_ARRAY, LONG_ARRAY, DOUBLE_ARRAY, BOOL_ARRAY, CHAR_ARRAY, STRING_ARRAY,
     INT_ARRAY_2D, CHAR_ARRAY_2D, STRING_ARRAY_2D,
     LIST_INT, LIST_DOUBLE, LIST_STRING, LIST_BOOL, LIST_LIST_INT, LIST_LIST_STRING,
-    LIST_NODE, TREE_NODE;
+    LIST_NODE, TREE_NODE,
+    LIST_NODE_ARRAY, INT_ARRAY_3D;
 
     /** The erased Java type, used to disambiguate overloaded methods during reflection lookup. */
     public Class<?> javaType() {
@@ -34,6 +35,8 @@ public enum T {
             case STRING_ARRAY_2D: return String[][].class;
             case LIST_NODE:       return ListNode.class;
             case TREE_NODE:       return TreeNode.class;
+            case LIST_NODE_ARRAY: return ListNode[].class;
+            case INT_ARRAY_3D:    return int[][][].class;
             default:              return java.util.List.class;
         }
     }

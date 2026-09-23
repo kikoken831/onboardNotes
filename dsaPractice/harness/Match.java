@@ -53,7 +53,7 @@ public final class Match {
             if (slow == fast) {
                 return "the list you returned contains a CYCLE — "
                      + "did you forget to null-terminate a list you rebuilt? "
-                     + Codec.printList((ListNode) v);
+                     + LcCodec.printList((ListNode) v);
             }
         }
         return null;
@@ -100,7 +100,7 @@ public final class Match {
             for (int i = 0; i < a.size(); i++) {
                 if (!Deep.eq(a.get(i), b.get(i), eps)) {
                     return "first difference at index " + i + ": yours "
-                         + Codec.print(a.get(i)) + ", expected " + Codec.print(b.get(i));
+                         + LcCodec.print(a.get(i)) + ", expected " + LcCodec.print(b.get(i));
                 }
             }
         }
@@ -148,11 +148,11 @@ public final class Match {
         for (Object row : Deep.asList(v)) {
             if (sortInner && Deep.isCollection(row)) {
                 List<String> inner = new ArrayList<>();
-                for (Object x : Deep.asList(row)) inner.add(Codec.print(x));
+                for (Object x : Deep.asList(row)) inner.add(LcCodec.print(x));
                 java.util.Collections.sort(inner);
                 out.add("[" + String.join(",", inner) + "]");
             } else {
-                out.add(Codec.print(row));
+                out.add(LcCodec.print(row));
             }
         }
         java.util.Collections.sort(out);
@@ -188,7 +188,7 @@ public final class Match {
         if (yours instanceof Number && expected instanceof Number) {
             double d = ((Number) yours).doubleValue() - ((Number) expected).doubleValue();
             if (Math.abs(d) == 1) return "off by one (" + (d > 0 ? "+1" : "-1") + ")";
-            return "off by " + Codec.print(d);
+            return "off by " + LcCodec.print(d);
         }
         return null; // no useful hint; the printed values speak for themselves
     }
@@ -209,8 +209,8 @@ public final class Match {
 
     private static boolean sameMultiset(Object a, Object b) {
         List<String> x = new ArrayList<>(), y = new ArrayList<>();
-        for (Object o : Deep.asList(a)) x.add(Codec.print(o));
-        for (Object o : Deep.asList(b)) y.add(Codec.print(o));
+        for (Object o : Deep.asList(a)) x.add(LcCodec.print(o));
+        for (Object o : Deep.asList(b)) y.add(LcCodec.print(o));
         java.util.Collections.sort(x);
         java.util.Collections.sort(y);
         return x.equals(y);

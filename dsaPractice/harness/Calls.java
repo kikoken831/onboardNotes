@@ -73,10 +73,10 @@ public final class Calls {
     /** LeetCode's two-line format, so a failing case can be pasted straight into leetcode.com. */
     @Override
     public String toString() {
-        StringBuilder o = new StringBuilder("[").append(Codec.print(className));
+        StringBuilder o = new StringBuilder("[").append(LcCodec.print(className));
         StringBuilder a = new StringBuilder("[").append(argList(ctorArgs));
         for (int i = 0; i < ops.size(); i++) {
-            o.append(',').append(Codec.print(ops.get(i)));
+            o.append(',').append(LcCodec.print(ops.get(i)));
             a.append(',').append(argList(args.get(i)));
         }
         return o.append(']') + "\n      " + a.append(']');
@@ -84,7 +84,7 @@ public final class Calls {
 
     private static String argList(Object[] xs) {
         StringBuilder b = new StringBuilder("[");
-        for (int i = 0; i < xs.length; i++) { if (i > 0) b.append(','); b.append(Codec.print(xs[i])); }
+        for (int i = 0; i < xs.length; i++) { if (i > 0) b.append(','); b.append(LcCodec.print(xs[i])); }
         return b.append(']').toString();
     }
 }

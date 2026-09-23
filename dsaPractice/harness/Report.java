@@ -95,7 +95,7 @@ public final class Report {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < a.length; i++) {
             if (i > 0) b.append(", ");
-            String s = Codec.print(a[i]);
+            String s = LcCodec.print(a[i]);
             if (s.length() > 160) s = s.substring(0, 157) + "...";
             b.append(s);
         }

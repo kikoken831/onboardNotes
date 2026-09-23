@@ -38,6 +38,12 @@ public final class Judge {
     private final Method refMethod;
     private final Method solMethod;
 
+    /** One call of the thing under test: a method on Solution, or a driver over your class. */
+    private interface Invoker { Object call(Object[] args) throws Throwable; }
+
+    private final Invoker refCall;
+    private final Invoker solCall;
+
     /** Design problems: the class under test, loaded separately for each side. */
     private final Class<?> refDesign;
     private final Class<?> solDesign;
@@ -81,13 +87,15 @@ public final class Judge {
         Class<?> refClass = Class.forName("Ref", true, refLoader);
         this.refInstance = instantiate(refClass);
         this.spec = ((Problem) refInstance).spec();
-        this.refMethod = spec.isDesign() ? null : find(refClass, spec);
+        this.refMethod = spec.isDesign() || spec.isDriven() ? null : find(refClass, spec);
         this.refDesign = spec.isDesign() ? Class.forName(spec.designClass, true, refLoader) : null;
+        this.refCall = invoker(refLoader, refInstance, refMethod);
 
         if (refOnly) {
             this.solInstance = null;
             this.solMethod = null;
             this.solDesign = null;
+            this.solCall = null;
         } else {
             URLClassLoader solLoader = new URLClassLoader(
                 new URL[]{ new File(solDir).toURI().toURL() }, parent);
@@ -95,13 +103,47 @@ public final class Judge {
                 this.solInstance = null;
                 this.solMethod = null;
                 this.solDesign = loadDesign(solLoader);
+                this.solCall = null;
+            } else if (spec.isDriven()) {
+                this.solInstance = null;
+                this.solMethod = null;
+                this.solDesign = null;
+                this.solCall = invoker(solLoader, null, null);
             } else {
                 Class<?> solClass = Class.forName("Solution", true, solLoader);
                 this.solInstance = instantiate(solClass);
                 this.solMethod = find(solClass, spec);
                 this.solDesign = null;
+                this.solCall = invoker(solLoader, solInstance, solMethod);
             }
         }
+    }
+
+    private Invoker invoker(ClassLoader loader, Object instance, Method m) throws Exception {
+        if (spec.isDesign()) return null;
+        if (spec.isDriven()) {
+            Class<?> cls;
+            try {
+                cls = Class.forName(spec.drivenClass, true, loader);
+            } catch (ClassNotFoundException e) {
+                throw new IllegalStateException("declare `class " + spec.drivenClass + "` (not `class Solution`)");
+            }
+            return a -> spec.driver.run(() -> instantiate(cls), a);
+        }
+        return a -> {
+            try {
+                return m.invoke(instance, a);
+            } catch (InvocationTargetException e) {
+                throw e.getCause() != null ? e.getCause() : e;
+            }
+        };
+    }
+
+    /** Hidden-argument install and prepare, applied to a call's private copy. */
+    private Object[] prepared(Object[] copy) {
+        if (spec.install != null) spec.install.accept(copy);      // e.g. set GuessGame's pick
+        if (spec.prepare != null) spec.prepare.accept(copy);      // e.g. wire LC 142's cycle
+        return spec.hidden.length > 0 ? java.util.Arrays.copyOf(copy, spec.params.length) : copy;
     }
 
     /** Your class, by the name LeetCode gives it -- not Solution. */
@@ -154,22 +196,16 @@ public final class Judge {
         long nanos;
     }
 
-    private Outcome invoke(Method m, Object target, Object[] args) {
+    private Outcome invoke(Invoker who, Object[] args) {
         Outcome o = new Outcome();
         Object[] copy = Deep.copyAll(args);
         long t0 = System.nanoTime();
         try {
-            Object[] callArgs = copy;
-            if (spec.hidden.length > 0) {
-                spec.install.accept(copy);                // e.g. set GuessGame's pick
-                callArgs = java.util.Arrays.copyOf(copy, spec.params.length);
-            }
-            Object ret = m.invoke(target, callArgs);
+            Object[] callArgs = prepared(copy);
+            t0 = System.nanoTime();                       // time the call, not the wiring
+            Object ret = who.call(callArgs);
             o.nanos = System.nanoTime() - t0;
             o.judged = spec.judged(copy, ret);
-        } catch (InvocationTargetException e) {
-            o.nanos = System.nanoTime() - t0;
-            o.thrown = e.getCause() != null ? e.getCause() : e;
         } catch (Throwable t) {
             o.nanos = System.nanoTime() - t0;
             o.thrown = t;
@@ -189,20 +225,20 @@ public final class Judge {
         }
         int n = 0;
         for (Spec.Example ex : spec.examples) {
-            Object[] args = Codec.parseArgs(ex.args, spec.allParams());
-            Outcome out = invoke(refMethod, refInstance, args);
+            Object[] args = LcCodec.parseArgs(ex.args, spec.allParams());
+            Outcome out = invoke(refCall, args);
             if (out.thrown != null) {
                 Report.fail(RBUG, "reference threw on pinned example " + ex.args
                         + "\n    " + root(out.thrown));
                 System.exit(1);
             }
-            Object expected = Codec.parse(ex.expected, spec.judgedType());
+            Object expected = LcCodec.parse(ex.expected, spec.judgedType());
             String why = Match.disagree(spec, args, out.judged, expected);
             if (why != null) {
                 Report.fail(RBUG, "reference disagrees with pinned example"
                         + "\n    input     " + ex.args
                         + "\n    pinned    " + ex.expected
-                        + "\n    reference " + Codec.print(out.judged)
+                        + "\n    reference " + LcCodec.print(out.judged)
                         + "\n    " + why);
                 System.exit(1);
             }
@@ -216,10 +252,10 @@ public final class Judge {
         // ---- phase 1: pinned examples, judged against the PIN, not the reference
         int passed = 0;
         for (Spec.Example ex : spec.examples) {
-            Object[] args = Codec.parseArgs(ex.args, spec.allParams());
-            Object expected = Codec.parse(ex.expected, spec.judgedType());
+            Object[] args = LcCodec.parseArgs(ex.args, spec.allParams());
+            Object expected = LcCodec.parse(ex.expected, spec.judgedType());
 
-            Outcome refOut = invoke(refMethod, refInstance, args);
+            Outcome refOut = invoke(refCall, args);
             if (refOut.thrown != null || Match.disagree(spec, args, refOut.judged, expected) != null) {
                 Report.fail(RBUG, "reference fails its own pinned example " + ex.args
                         + "\n    This is a bug in the judge, not in your solution."
@@ -227,15 +263,15 @@ public final class Judge {
                 System.exit(1);
             }
 
-            Outcome out = invoke(solMethod, solInstance, args);
+            Outcome out = invoke(solCall, args);
             if (out.thrown != null) {
-                Report.example(false, ex.args, null, Codec.print(expected), root(out.thrown));
+                Report.example(false, ex.args, null, LcCodec.print(expected), root(out.thrown));
                 Report.fail(RE, "threw on pinned example " + (passed + 1));
                 System.exit(1);
             }
             String why = Match.disagree(spec, args, out.judged, expected);
             if (why != null) {
-                Report.example(false, ex.args, Codec.print(out.judged), Codec.print(expected), why);
+                Report.example(false, ex.args, LcCodec.print(out.judged), LcCodec.print(expected), why);
                 Report.fail(WA, "failed pinned example " + (passed + 1));
                 System.exit(1);
             }
@@ -267,7 +303,7 @@ public final class Judge {
                 return;
             }
 
-            Outcome refOut = invoke(refMethod, refInstance, args);
+            Outcome refOut = invoke(refCall, args);
             if (refOut.thrown != null) {
                 Report.fail(RBUG, "reference threw on generated input at iteration " + i
                         + "\n    " + Report.args(args)
@@ -275,7 +311,7 @@ public final class Judge {
                 System.exit(1);
             }
 
-            Outcome out = invoke(solMethod, solInstance, args);
+            Outcome out = invoke(solCall, args);
             worstSol = Math.max(worstSol, out.nanos);
             worstRef = Math.max(worstRef, refOut.nanos);
 
@@ -305,24 +341,24 @@ public final class Judge {
         Report.section("stress", (iteration + 1) + "/" + total + " failed");
 
         Object[] minimal = Shrink.minimise(args, trial -> {
-            Outcome r = invoke(refMethod, refInstance, trial);
+            Outcome r = invoke(refCall, trial);
             if (r.thrown != null) return false;
-            Outcome s = invoke(solMethod, solInstance, trial);
+            Outcome s = invoke(solCall, trial);
             if (s.thrown != null) return true;
             return Match.disagree(spec, trial, s.judged, r.judged) != null;
         });
 
-        Outcome refMin = invoke(refMethod, refInstance, minimal);
-        Outcome solMin = invoke(solMethod, solInstance, minimal);
+        Outcome refMin = invoke(refCall, minimal);
+        Outcome solMin = invoke(solCall, minimal);
 
         StringBuilder b = new StringBuilder();
         b.append("minimised input\n      ").append(Report.args(minimal));
         if (solMin.thrown != null) {
             b.append("\n    yours     threw ").append(root(solMin.thrown));
         } else {
-            b.append("\n    yours     ").append(Codec.print(solMin.judged));
+            b.append("\n    yours     ").append(LcCodec.print(solMin.judged));
         }
-        b.append("\n    expected  ").append(Codec.print(refMin.judged));
+        b.append("\n    expected  ").append(LcCodec.print(refMin.judged));
 
         String reason = solMin.thrown != null ? null
                       : Match.disagree(spec, minimal, solMin.judged, refMin.judged);
@@ -369,7 +405,7 @@ public final class Judge {
             }
 
             for (int w = 0; w < 3; w++) {
-                Outcome warm = invoke(solMethod, solInstance, args);
+                Outcome warm = invoke(solCall, args);
                 if (warm.thrown != null) {
                     Report.warn("threw at n=" + n + ": " + root(warm.thrown));
                     return;
@@ -381,10 +417,10 @@ public final class Judge {
             // curve for a quadratic one. Copy first, measure second.
             long best = Long.MAX_VALUE;
             for (int r = 0; r < 7; r++) {
-                Object[] fresh = Deep.copyAll(args);
+                Object[] fresh = prepared(Deep.copyAll(args));
                 long t0 = System.nanoTime();
                 try {
-                    solMethod.invoke(solInstance, fresh);
+                    solCall.call(fresh);
                 } catch (Throwable t) {
                     Report.warn("threw at n=" + n + ": " + root(t));
                     return;
@@ -475,7 +511,7 @@ public final class Judge {
     /** Parse a pinned expected-output literal, typed per call. */
     @SuppressWarnings("unchecked")
     private List<Object> expectedOutputs(Calls calls, String literal) {
-        List<Object> raw = (List<Object>) Codec.parseRaw(literal);
+        List<Object> raw = (List<Object>) LcCodec.parseRaw(literal);
         if (raw.size() != calls.size() + 1) {
             throw new IllegalArgumentException("expected output has " + raw.size()
                 + " entries for " + (calls.size() + 1) + " calls");
@@ -484,7 +520,7 @@ public final class Judge {
         out.add(null);
         for (int i = 0; i < calls.size(); i++) {
             T ret = spec.ops.get(calls.ops.get(i)).ret;
-            out.add(ret == T.VOID ? null : Codec.coerceTo(raw.get(i + 1), ret));
+            out.add(ret == T.VOID ? null : LcCodec.coerceTo(raw.get(i + 1), ret));
         }
         return out;
     }
@@ -495,7 +531,7 @@ public final class Judge {
             Object y = i < yours.size() ? yours.get(i) : null, e = expected.get(i);
             if (!Deep.eq(y, e, spec.eps)) {
                 return "call " + i + ", " + describe(calls, i - 1) + ": yours "
-                     + Codec.print(y) + ", expected " + Codec.print(e);
+                     + LcCodec.print(y) + ", expected " + LcCodec.print(e);
             }
         }
         return null;
@@ -508,7 +544,7 @@ public final class Judge {
 
     private static String joinArgs(Object[] a) {
         StringBuilder b = new StringBuilder();
-        for (int i = 0; i < a.length; i++) { if (i > 0) b.append(", "); b.append(Codec.print(a[i])); }
+        for (int i = 0; i < a.length; i++) { if (i > 0) b.append(", "); b.append(LcCodec.print(a[i])); }
         return b.toString();
     }
 
@@ -524,7 +560,7 @@ public final class Judge {
         }
         int n = 0;
         for (Spec.CallsExample ex : spec.callExamples) {
-            Calls calls = Codec.parseCalls(ex.ops, ex.args, spec);
+            Calls calls = LcCodec.parseCalls(ex.ops, ex.args, spec);
             List<Object> expected = expectedOutputs(calls, ex.expected);
             Replay r = replay(refDesign, calls.deepCopy());
             if (r.thrown != null) {
@@ -544,7 +580,7 @@ public final class Judge {
     private void runDesign(int stressIterations, long seed) {
         int passed = 0;
         for (Spec.CallsExample ex : spec.callExamples) {
-            Calls calls = Codec.parseCalls(ex.ops, ex.args, spec);
+            Calls calls = LcCodec.parseCalls(ex.ops, ex.args, spec);
             List<Object> expected = expectedOutputs(calls, ex.expected);
 
             Replay ref = replay(refDesign, calls.deepCopy());
@@ -555,13 +591,13 @@ public final class Judge {
             }
             Replay mine = replay(solDesign, calls.deepCopy());
             if (mine.thrown != null) {
-                Report.example(false, calls.toString(), null, Codec.print(expected), thrownAt(calls, mine));
+                Report.example(false, calls.toString(), null, LcCodec.print(expected), thrownAt(calls, mine));
                 Report.fail(RE, "threw on pinned example " + (passed + 1));
                 System.exit(1);
             }
             String why = designDisagree(calls, mine.out, expected);
             if (why != null) {
-                Report.example(false, calls.toString(), Codec.print(mine.out), Codec.print(expected), why);
+                Report.example(false, calls.toString(), LcCodec.print(mine.out), LcCodec.print(expected), why);
                 Report.fail(WA, "failed pinned example " + (passed + 1));
                 System.exit(1);
             }
@@ -629,8 +665,8 @@ public final class Judge {
         if (mine.thrown != null) {
             b.append("\n    yours     ").append(thrownAt(c, mine));
         } else {
-            b.append("\n    yours     ").append(Codec.print(mine.out))
-             .append("\n    expected  ").append(Codec.print(ref.out))
+            b.append("\n    yours     ").append(LcCodec.print(mine.out))
+             .append("\n    expected  ").append(LcCodec.print(ref.out))
              .append("\n    ").append(designDisagree(c, mine.out, ref.out));
         }
         Report.fail(mine.thrown != null ? RE : WA, b.toString());

@@ -7,6 +7,61 @@ from . import catalogue
 
 HARNESS_DIR = os.path.join(catalogue.ROOT, "harness")
 BUILD_HARNESS = os.path.join(catalogue.ROOT, "build", "harness")
+HARNESS_DIR_ = os.path.join(catalogue.ROOT, "harness")
+
+# LeetCode-provided classes some problems need (the graph Node, Interval). Each is
+# put on the classpath ONLY for the problems listed here: a global `Node` would
+# silently replace the `class Node` that many trie solutions declare themselves.
+PROVIDED = {
+    "clone-graph": ["graph"],
+    "employee-free-time": ["interval"],
+}
+
+
+def provided_dirs(problem):
+    return [os.path.join(catalogue.ROOT, "build", "provided", name)
+            for name in PROVIDED.get(problem["slug"], [])]
+
+
+def classpath(problem=None):
+    """The harness, plus any LeetCode-provided classes this problem uses."""
+    parts = [BUILD_HARNESS]
+    if problem is not None:
+        for name in PROVIDED.get(problem["slug"], []):
+            out = os.path.join(catalogue.ROOT, "build", "provided", name)
+            src_dir = os.path.join(HARNESS_DIR_, "provided", name)
+            srcs = [os.path.join(src_dir, f) for f in os.listdir(src_dir) if f.endswith(".java")]
+            if _stale(srcs, out, ".stamp"):
+                os.makedirs(out, exist_ok=True)
+                _javac(["-d", out] + srcs, "the provided %s classes" % name)
+                _touch(out, ".stamp")
+            parts.append(out)
+    return os.pathsep.join(parts)
+
+
+def harness_class_names():
+    return {f[:-5] for f in os.listdir(HARNESS_DIR_) if f.endswith(".java")}
+
+
+def check_no_shadowing(problem, out_dir, what):
+    """
+    Refuse a solution that declares a top-level class the judge already defines.
+
+    Class loading is parent-first so that ListNode and TreeNode can be shared across
+    the reference/solution boundary. The flip side: a solution's own `class Codec` or
+    `class Node` is silently replaced by the judge's class of the same name, and fails
+    in baffling ways. Better to say so up front.
+    """
+    reserved = harness_class_names()
+    for d in provided_dirs(problem):
+        reserved |= {f[:-6] for f in os.listdir(d) if f.endswith(".class")}
+    mine = {f[:-6] for f in os.listdir(out_dir) if f.endswith(".class") and "$" not in f}
+    clash = sorted(mine & reserved)
+    if clash:
+        raise CompileError(
+            "%s declares %s, which the judge already defines" % (what, ", ".join("class " + c for c in clash)),
+            "Rename it (e.g. make it a nested class, or call it TrieNode).\n"
+            "The judge's own %s would be loaded instead of yours." % " / ".join(clash))
 
 
 class CompileError(Exception):
@@ -62,7 +117,7 @@ def reference(problem, force=False):
     if not force and not _stale([p["ref"]], p["build_ref"], ".stamp"):
         return
     os.makedirs(p["build_ref"], exist_ok=True)
-    _javac(["-cp", BUILD_HARNESS, "-d", p["build_ref"], p["ref"]],
+    _javac(["-cp", classpath(problem), "-d", p["build_ref"], p["ref"]],
            "the reference for " + problem["slug"])
     _touch(p["build_ref"], ".stamp")
 
@@ -80,8 +135,9 @@ def solution(problem, force=False):
     if not force and not _stale([p["solution"]], p["build_sol"], ".stamp"):
         return
     os.makedirs(p["build_sol"], exist_ok=True)
-    _javac(["-cp", BUILD_HARNESS, "-d", p["build_sol"], p["solution"]],
+    _javac(["-cp", classpath(problem), "-d", p["build_sol"], p["solution"]],
            "your solution")
+    check_no_shadowing(problem, p["build_sol"], "your solution")
     _touch(p["build_sol"], ".stamp")
 
 
@@ -116,7 +172,7 @@ def reference_as_solution(problem, force=False):
     with open(src, "w") as f:
         f.write(body)
 
-    _javac(["-cp", BUILD_HARNESS, "-d", out_dir, src],
+    _javac(["-cp", classpath(problem), "-d", out_dir, src],
            "the reference-as-solution for " + problem["slug"])
     _touch(out_dir, ".stamp")
     return out_dir
@@ -133,7 +189,7 @@ def run_judge(problem, mode, iterations, seed, sol_dir=None, timeout=JUDGE_TIMEO
     p = catalogue.paths(problem)
     try:
         r = subprocess.run(
-            ["java", "-cp", BUILD_HARNESS, "Judge",
+            ["java", "-cp", classpath(problem), "Judge",
              problem["slug"], p["build_ref"], sol_dir or p["build_sol"],
              mode, str(iterations), str(seed)],
             capture_output=True, text=True, timeout=timeout)

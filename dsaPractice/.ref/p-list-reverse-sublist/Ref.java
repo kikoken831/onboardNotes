@@ -14,7 +14,7 @@ class Ref implements Problem {
                 int[] vals = g.ints(len, -20, 20);
                 int m = g.nextInt(1, len);
                 int n = g.nextInt(m, len);
-                return new Object[]{ Codec.buildList(vals), m, n };
+                return new Object[]{ LcCodec.buildList(vals), m, n };
             })
             .patterns("Linked List")
             .limitMs(2000)
