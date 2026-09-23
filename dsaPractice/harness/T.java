@@ -10,7 +10,7 @@ public enum T {
     INT, LONG, DOUBLE, BOOL, CHAR, STRING,
     INT_ARRAY, LONG_ARRAY, DOUBLE_ARRAY, BOOL_ARRAY, CHAR_ARRAY, STRING_ARRAY,
     INT_ARRAY_2D, CHAR_ARRAY_2D, STRING_ARRAY_2D,
-    LIST_INT, LIST_DOUBLE, LIST_STRING, LIST_LIST_INT, LIST_LIST_STRING,
+    LIST_INT, LIST_DOUBLE, LIST_STRING, LIST_BOOL, LIST_LIST_INT, LIST_LIST_STRING,
     LIST_NODE, TREE_NODE;
 
     /** The erased Java type, used to disambiguate overloaded methods during reflection lookup. */
@@ -39,7 +39,7 @@ public enum T {
     }
 
     public boolean isList() {
-        return this == LIST_INT || this == LIST_DOUBLE || this == LIST_STRING
+        return this == LIST_INT || this == LIST_DOUBLE || this == LIST_STRING || this == LIST_BOOL
             || this == LIST_LIST_INT || this == LIST_LIST_STRING;
     }
 }

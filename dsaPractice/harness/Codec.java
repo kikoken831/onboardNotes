@@ -248,6 +248,12 @@ public final class Codec {
                 for (Object x : l) o.add((String) x);
                 return o;
             }
+            case LIST_BOOL: {
+                List<Object> l = (List<Object>) raw;
+                List<Boolean> o = new ArrayList<>(l.size());
+                for (Object x : l) o.add((Boolean) x);
+                return o;
+            }
             case LIST_LIST_INT: {
                 List<Object> l = (List<Object>) raw;
                 List<List<Integer>> o = new ArrayList<>(l.size());
