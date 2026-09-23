@@ -120,14 +120,28 @@ def reference_as_solution(problem, force=False):
     return out_dir
 
 
-def run_judge(problem, mode, iterations, seed, sol_dir=None):
+# Wall-clock ceiling for one judge process. The Java side enforces the per-call time
+# limit only AFTER a call returns, so a solution stuck in an infinite loop never returns
+# and would otherwise hang `judge run` forever. This turns that into a TLE verdict.
+JUDGE_TIMEOUT_S = 120
+
+
+def run_judge(problem, mode, iterations, seed, sol_dir=None, timeout=JUDGE_TIMEOUT_S):
     """Invoke the Java judge. Returns (verdict, stdout)."""
     p = catalogue.paths(problem)
-    r = subprocess.run(
-        ["java", "-cp", BUILD_HARNESS, "Judge",
-         problem["slug"], p["build_ref"], sol_dir or p["build_sol"],
-         mode, str(iterations), str(seed)],
-        capture_output=True, text=True)
+    try:
+        r = subprocess.run(
+            ["java", "-cp", BUILD_HARNESS, "Judge",
+             problem["slug"], p["build_ref"], sol_dir or p["build_sol"],
+             mode, str(iterations), str(seed)],
+            capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired as e:
+        partial = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
+        kept = [l for l in partial.splitlines() if not l.startswith("::verdict ")]
+        kept.append("  no result after %ds -- almost certainly an infinite loop "
+                    "(a loop whose index never advances, or a recursion with no base case)"
+                    % timeout)
+        return "TIME LIMIT EXCEEDED", "\n".join(kept)
 
     out = r.stdout
     verdict = None
