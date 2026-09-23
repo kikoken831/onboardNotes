@@ -1,6 +1,9 @@
 # Generated practice sheets — regenerate with tools/mcq_shuffle.py
 practice/
 
+# My own drill attempts (local, personal)
+dsaPractice/solutions/
+
 # MCQ progress state (local, personal)
 .mcq-progress.json
 .mcq-progress.tmp
