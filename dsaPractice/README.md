@@ -54,6 +54,25 @@ that, which is why `judge verify` exists and why subtle problems carry more pins
 there means a nondeterministic generator or an unstable comparison mode — a judge bug,
 not a solution bug. Run it after touching anything in `harness/`.
 
+Neither of those proves the judge can tell a wrong answer from a right one. That is what
+**mutation testing** is for:
+
+```bash
+python3 tools/mutants.py              # every problem that has mutants
+python3 tools/mutants.py hashmap      # substring match on slug
+```
+
+Each problem carries plausible **buggy** solutions — off-by-one, `int` overflow, the
+un-guarded flood fill, the queue that transfers on every pop — which must be *rejected*,
+and **correct-but-different** ones (another algorithm, another valid output) which must be
+*accepted*. The second kind is what catches a comparison mode that is too strict. It runs
+in a temp dir and never touches `solutions/`.
+
+It has already earned its keep: its first run found that the exact comparator was
+**accepting any wrong answer of the right length** that wasn't a reversal or reordering
+(`[7,0]` for `[7,7]`). That bug predated tier 2; if you solved drills before it was fixed,
+re-run them.
+
 ---
 
 ## The tiers
@@ -67,12 +86,32 @@ one. Hence four tiers:
 |---|---|---|---|
 | **0** | Java mechanics — measured JVM traps, predict-then-run | 20 items | ready |
 | **1** | Authored primitives — one mechanical sub-skill each, 5–15 lines | 69 drills | **ready** |
-| **2** | Real LeetCode Easy below the target list's floor | 58 problems | catalogued |
+| **2** | Real LeetCode Easy below the target list's floor | 58 problems | **ready** |
 | **3** | The supplied target list | 179 problems | catalogued |
 
-Tier 1 is complete and is where to start. Tiers 2 and 3 are in the catalogue with
-statements and references still to be written; `judge list --ready` shows what is
-actually runnable today.
+Tiers 1 and 2 are complete. Start at tier 1; tier 2 is where each tier 1 group pays off
+on a real LeetCode problem (24 of the 58 statements name the drill they ramp from). Tier
+3 is in the catalogue with statements and references still to be written;
+`judge list --ready` shows what is actually runnable today.
+
+### Design and interactive problems
+
+Eight tier 2 problems aren't "a method on `Solution`":
+
+- **Design** (232, 225, 933, 703, 1603, 705, 706) — you implement the class LeetCode
+  names (`class MyQueue`, not `class Solution`). Pinned examples use LeetCode's exact
+  format, and a failure is reported at the **first diverging call** and shrunk to the
+  shortest call sequence that still fails:
+
+  ```
+  minimised to 5 calls
+  ["MyQueue","push","push","pop","push","peek"]
+  [[],[4],[8],[],[5],[]]
+  call 5, peek(): yours 5, expected 8
+  ```
+
+- **Interactive** (374) — `class Solution extends GuessGame`, calling the provided
+  `guess(num)`. The pick is installed per test and never passed to you.
 
 Tier 1 is mandatory rather than optional for five patterns — **backtracking, trie,
 topological sort, union-find, and LIS/knapsack DP have no Easy entry point on LeetCode
@@ -139,11 +178,12 @@ invariant:
 ```
 judge                        the CLI
 problems.json                catalogue (generated — see tools/make_catalogue.py)
-harness/                     the Java judge: Codec, Match, Shrink, Gen, Judge
+harness/                     the Java judge: Codec, Match, Shrink, Gen, Judge, Calls
 drills/<slug>/statement.md   tier 0 and 1 statements
 statements/<slug>/           tier 2 and 3 statements
 solutions/<slug>/            YOUR code
 .ref/<slug>/Ref.java         reference solution + test spec  (spoilers)
+tools/mutants.py             mutation test: does the judge reject bugs, accept alternatives?
 .progress.json               attempts and the re-solve schedule
 ```
 
