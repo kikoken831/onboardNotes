@@ -275,6 +275,14 @@ public final class Judge {
                 Report.fail(WA, "failed pinned example " + (passed + 1));
                 System.exit(1);
             }
+            // Pinned examples are time-limited too. Several are chosen precisely because
+            // the naive solution is exponential on them (LC 139's "aaa...ab"), and the
+            // stress phase's small random inputs would never expose that.
+            if (out.nanos / 1_000_000 > spec.limitMs) {
+                Report.fail(TLE, "exceeded " + spec.limitMs + "ms on pinned example " + (passed + 1)
+                        + " (the reference took " + (refOut.nanos / 1_000_000) + "ms)\n    " + ex.args);
+                System.exit(1);
+            }
             passed++;
         }
         Report.ok("fixed", passed + "/" + spec.examples.size());
@@ -599,6 +607,10 @@ public final class Judge {
             if (why != null) {
                 Report.example(false, calls.toString(), LcCodec.print(mine.out), LcCodec.print(expected), why);
                 Report.fail(WA, "failed pinned example " + (passed + 1));
+                System.exit(1);
+            }
+            if (mine.nanos / 1_000_000 > spec.limitMs) {
+                Report.fail(TLE, "exceeded " + spec.limitMs + "ms on pinned example " + (passed + 1));
                 System.exit(1);
             }
             passed++;
