@@ -1030,3 +1030,160 @@ MUTANTS["word-squares"] = [
     void go(String[] w, List<String> sq, List<List<String>> o) { int L = w[0].length(), r = sq.size(); if (r == L) { o.add(new ArrayList<>(sq)); return; }
         for (String x : w) { boolean ok = true; for (int k = 0; k < r; k++) if (sq.get(k).charAt(r) != x.charAt(k)) ok = false; if (ok) { sq.add(x); go(w, sq, o); sq.remove(sq.size() - 1); } } }""", LIST)),
 ]
+
+# ----------------------------------------------------------------- batch 7: DP
+
+MUTANTS["maximum-subarray"] = [
+    ("init-zero", "reject", S("""
+    public int maxSubArray(int[] a) { int b = 0, c = 0; for (int x : a) { c = Math.max(0, c + x); b = Math.max(b, c); } return b; }""")),
+    ("prefix-min", "accept", S("""
+    public int maxSubArray(int[] a) { long pre = 0, mn = 0, b = Long.MIN_VALUE; for (int x : a) { pre += x; b = Math.max(b, pre - mn); mn = Math.min(mn, pre); } return (int) b; }""")),
+]
+MUTANTS["jump-game"] = [
+    ("only-checks-zeros-at-start", "reject", S("""
+    public boolean canJump(int[] a) { return a.length == 1 || a[0] > 0; }""")),
+    ("backwards-goal", "accept", S("""
+    public boolean canJump(int[] a) { int goal = a.length - 1; for (int i = a.length - 1; i >= 0; i--) if (i + a[i] >= goal) goal = i; return goal == 0; }""")),
+]
+MUTANTS["unique-paths"] = [
+    ("counts-cells", "reject", S("""
+    public int uniquePaths(int m, int n) { return m + n - 1; }""")),
+    ("combinatorics", "accept", S("""
+    public int uniquePaths(int m, int n) { long r = 1; for (int i = 1; i <= m - 1; i++) r = r * (n - 1 + i) / i; return (int) r; }""")),
+]
+MUTANTS["climbing-stairs"] = [
+    ("naive-recursion-tle", "reject", S("""
+    public int climbStairs(int n) { return n <= 2 ? n : climbStairs(n - 1) + climbStairs(n - 2); }""")),
+    ("memo", "accept", S("""
+    int[] m = new int[50];
+    public int climbStairs(int n) { if (n <= 2) return n; if (m[n] != 0) return m[n]; return m[n] = climbStairs(n - 1) + climbStairs(n - 2); }""")),
+]
+MUTANTS["decode-ways"] = [
+    ("ignores-zero", "reject", S("""
+    public int numDecodings(String s) { int a = 1, b = 1; for (int i = 2; i <= s.length(); i++) { int t = Integer.parseInt(s.substring(i - 2, i)); int c = b + (t <= 26 && t >= 10 ? a : 0); a = b; b = c; } return b; }""")),
+    ("memo-recursion", "accept", S("""
+    Integer[] m;
+    public int numDecodings(String s) { m = new Integer[s.length() + 1]; return g(s, 0); }
+    int g(String s, int i) { if (i == s.length()) return 1; if (s.charAt(i) == '0') return 0; if (m[i] != null) return m[i]; int r = g(s, i + 1); if (i + 1 < s.length() && Integer.parseInt(s.substring(i, i + 2)) <= 26) r += g(s, i + 2); return m[i] = r; }""")),
+]
+MUTANTS["best-time-to-buy-and-sell-stock"] = [
+    ("max-minus-min", "reject", S("""
+    public int maxProfit(int[] p) { int mx = 0, mn = Integer.MAX_VALUE; for (int x : p) { mx = Math.max(mx, x); mn = Math.min(mn, x); } return Math.max(0, mx - mn); }""")),
+    ("brute-force", "accept", S("""
+    public int maxProfit(int[] p) { int b = 0; for (int i = 0; i < p.length; i++) for (int j = i + 1; j < p.length; j++) b = Math.max(b, p[j] - p[i]); return b; }""")),
+]
+MUTANTS["word-break"] = [
+    ("greedy-longest-first", "reject", S("""
+    public boolean wordBreak(String s, List<String> d) { int i = 0; while (i < s.length()) { int best = -1; for (String w : d) if (s.startsWith(w, i) && w.length() > best) best = w.length(); if (best < 0) return false; i += best; } return true; }""", LIST)),
+    ("unmemoised-recursion-tle", "reject", S("""
+    public boolean wordBreak(String s, List<String> d) { return g(s, 0, d); }
+    boolean g(String s, int i, List<String> d) { if (i == s.length()) return true; for (String w : d) if (s.startsWith(w, i) && g(s, i + w.length(), d)) return true; return false; }""", LIST)),
+    ("memo-recursion", "accept", S("""
+    Boolean[] m;
+    public boolean wordBreak(String s, List<String> d) { m = new Boolean[s.length() + 1]; return g(s, 0, d); }
+    boolean g(String s, int i, List<String> d) { if (i == s.length()) return true; if (m[i] != null) return m[i]; for (String w : d) if (s.startsWith(w, i) && g(s, i + w.length(), d)) return m[i] = true; return m[i] = false; }""", LIST)),
+]
+MUTANTS["maximum-product-subarray"] = [
+    ("kadane-on-product", "reject", S("""
+    public int maxProduct(int[] a) { int b = a[0], c = a[0]; for (int i = 1; i < a.length; i++) { c = Math.max(a[i], c * a[i]); b = Math.max(b, c); } return b; }""")),
+    ("brute-force", "accept", S("""
+    public int maxProduct(int[] a) { int b = a[0]; for (int i = 0; i < a.length; i++) { int p = 1; for (int j = i; j < a.length; j++) { p *= a[j]; b = Math.max(b, p); } } return b; }""")),
+]
+MUTANTS["house-robber"] = [
+    ("odds-vs-evens", "reject", S("""
+    public int rob(int[] a) { int o = 0, e = 0; for (int i = 0; i < a.length; i++) if (i % 2 == 0) e += a[i]; else o += a[i]; return Math.max(o, e); }""")),
+    ("dp-array", "accept", S("""
+    public int rob(int[] a) { int n = a.length; int[] d = new int[n + 1]; d[1] = a[0]; for (int i = 2; i <= n; i++) d[i] = Math.max(d[i - 1], d[i - 2] + a[i - 1]); return d[n]; }""")),
+]
+MUTANTS["house-robber-ii"] = [
+    ("ignores-circle", "reject", S("""
+    public int rob(int[] a) { int p = 0, c = 0; for (int x : a) { int t = Math.max(c, p + x); p = c; c = t; } return c; }""")),
+    ("two-dp-arrays", "accept", S("""
+    public int rob(int[] a) { int n = a.length; if (n == 1) return a[0]; int[] x = new int[n], y = new int[n]; x[0] = a[0]; x[1] = Math.max(a[0], a[1]); for (int i = 2; i < n - 1; i++) x[i] = Math.max(x[i - 1], x[i - 2] + a[i]);
+        y[1] = a[1]; for (int i = 2; i < n; i++) y[i] = Math.max(y[i - 1], y[i - 2] + a[i]); return Math.max(n > 2 ? x[n - 2] : x[0], y[n - 1]); }""")),
+]
+MUTANTS["longest-increasing-subsequence"] = [
+    ("upper-bound-allows-equal", "reject", S("""
+    public int lengthOfLIS(int[] a) { int[] t = new int[a.length]; int len = 0; for (int x : a) { int lo = 0, hi = len; while (lo < hi) { int m = (lo + hi) / 2; if (t[m] <= x) lo = m + 1; else hi = m; } t[lo] = x; if (lo == len) len++; } return len; }""")),
+    ("quadratic", "accept", S("""
+    public int lengthOfLIS(int[] a) { int[] d = new int[a.length]; int b = 0; for (int i = 0; i < a.length; i++) { d[i] = 1; for (int j = 0; j < i; j++) if (a[j] < a[i]) d[i] = Math.max(d[i], d[j] + 1); b = Math.max(b, d[i]); } return b; }""")),
+]
+MUTANTS["best-time-to-buy-and-sell-stock-with-cooldown"] = [
+    ("no-cooldown", "reject", S("""
+    public int maxProfit(int[] p) { int b = 0; for (int i = 1; i < p.length; i++) b += Math.max(0, p[i] - p[i - 1]); return b; }""")),
+    ("memo-states", "accept", S("""
+    Integer[][] m;
+    public int maxProfit(int[] p) { m = new Integer[p.length + 2][2]; return g(p, 0, 0); }
+    int g(int[] p, int i, int h) { if (i >= p.length) return 0; if (m[i][h] != null) return m[i][h]; int r = g(p, i + 1, h); r = h == 1 ? Math.max(r, p[i] + g(p, i + 2, 0)) : Math.max(r, -p[i] + g(p, i + 1, 1)); return m[i][h] = r; }""")),
+]
+MUTANTS["coin-change"] = [
+    ("greedy-largest-first", "reject", S("""
+    public int coinChange(int[] c, int a) { Arrays.sort(c); int n = 0; for (int i = c.length - 1; i >= 0; i--) { n += a / c[i]; a %= c[i]; } return a == 0 ? n : -1; }""", LIST)),
+    ("sentinel-overflow", "reject", S("""
+    public int coinChange(int[] c, int a) { int[] d = new int[a + 1]; Arrays.fill(d, Integer.MAX_VALUE); d[0] = 0; for (int x = 1; x <= a; x++) for (int k : c) if (k <= x) d[x] = Math.min(d[x], d[x - k] + 1); return d[a] == Integer.MAX_VALUE ? -1 : d[a]; }""", LIST)),
+    ("bfs", "accept", S("""
+    public int coinChange(int[] c, int a) { if (a == 0) return 0; boolean[] seen = new boolean[a + 1]; Deque<Integer> q = new ArrayDeque<>(); q.add(0); seen[0] = true; int steps = 0;
+        while (!q.isEmpty()) { steps++; for (int n = q.size(); n > 0; n--) { int v = q.poll(); for (int k : c) { int w = v + k; if (w == a) return steps; if (w < a && !seen[w]) { seen[w] = true; q.add(w); } } } } return -1; }""", LIST)),
+]
+MUTANTS["counting-bits"] = [
+    ("off-by-one-length", "reject", S("""
+    public int[] countBits(int n) { int[] b = new int[n]; for (int i = 1; i < n; i++) b[i] = b[i >> 1] + (i & 1); return b; }""")),
+    ("lowest-bit-clear", "accept", S("""
+    public int[] countBits(int n) { int[] b = new int[n + 1]; for (int i = 1; i <= n; i++) b[i] = b[i & (i - 1)] + 1; return b; }""")),
+]
+MUTANTS["combination-sum-iv"] = [
+    ("counts-combinations-not-orders", "reject", S("""
+    public int combinationSum4(int[] a, int t) { long[] d = new long[t + 1]; d[0] = 1; for (int x : a) for (int s = x; s <= t; s++) d[s] += d[s - x]; return (int) d[t]; }""")),
+    ("memo-recursion", "accept", S("""
+    Integer[] m;
+    public int combinationSum4(int[] a, int t) { m = new Integer[t + 1]; return g(a, t); }
+    int g(int[] a, int t) { if (t == 0) return 1; if (m[t] != null) return m[t]; int r = 0; for (int x : a) if (x <= t) r += g(a, t - x); return m[t] = r; }""")),
+]
+MUTANTS["partition-equal-subset-sum"] = [
+    ("forward-loop-reuses-items", "reject", S("""
+    public boolean canPartition(int[] a) { int s = 0; for (int x : a) s += x; if (s % 2 == 1) return false; boolean[] c = new boolean[s / 2 + 1]; c[0] = true; for (int x : a) for (int t = x; t <= s / 2; t++) c[t] |= c[t - x]; return c[s / 2]; }""")),
+    ("set-of-sums", "accept", S("""
+    public boolean canPartition(int[] a) { int s = 0; for (int x : a) s += x; if (s % 2 == 1) return false; Set<Integer> r = new HashSet<>(); r.add(0); for (int x : a) { Set<Integer> n = new HashSet<>(r); for (int v : r) n.add(v + x); r = n; } return r.contains(s / 2); }""", LIST)),
+]
+MUTANTS["target-sum"] = [
+    ("no-bounds-guard", "reject", S("""
+    public int findTargetSumWays(int[] a, int t) { int s = 0; for (int x : a) s += x; if ((s + t) % 2 != 0) return 0; int w = (s + t) / 2; if (w < 0) return 0; int[] d = new int[Math.max(w, 0) + 1]; d[0] = 1; for (int x : a) for (int v = w; v >= x; v--) d[v] += d[v - x]; return w > s ? 1 : d[w]; }""")),
+    ("brute-force", "accept", S("""
+    public int findTargetSumWays(int[] a, int t) { return g(a, 0, t); }
+    int g(int[] a, int i, int r) { if (i == a.length) return r == 0 ? 1 : 0; return g(a, i + 1, r - a[i]) + g(a, i + 1, r + a[i]); }""")),
+]
+MUTANTS["number-of-longest-increasing-subsequence"] = [
+    ("count-at-last-index", "reject", S("""
+    public int findNumberOfLIS(int[] a) { int n = a.length; int[] l = new int[n], c = new int[n]; for (int i = 0; i < n; i++) { l[i] = 1; c[i] = 1; for (int j = 0; j < i; j++) if (a[j] < a[i]) { if (l[j] + 1 > l[i]) { l[i] = l[j] + 1; c[i] = c[j]; } else if (l[j] + 1 == l[i]) c[i] += c[j]; } } return c[n - 1]; }""")),
+    ("memo-length-and-count", "accept", S("""
+    int[] a; int[][] m;
+    public int findNumberOfLIS(int[] a) { this.a = a; int n = a.length; m = new int[n][]; int best = 0, cnt = 0; for (int i = 0; i < n; i++) { int[] r = g(i); if (r[0] > best) { best = r[0]; cnt = r[1]; } else if (r[0] == best) cnt += r[1]; } return cnt; }
+    int[] g(int i) { if (m[i] != null) return m[i]; int len = 1, cnt = 1; for (int j = i + 1; j < a.length; j++) if (a[j] > a[i]) { int[] r = g(j); if (r[0] + 1 > len) { len = r[0] + 1; cnt = r[1]; } else if (r[0] + 1 == len) cnt += r[1]; } return m[i] = new int[]{len, cnt}; }""")),
+]
+MUTANTS["partition-to-k-equal-sum-subsets"] = [
+    ("greedy-fill-largest-first", "reject", S("""
+    public boolean canPartitionKSubsets(int[] a, int k) { int s = 0; for (int x : a) s += x; if (s % k != 0) return false; int t = s / k; Integer[] b = Arrays.stream(a).boxed().sorted(Collections.reverseOrder()).toArray(Integer[]::new); int[] fill = new int[k];
+        for (int x : b) { int j = 0; while (j < k && fill[j] + x > t) j++; if (j == k) return false; fill[j] += x; } return true; }""", LIST)),
+    ("bucket-backtracking", "accept", S("""
+    public boolean canPartitionKSubsets(int[] a, int k) { int s = 0; for (int x : a) s += x; if (s % k != 0) return false; Arrays.sort(a); return go(a, a.length - 1, new int[k], s / k); }
+    boolean go(int[] a, int i, int[] b, int t) { if (i < 0) return true; for (int j = 0; j < b.length; j++) { if (b[j] + a[i] <= t) { b[j] += a[i]; if (go(a, i - 1, b, t)) return true; b[j] -= a[i]; } if (b[j] == 0) break; } return false; }""", LIST)),
+]
+MUTANTS["longest-common-subsequence"] = [
+    ("longest-common-substring", "reject", S("""
+    public int longestCommonSubsequence(String a, String b) { int[][] d = new int[a.length() + 1][b.length() + 1]; int best = 0; for (int i = 1; i <= a.length(); i++) for (int j = 1; j <= b.length(); j++) if (a.charAt(i - 1) == b.charAt(j - 1)) { d[i][j] = d[i - 1][j - 1] + 1; best = Math.max(best, d[i][j]); } return best; }""")),
+    ("full-table", "accept", S("""
+    public int longestCommonSubsequence(String a, String b) { int[][] d = new int[a.length() + 1][b.length() + 1]; for (int i = 1; i <= a.length(); i++) for (int j = 1; j <= b.length(); j++) d[i][j] = a.charAt(i - 1) == b.charAt(j - 1) ? d[i - 1][j - 1] + 1 : Math.max(d[i - 1][j], d[i][j - 1]); return d[a.length()][b.length()]; }""")),
+]
+MUTANTS["concatenated-words"] = [
+    ("word-builds-itself", "reject", S("""
+    public List<String> findAllConcatenatedWordsInADict(String[] w) { Set<String> d = new HashSet<>(Arrays.asList(w)); List<String> o = new ArrayList<>(); for (String x : w) { boolean[] ok = new boolean[x.length() + 1]; ok[0] = true; for (int i = 1; i <= x.length(); i++) for (int j = 0; j < i; j++) if (ok[j] && d.contains(x.substring(j, i))) ok[i] = true; if (ok[x.length()]) o.add(x); } return o; }""", LIST)),
+    ("count-pieces", "accept", S("""
+    public List<String> findAllConcatenatedWordsInADict(String[] w) { Set<String> d = new HashSet<>(Arrays.asList(w)); List<String> o = new ArrayList<>();
+        for (String x : w) { int[] best = new int[x.length() + 1]; Arrays.fill(best, -1); best[0] = 0; for (int i = 1; i <= x.length(); i++) for (int j = 0; j < i; j++) if (best[j] >= 0 && d.contains(x.substring(j, i))) best[i] = Math.max(best[i], best[j] + 1); if (best[x.length()] >= 2) o.add(x); } return o; }""", LIST)),
+]
+MUTANTS["gas-station"] = [
+    ("start-at-max-surplus", "reject", S("""
+    public int canCompleteCircuit(int[] g, int[] c) { long t = 0; int b = 0; for (int i = 0; i < g.length; i++) { t += g[i] - c[i]; if (g[i] - c[i] > g[b] - c[b]) b = i; } return t < 0 ? -1 : b; }""")),
+    ("try-every-start", "accept", S("""
+    public int canCompleteCircuit(int[] g, int[] c) { int n = g.length; for (int s = 0; s < n; s++) { long t = 0; boolean ok = true; for (int k = 0; k < n && ok; k++) { int i = (s + k) % n; t += g[i] - c[i]; if (t < 0) ok = false; } if (ok) return s; } return -1; }""")),
+]
