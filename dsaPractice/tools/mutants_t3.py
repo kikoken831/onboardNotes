@@ -1187,3 +1187,102 @@ MUTANTS["gas-station"] = [
     ("try-every-start", "accept", S("""
     public int canCompleteCircuit(int[] g, int[] c) { int n = g.length; for (int s = 0; s < n; s++) { long t = 0; boolean ok = true; for (int k = 0; k < n && ok; k++) { int i = (s + k) % n; t += g[i] - c[i]; if (t < 0) ok = false; } if (ok) return s; } return -1; }""")),
 ]
+
+# ---------------------------------------------------------------- batch 8: graphs
+
+MUTANTS["number-of-islands"] = [
+    ("counts-land-cells", "reject", S("""
+    public int numIslands(char[][] g) { int n = 0; for (char[] r : g) for (char c : r) if (c == '1') n++; return n; }""")),
+    ("diagonals-connect", "reject", S("""
+    public int numIslands(char[][] g) { int n = 0; for (int i = 0; i < g.length; i++) for (int j = 0; j < g[0].length; j++) if (g[i][j] == '1') { n++; s(g, i, j); } return n; }
+    void s(char[][] g, int i, int j) { if (i < 0 || j < 0 || i >= g.length || j >= g[0].length || g[i][j] != '1') return; g[i][j] = '0'; for (int a = -1; a <= 1; a++) for (int b = -1; b <= 1; b++) s(g, i + a, j + b); }""")),
+    ("union-find", "accept", S("""
+    int[] p;
+    int f(int x) { while (p[x] != x) x = p[x] = p[p[x]]; return x; }
+    public int numIslands(char[][] g) { int R = g.length, C = g[0].length, n = 0; p = new int[R * C]; for (int i = 0; i < R * C; i++) p[i] = i;
+        for (int i = 0; i < R; i++) for (int j = 0; j < C; j++) if (g[i][j] == '1') { n++; if (i > 0 && g[i - 1][j] == '1' && f(i * C + j) != f((i - 1) * C + j)) { p[f(i * C + j)] = f((i - 1) * C + j); n--; } if (j > 0 && g[i][j - 1] == '1' && f(i * C + j) != f(i * C + j - 1)) { p[f(i * C + j)] = f(i * C + j - 1); n--; } }
+        return n; }""")),
+]
+MUTANTS["course-schedule"] = [
+    ("visited-set-not-colours", "reject", S("""
+    public boolean canFinish(int n, int[][] pre) { List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); for (int[] p : pre) g.get(p[1]).add(p[0]); boolean[] seen = new boolean[n];
+        for (int i = 0; i < n; i++) if (!seen[i] && !d(g, i, seen)) return false; return true; }
+    boolean d(List<List<Integer>> g, int u, boolean[] seen) { if (seen[u]) return false; seen[u] = true; for (int v : g.get(u)) if (!d(g, v, seen)) return false; return true; }""", LIST)),
+    ("three-colour-dfs", "accept", S("""
+    public boolean canFinish(int n, int[][] pre) { List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); for (int[] p : pre) g.get(p[1]).add(p[0]); int[] c = new int[n];
+        for (int i = 0; i < n; i++) if (!d(g, i, c)) return false; return true; }
+    boolean d(List<List<Integer>> g, int u, int[] c) { if (c[u] == 1) return false; if (c[u] == 2) return true; c[u] = 1; for (int v : g.get(u)) if (!d(g, v, c)) return false; c[u] = 2; return true; }""", LIST)),
+]
+MUTANTS["course-schedule-ii"] = [
+    ("returns-partial-order-on-cycle", "reject", S("""
+    public int[] findOrder(int n, int[][] pre) { List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); int[] in = new int[n]; for (int[] p : pre) { g.get(p[1]).add(p[0]); in[p[0]]++; }
+        Deque<Integer> q = new ArrayDeque<>(); for (int i = 0; i < n; i++) if (in[i] == 0) q.add(i); List<Integer> o = new ArrayList<>(); while (!q.isEmpty()) { int u = q.poll(); o.add(u); for (int v : g.get(u)) if (--in[v] == 0) q.add(v); }
+        return o.stream().mapToInt(Integer::intValue).toArray(); }""", LIST)),
+    ("reversed-edge-direction", "reject", S("""
+    public int[] findOrder(int n, int[][] pre) { List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); int[] in = new int[n]; for (int[] p : pre) { g.get(p[0]).add(p[1]); in[p[1]]++; }
+        Deque<Integer> q = new ArrayDeque<>(); for (int i = 0; i < n; i++) if (in[i] == 0) q.add(i); int[] o = new int[n]; int k = 0; while (!q.isEmpty()) { int u = q.poll(); o[k++] = u; for (int v : g.get(u)) if (--in[v] == 0) q.add(v); } return k == n ? o : new int[0]; }""", LIST)),
+    ("dfs-postorder-reversed", "accept", S("""
+    List<List<Integer>> g; int[] c; List<Integer> post;
+    public int[] findOrder(int n, int[][] pre) { g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); for (int[] p : pre) g.get(p[1]).add(p[0]); c = new int[n]; post = new ArrayList<>();
+        for (int i = 0; i < n; i++) if (!d(i)) return new int[0]; Collections.reverse(post); return post.stream().mapToInt(Integer::intValue).toArray(); }
+    boolean d(int u) { if (c[u] == 1) return false; if (c[u] == 2) return true; c[u] = 1; for (int v : g.get(u)) if (!d(v)) return false; c[u] = 2; post.add(u); return true; }""", LIST)),
+]
+MUTANTS["graph-valid-tree"] = [
+    ("edge-count-only", "reject", S("""
+    public boolean validTree(int n, int[][] e) { return e.length == n - 1; }""")),
+    ("acyclic-only", "reject", S("""
+    int[] p; int f(int x) { while (p[x] != x) x = p[x]; return x; }
+    public boolean validTree(int n, int[][] e) { p = new int[n]; for (int i = 0; i < n; i++) p[i] = i; for (int[] x : e) { int a = f(x[0]), b = f(x[1]); if (a == b) return false; p[a] = b; } return true; }""")),
+    ("bfs-connected-and-count", "accept", S("""
+    public boolean validTree(int n, int[][] e) { if (e.length != n - 1) return false; List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); for (int[] x : e) { g.get(x[0]).add(x[1]); g.get(x[1]).add(x[0]); }
+        boolean[] s = new boolean[n]; Deque<Integer> q = new ArrayDeque<>(); q.add(0); s[0] = true; int c = 1; while (!q.isEmpty()) for (int v : g.get(q.poll())) if (!s[v]) { s[v] = true; c++; q.add(v); } return c == n; }""", LIST)),
+]
+MUTANTS["number-of-connected-components-in-an-undirected-graph"] = [
+    ("n-minus-edges", "reject", S("""
+    public int countComponents(int n, int[][] e) { return n - e.length; }""")),
+    ("dfs", "accept", S("""
+    public int countComponents(int n, int[][] e) { List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); for (int[] x : e) { g.get(x[0]).add(x[1]); g.get(x[1]).add(x[0]); }
+        boolean[] s = new boolean[n]; int c = 0; for (int i = 0; i < n; i++) if (!s[i]) { c++; Deque<Integer> st = new ArrayDeque<>(); st.push(i); s[i] = true; while (!st.isEmpty()) for (int v : g.get(st.pop())) if (!s[v]) { s[v] = true; st.push(v); } } return c; }""", LIST)),
+]
+MUTANTS["alien-dictionary"] = [
+    ("ignores-prefix-rule", "reject", S("""
+    public String alienOrder(String[] w) { Map<Character, Set<Character>> g = new TreeMap<>(); Map<Character, Integer> in = new TreeMap<>(); for (String s : w) for (char c : s.toCharArray()) { g.putIfAbsent(c, new TreeSet<>()); in.putIfAbsent(c, 0); }
+        for (int i = 0; i + 1 < w.length; i++) { String a = w[i], b = w[i + 1]; for (int k = 0; k < Math.min(a.length(), b.length()); k++) if (a.charAt(k) != b.charAt(k)) { if (g.get(a.charAt(k)).add(b.charAt(k))) in.merge(b.charAt(k), 1, Integer::sum); break; } }
+        Deque<Character> q = new ArrayDeque<>(); for (char c : in.keySet()) if (in.get(c) == 0) q.add(c); StringBuilder o = new StringBuilder(); while (!q.isEmpty()) { char c = q.poll(); o.append(c); for (char d : g.get(c)) if (in.merge(d, -1, Integer::sum) == 0) q.add(d); } return o.length() == in.size() ? o.toString() : ""; }""", LIST)),
+    ("dfs-topo", "accept", S("""
+    Map<Character, Set<Character>> g = new HashMap<>(); Map<Character, Integer> c = new HashMap<>(); StringBuilder o = new StringBuilder();
+    public String alienOrder(String[] w) { for (String s : w) for (char x : s.toCharArray()) g.putIfAbsent(x, new HashSet<>());
+        for (int i = 0; i + 1 < w.length; i++) { String a = w[i], b = w[i + 1]; int k = 0; while (k < Math.min(a.length(), b.length()) && a.charAt(k) == b.charAt(k)) k++; if (k == Math.min(a.length(), b.length())) { if (a.length() > b.length()) return ""; } else g.get(a.charAt(k)).add(b.charAt(k)); }
+        for (char x : g.keySet()) if (!d(x)) return ""; return o.reverse().toString(); }
+    boolean d(char x) { int s = c.getOrDefault(x, 0); if (s == 1) return false; if (s == 2) return true; c.put(x, 1); for (char y : g.get(x)) if (!d(y)) return false; c.put(x, 2); o.append(x); return true; }""", LIST)),
+]
+MUTANTS["minimum-height-trees"] = [
+    ("max-degree-node", "reject", S("""
+    public List<Integer> findMinHeightTrees(int n, int[][] e) { int[] d = new int[n]; for (int[] x : e) { d[x[0]]++; d[x[1]]++; } int b = 0; for (int i = 0; i < n; i++) if (d[i] > d[b]) b = i; return new ArrayList<>(List.of(b)); }""", LIST)),
+    ("bfs-from-every-root", "accept", S("""
+    public List<Integer> findMinHeightTrees(int n, int[][] e) { List<List<Integer>> g = new ArrayList<>(); for (int i = 0; i < n; i++) g.add(new ArrayList<>()); for (int[] x : e) { g.get(x[0]).add(x[1]); g.get(x[1]).add(x[0]); }
+        int[] h = new int[n]; int mn = Integer.MAX_VALUE; for (int r = 0; r < n; r++) { int[] d = new int[n]; Arrays.fill(d, -1); d[r] = 0; Deque<Integer> q = new ArrayDeque<>(); q.add(r); int m = 0; while (!q.isEmpty()) { int u = q.poll(); m = Math.max(m, d[u]); for (int v : g.get(u)) if (d[v] < 0) { d[v] = d[u] + 1; q.add(v); } } h[r] = m; mn = Math.min(mn, m); }
+        List<Integer> o = new ArrayList<>(); for (int r = 0; r < n; r++) if (h[r] == mn) o.add(r); return o; }""", LIST)),
+]
+MUTANTS["pacific-atlantic-water-flow"] = [
+    ("strictly-downhill", "reject", S("""
+    public List<List<Integer>> pacificAtlantic(int[][] h) { int R = h.length, C = h[0].length; boolean[][] p = new boolean[R][C], a = new boolean[R][C];
+        for (int i = 0; i < R; i++) { d(h, p, i, 0, Integer.MIN_VALUE); d(h, a, i, C - 1, Integer.MIN_VALUE); } for (int j = 0; j < C; j++) { d(h, p, 0, j, Integer.MIN_VALUE); d(h, a, R - 1, j, Integer.MIN_VALUE); }
+        List<List<Integer>> o = new ArrayList<>(); for (int i = 0; i < R; i++) for (int j = 0; j < C; j++) if (p[i][j] && a[i][j]) o.add(Arrays.asList(i, j)); return o; }
+    void d(int[][] h, boolean[][] s, int i, int j, int prev) { if (i < 0 || j < 0 || i >= h.length || j >= h[0].length || s[i][j] || h[i][j] <= prev && prev != Integer.MIN_VALUE) return; s[i][j] = true; d(h, s, i + 1, j, h[i][j]); d(h, s, i - 1, j, h[i][j]); d(h, s, i, j + 1, h[i][j]); d(h, s, i, j - 1, h[i][j]); }""", LIST)),
+    ("per-cell-search", "accept", S("""
+    public List<List<Integer>> pacificAtlantic(int[][] h) { int R = h.length, C = h[0].length; List<List<Integer>> o = new ArrayList<>();
+        for (int i = 0; i < R; i++) for (int j = 0; j < C; j++) { boolean[][] s = new boolean[R][C]; boolean[] hit = new boolean[2]; Deque<int[]> q = new ArrayDeque<>(); q.add(new int[]{i, j}); s[i][j] = true;
+            while (!q.isEmpty()) { int[] c = q.poll(); if (c[0] == 0 || c[1] == 0) hit[0] = true; if (c[0] == R - 1 || c[1] == C - 1) hit[1] = true;
+                for (int[] d : new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) { int x = c[0] + d[0], y = c[1] + d[1]; if (x >= 0 && y >= 0 && x < R && y < C && !s[x][y] && h[x][y] <= h[c[0]][c[1]]) { s[x][y] = true; q.add(new int[]{x, y}); } } }
+            if (hit[0] && hit[1]) o.add(Arrays.asList(i, j)); } return o; }""", LIST)),
+]
+MUTANTS["clone-graph"] = [
+    ("returns-original", "reject", S("""
+    public Node cloneGraph(Node node) { return node; }""")),
+    ("shallow-copies-neighbours", "reject", S("""
+    public Node cloneGraph(Node node) { if (node == null) return null; Node c = new Node(node.val); c.neighbors.addAll(node.neighbors); return c; }""")),
+    ("dfs-with-map", "accept", S("""
+    Map<Node, Node> m = new IdentityHashMap<>();
+    public Node cloneGraph(Node node) { if (node == null) return null; if (m.containsKey(node)) return m.get(node); Node c = new Node(node.val); m.put(node, c); for (Node v : node.neighbors) c.neighbors.add(cloneGraph(v)); return c; }""", LIST)),
+]
