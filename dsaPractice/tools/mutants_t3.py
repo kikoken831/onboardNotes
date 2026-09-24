@@ -1444,3 +1444,103 @@ public class Codec {
         for (int i = 0; i < s.length(); i++) { char c = s.charAt(i); if (c == '/') cur.append(s.charAt(++i)); else if (c == ',') { o.add(cur.substring(0, cur.length() - 1)); cur.setLength(0); } else cur.append(c); } return o; }
 }""")),
 ]
+
+# ------------------------------------------------- batch 10: heap / greedy / bits
+
+MUTANTS["kth-largest-element-in-an-array"] = [
+    ("kth-distinct", "reject", S("""
+    public int findKthLargest(int[] a, int k) { TreeSet<Integer> s = new TreeSet<>(); for (int x : a) s.add(x); Iterator<Integer> it = s.descendingIterator(); int v = 0; for (int i = 0; i < k && it.hasNext(); i++) v = it.next(); return v; }""", LIST)),
+    ("quickselect", "accept", S("""
+    public int findKthLargest(int[] a, int k) { int t = a.length - k, lo = 0, hi = a.length - 1; Random r = new Random(7);
+        while (true) { int p = a[lo + r.nextInt(hi - lo + 1)], i = lo, lt = lo, gt = hi; while (i <= gt) { if (a[i] < p) { int x = a[i]; a[i++] = a[lt]; a[lt++] = x; } else if (a[i] > p) { int x = a[i]; a[i] = a[gt]; a[gt--] = x; } else i++; }
+            if (t < lt) hi = lt - 1; else if (t > gt) lo = gt + 1; else return p; } }""", LIST)),
+]
+MUTANTS["find-k-pairs-with-smallest-sums"] = [
+    ("only-pairs-with-first-element", "reject", S("""
+    public List<List<Integer>> kSmallestPairs(int[] a, int[] b, int k) { List<List<Integer>> o = new ArrayList<>(); for (int j = 0; j < b.length && o.size() < k; j++) o.add(Arrays.asList(a[0], b[j])); return o; }""", LIST)),
+    ("all-pairs-sorted", "accept", S("""
+    public List<List<Integer>> kSmallestPairs(int[] a, int[] b, int k) { List<List<Integer>> all = new ArrayList<>(); for (int x : a) for (int y : b) all.add(Arrays.asList(x, y)); all.sort((p, q) -> Integer.compare(p.get(0) + p.get(1), q.get(0) + q.get(1))); return new ArrayList<>(all.subList(0, Math.min(k, all.size()))); }""", LIST)),
+]
+MUTANTS["sort-characters-by-frequency"] = [
+    ("sorted-alphabetically", "reject", S("""
+    public String frequencySort(String s) { char[] c = s.toCharArray(); Arrays.sort(c); return new String(c); }""", LIST)),
+    ("bucket-sort", "accept", S("""
+    public String frequencySort(String s) { Map<Character, Integer> c = new HashMap<>(); for (char x : s.toCharArray()) c.merge(x, 1, Integer::sum); List<Character>[] b = new List[s.length() + 1];
+        for (char x : c.keySet()) { int f = c.get(x); if (b[f] == null) b[f] = new ArrayList<>(); b[f].add(x); } StringBuilder o = new StringBuilder(); for (int f = s.length(); f > 0; f--) if (b[f] != null) for (char x : b[f]) for (int i = 0; i < f; i++) o.append(x); return o.toString(); }""", LIST)),
+]
+MUTANTS["task-scheduler"] = [
+    ("ignores-tied-maxima", "reject", S("""
+    public int leastInterval(char[] t, int n) { int[] c = new int[26]; int m = 0; for (char x : t) m = Math.max(m, ++c[x - 'A']); return Math.max(t.length, (m - 1) * (n + 1) + 1); }""")),
+    ("simulate-with-heap", "accept", S("""
+    public int leastInterval(char[] t, int n) { int[] c = new int[26]; for (char x : t) c[x - 'A']++; PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder()); for (int x : c) if (x > 0) pq.add(x); int time = 0;
+        while (!pq.isEmpty()) { List<Integer> back = new ArrayList<>(); int slots = n + 1; while (slots > 0 && !pq.isEmpty()) { int x = pq.poll(); if (x > 1) back.add(x - 1); slots--; time++; } pq.addAll(back); if (!pq.isEmpty()) time += slots; } return time; }""", LIST)),
+]
+MUTANTS["reorganize-string"] = [
+    ("sorted-interleave-no-feasibility", "reject", S("""
+    public String reorganizeString(String s) { char[] c = s.toCharArray(); Arrays.sort(c); StringBuilder b = new StringBuilder(); int i = 0, j = (c.length + 1) / 2; while (b.length() < c.length) { b.append(c[i++]); if (j < c.length) b.append(c[j++]); } return b.toString(); }""", LIST)),
+    ("heap-two-at-a-time", "accept", S("""
+    public String reorganizeString(String s) { int[] c = new int[26]; for (char x : s.toCharArray()) c[x - 'a']++; PriorityQueue<int[]> pq = new PriorityQueue<>((x, y) -> y[1] - x[1]); for (int i = 0; i < 26; i++) if (c[i] > 0) pq.add(new int[]{i, c[i]}); StringBuilder b = new StringBuilder();
+        while (pq.size() >= 2) { int[] a = pq.poll(), d = pq.poll(); b.append((char) ('a' + a[0])).append((char) ('a' + d[0])); if (--a[1] > 0) pq.add(a); if (--d[1] > 0) pq.add(d); }
+        if (!pq.isEmpty()) { int[] a = pq.poll(); if (a[1] > 1) return ""; b.append((char) ('a' + a[0])); } return b.toString(); }""", LIST)),
+]
+MUTANTS["rearrange-string-k-distance-apart"] = [
+    ("distance-two-only", "reject", S("""
+    public String rearrangeString(String s, int k) { if (k <= 1) return s; int[] c = new int[26]; for (char x : s.toCharArray()) c[x - 'a']++; PriorityQueue<int[]> pq = new PriorityQueue<>((x, y) -> y[1] - x[1]); for (int i = 0; i < 26; i++) if (c[i] > 0) pq.add(new int[]{i, c[i]}); StringBuilder b = new StringBuilder();
+        while (pq.size() >= 2) { int[] a = pq.poll(), d = pq.poll(); b.append((char) ('a' + a[0])).append((char) ('a' + d[0])); if (--a[1] > 0) pq.add(a); if (--d[1] > 0) pq.add(d); }
+        if (!pq.isEmpty()) { int[] a = pq.poll(); if (a[1] > 1) return ""; b.append((char) ('a' + a[0])); } return b.toString(); }""", LIST)),
+    ("slot-scan-greedy", "accept", S("""
+    public String rearrangeString(String s, int k) { if (k <= 1) return s; int n = s.length(); int[] c = new int[26], next = new int[26]; for (char x : s.toCharArray()) c[x - 'a']++; StringBuilder b = new StringBuilder();
+        for (int i = 0; i < n; i++) { int best = -1; for (int j = 0; j < 26; j++) if (c[j] > 0 && next[j] <= i && (best < 0 || c[j] > c[best])) best = j; if (best < 0) return ""; b.append((char) ('a' + best)); c[best]--; next[best] = i + k; } return b.toString(); }""")),
+]
+MUTANTS["k-closest-points-to-origin"] = [
+    ("manhattan-distance", "reject", S("""
+    public int[][] kClosest(int[][] p, int k) { int[][] a = p.clone(); Arrays.sort(a, (x, y) -> (Math.abs(x[0]) + Math.abs(x[1])) - (Math.abs(y[0]) + Math.abs(y[1]))); return Arrays.copyOf(a, k); }""", LIST)),
+    ("sort-by-squared", "accept", S("""
+    public int[][] kClosest(int[][] p, int k) { int[][] a = p.clone(); Arrays.sort(a, (x, y) -> Integer.compare(x[0] * x[0] + x[1] * x[1], y[0] * y[0] + y[1] * y[1])); return Arrays.copyOf(a, k); }""", LIST)),
+]
+MUTANTS["employee-free-time"] = [
+    ("touching-counts-as-free", "reject", S("""
+    public List<Interval> employeeFreeTime(List<List<Interval>> s) { List<Interval> all = new ArrayList<>(); for (List<Interval> e : s) all.addAll(e); all.sort((x, y) -> x.start - y.start); List<Interval> o = new ArrayList<>(); int end = all.get(0).end;
+        for (Interval iv : all) { if (iv.start >= end && iv != all.get(0)) o.add(new Interval(end, iv.start)); end = Math.max(end, iv.end); } return o; }""", LIST)),
+    ("timeline-array", "accept", S("""
+    public List<Interval> employeeFreeTime(List<List<Interval>> s) { int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE; for (List<Interval> e : s) for (Interval iv : e) { lo = Math.min(lo, iv.start); hi = Math.max(hi, iv.end); }
+        boolean[] busy = new boolean[hi - lo + 1]; for (List<Interval> e : s) for (Interval iv : e) for (int t = iv.start; t < iv.end; t++) busy[t - lo] = true;
+        List<Interval> o = new ArrayList<>(); for (int t = lo; t < hi; ) { if (!busy[t - lo]) { int u = t; while (u < hi && !busy[u - lo]) u++; o.add(new Interval(t, u)); t = u; } else t++; } return o; }""", LIST)),
+]
+MUTANTS["count-of-range-sum"] = [
+    ("int-prefix-sums", "reject", S("""
+    public int countRangeSum(int[] a, int lo, int hi) { int n = a.length, c = 0; int[] p = new int[n + 1]; for (int i = 0; i < n; i++) p[i + 1] = p[i] + a[i]; for (int i = 0; i < n; i++) for (int j = i + 1; j <= n; j++) { int s = p[j] - p[i]; if (s >= lo && s <= hi) c++; } return c; }""")),
+    ("quadratic-long", "accept", S("""
+    public int countRangeSum(int[] a, int lo, int hi) { int c = 0; for (int i = 0; i < a.length; i++) { long s = 0; for (int j = i; j < a.length; j++) { s += a[j]; if (s >= lo && s <= hi) c++; } } return c; }""")),
+]
+MUTANTS["smallest-range-covering-elements-from-k-lists"] = [
+    ("min-and-max-of-heads", "reject", S("""
+    public int[] smallestRange(List<List<Integer>> n) { int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE; for (List<Integer> l : n) { lo = Math.min(lo, l.get(0)); hi = Math.max(hi, l.get(0)); } return new int[]{lo, hi}; }""", LIST)),
+    ("sweep-sorted-values", "accept", S("""
+    public int[] smallestRange(List<List<Integer>> n) { List<int[]> v = new ArrayList<>(); for (int i = 0; i < n.size(); i++) for (int x : n.get(i)) v.add(new int[]{x, i}); v.sort((a, b) -> a[0] - b[0]);
+        int[] cnt = new int[n.size()]; int have = 0, l = 0, bl = 0, bh = Integer.MAX_VALUE; boolean first = true;
+        for (int r = 0; r < v.size(); r++) { if (cnt[v.get(r)[1]]++ == 0) have++; while (have == n.size()) { long w = (long) v.get(r)[0] - v.get(l)[0]; if (first || w < (long) bh - bl || (w == (long) bh - bl && v.get(l)[0] < bl)) { bl = v.get(l)[0]; bh = v.get(r)[0]; first = false; } if (--cnt[v.get(l)[1]] == 0) have--; l++; } }
+        return new int[]{bl, bh}; }""", LIST)),
+]
+MUTANTS["reverse-bits"] = [
+    ("stops-when-n-is-zero", "reject", S("""
+    public int reverseBits(int n) { int r = 0; while (n != 0) { r = (r << 1) | (n & 1); n >>>= 1; } return r; }""")),
+    # With exactly 32 iterations, `>>` is as correct as `>>>`: step i reads original bit i
+    # either way, and sign extension only fills bits that are never read.
+    ("signed-shift-fixed-32-is-fine", "accept", S("""
+    public int reverseBits(int n) { int r = 0; for (int i = 0; i < 32; i++) { r = (r << 1) | (n & 1); n >>= 1; } return r; }""")),
+    ("library", "accept", S("""
+    public int reverseBits(int n) { return Integer.reverse(n); }""")),
+]
+MUTANTS["number-of-1-bits"] = [
+    ("counts-only-low-16", "reject", S("""
+    public int hammingWeight(int n) { int c = 0; for (int i = 0; i < 16; i++) c += (n >> i) & 1; return c; }""")),
+    ("shift-32", "accept", S("""
+    public int hammingWeight(int n) { int c = 0; for (int i = 0; i < 32; i++) c += (n >>> i) & 1; return c; }""")),
+]
+MUTANTS["sum-of-two-integers"] = [
+    ("xor-only", "reject", S("""
+    public int getSum(int a, int b) { return a ^ b; }""")),
+    ("recursive", "accept", S("""
+    public int getSum(int a, int b) { return b == 0 ? a : getSum(a ^ b, (a & b) << 1); }""")),
+]
