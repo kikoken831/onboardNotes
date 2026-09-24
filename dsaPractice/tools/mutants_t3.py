@@ -188,3 +188,179 @@ MUTANTS["find-the-duplicate-number"] = [
         while (lo < hi) { int m = (lo + hi) / 2, c = 0; for (int x : a) if (x <= m) c++; if (c > m) hi = m; else lo = m + 1; } return lo;
     }""")),
 ]
+
+# ------------------------------------------------ batch 2: windows / strings / stack
+
+MUTANTS["longest-substring-without-repeating-characters"] = [
+    ("left-moves-backwards", "reject", S("""
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> last = new HashMap<>(); int best = 0, l = 0;
+        for (int r = 0; r < s.length(); r++) { Integer p = last.get(s.charAt(r)); if (p != null) l = p + 1; last.put(s.charAt(r), r); best = Math.max(best, r - l + 1); }
+        return best;
+    }""", LIST)),
+    ("brute-force", "accept", S("""
+    public int lengthOfLongestSubstring(String s) {
+        int best = 0;
+        for (int i = 0; i < s.length(); i++) { Set<Character> seen = new HashSet<>(); for (int j = i; j < s.length() && seen.add(s.charAt(j)); j++) best = Math.max(best, j - i + 1); }
+        return best;
+    }""", LIST)),
+]
+MUTANTS["minimum-window-substring"] = [
+    ("membership-not-counts", "reject", S("""
+    public String minWindow(String s, String t) {
+        Set<Character> need = new HashSet<>(); for (char c : t.toCharArray()) need.add(c); String best = "";
+        for (int i = 0; i < s.length(); i++) { Set<Character> have = new HashSet<>();
+            for (int j = i; j < s.length(); j++) { have.add(s.charAt(j)); if (have.containsAll(need)) { if (best.isEmpty() || j - i + 1 < best.length()) best = s.substring(i, j + 1); break; } } }
+        return best;
+    }""", LIST)),
+    ("brute-force", "accept", S("""
+    public String minWindow(String s, String t) {
+        String best = "";
+        for (int i = 0; i < s.length(); i++) { int[] c = new int[128]; for (char ch : t.toCharArray()) c[ch]++; int miss = t.length();
+            for (int j = i; j < s.length(); j++) { if (c[s.charAt(j)]-- > 0) miss--; if (miss == 0) { if (best.isEmpty() || j - i + 1 < best.length()) best = s.substring(i, j + 1); break; } } }
+        return best;
+    }""")),
+]
+MUTANTS["substring-with-concatenation-of-all-words"] = [
+    ("ignores-duplicate-words", "reject", S("""
+    public List<Integer> findSubstring(String s, String[] w) {
+        Set<String> need = new HashSet<>(Arrays.asList(w)); int wl = w[0].length(), L = wl * w.length; List<Integer> o = new ArrayList<>();
+        for (int i = 0; i + L <= s.length(); i++) { boolean ok = true; for (int k = 0; k < w.length; k++) if (!need.contains(s.substring(i + k * wl, i + (k + 1) * wl))) { ok = false; break; } if (ok) o.add(i); }
+        return o;
+    }""", LIST)),
+    ("brute-force-map", "accept", S("""
+    public List<Integer> findSubstring(String s, String[] w) {
+        Map<String, Integer> need = new HashMap<>(); for (String x : w) need.merge(x, 1, Integer::sum);
+        int wl = w[0].length(), L = wl * w.length; List<Integer> o = new ArrayList<>();
+        for (int i = 0; i + L <= s.length(); i++) { Map<String, Integer> have = new HashMap<>();
+            for (int k = 0; k < w.length; k++) have.merge(s.substring(i + k * wl, i + (k + 1) * wl), 1, Integer::sum);
+            if (have.equals(need)) o.add(i); }
+        return o;
+    }""", LIST)),
+]
+MUTANTS["longest-repeating-character-replacement"] = [
+    ("if-not-while-and-no-k", "reject", S("""
+    public int characterReplacement(String s, int k) {
+        int best = 1, run = 1; for (int i = 1; i < s.length(); i++) { run = s.charAt(i) == s.charAt(i - 1) ? run + 1 : 1; best = Math.max(best, run); } return Math.min(s.length(), best + k);
+    }""")),
+    ("brute-force", "accept", S("""
+    public int characterReplacement(String s, int k) {
+        int best = 0;
+        for (int i = 0; i < s.length(); i++) { int[] c = new int[26]; int mx = 0; for (int j = i; j < s.length(); j++) { mx = Math.max(mx, ++c[s.charAt(j) - 'A']); if (j - i + 1 - mx <= k) best = Math.max(best, j - i + 1); } }
+        return best;
+    }""")),
+]
+MUTANTS["permutation-in-string"] = [
+    ("subsequence-not-substring", "reject", S("""
+    public boolean checkInclusion(String a, String b) { int[] c = new int[26]; for (char x : a.toCharArray()) c[x - 'a']++; for (char x : b.toCharArray()) c[x - 'a']--; for (int v : c) if (v > 0) return false; return true; }""")),
+    ("compare-26-each-step", "accept", S("""
+    public boolean checkInclusion(String a, String b) {
+        int n = a.length(); if (n > b.length()) return false; int[] ca = new int[26], cb = new int[26];
+        for (int i = 0; i < n; i++) { ca[a.charAt(i) - 'a']++; cb[b.charAt(i) - 'a']++; }
+        if (Arrays.equals(ca, cb)) return true;
+        for (int r = n; r < b.length(); r++) { cb[b.charAt(r) - 'a']++; cb[b.charAt(r - n) - 'a']--; if (Arrays.equals(ca, cb)) return true; }
+        return false;
+    }""", LIST)),
+]
+MUTANTS["fruit-into-baskets"] = [
+    ("never-removes-empty-key", "reject", S("""
+    public int totalFruit(int[] f) {
+        Map<Integer, Integer> c = new HashMap<>(); int l = 0, b = 0;
+        for (int r = 0; r < f.length; r++) { c.merge(f[r], 1, Integer::sum); while (c.size() > 2) { c.merge(f[l], -1, Integer::sum); l++; } b = Math.max(b, r - l + 1); }
+        return b;
+    }""", LIST)),
+    ("brute-force", "accept", S("""
+    public int totalFruit(int[] f) { int b = 0; for (int i = 0; i < f.length; i++) { Set<Integer> s = new HashSet<>(); for (int j = i; j < f.length; j++) { s.add(f[j]); if (s.size() > 2) break; b = Math.max(b, j - i + 1); } } return b; }""", LIST)),
+]
+MUTANTS["minimum-size-subarray-sum"] = [
+    ("if-not-while", "reject", S("""
+    public int minSubArrayLen(int t, int[] a) { int l = 0, s = 0, b = Integer.MAX_VALUE; for (int r = 0; r < a.length; r++) { s += a[r]; if (s >= t) { b = Math.min(b, r - l + 1); s -= a[l++]; } } return b == Integer.MAX_VALUE ? 0 : b; }""")),
+    ("brute-force", "accept", S("""
+    public int minSubArrayLen(int t, int[] a) { int b = 0; for (int i = 0; i < a.length; i++) { int s = 0; for (int j = i; j < a.length; j++) { s += a[j]; if (s >= t) { if (b == 0 || j - i + 1 < b) b = j - i + 1; break; } } } return b; }""")),
+]
+MUTANTS["subarray-product-less-than-k"] = [
+    # NB: adding `&& l <= r` to the while makes this CORRECT -- it handles k <= 1 by
+    # emptying the window. The bug is the unguarded loop, which walks l past r.
+    ("no-k-le-1-guard", "reject", S("""
+    public int numSubarrayProductLessThanK(int[] a, int k) { long p = 1; int l = 0, c = 0; for (int r = 0; r < a.length; r++) { p *= a[r]; while (p >= k) p /= a[l++]; c += r - l + 1; } return c; }""")),
+    ("guarded-loop-is-fine", "accept", S("""
+    public int numSubarrayProductLessThanK(int[] a, int k) { long p = 1; int l = 0, c = 0; for (int r = 0; r < a.length; r++) { p *= a[r]; while (p >= k && l <= r) p /= a[l++]; c += r - l + 1; } return c; }""")),
+    ("brute-force", "accept", S("""
+    public int numSubarrayProductLessThanK(int[] a, int k) { int c = 0; for (int i = 0; i < a.length; i++) { long p = 1; for (int j = i; j < a.length; j++) { p *= a[j]; if (p >= k) break; c++; } } return c; }""")),
+]
+MUTANTS["maximum-average-subarray-i"] = [
+    ("best-starts-at-zero", "reject", S("""
+    public double findMaxAverage(int[] a, int k) { long s = 0, b = 0; for (int i = 0; i < a.length; i++) { s += a[i]; if (i >= k) s -= a[i - k]; if (i >= k - 1) b = Math.max(b, s); } return (double) b / k; }""")),
+    ("prefix-sums", "accept", S("""
+    public double findMaxAverage(int[] a, int k) { long[] p = new long[a.length + 1]; for (int i = 0; i < a.length; i++) p[i + 1] = p[i] + a[i]; long b = Long.MIN_VALUE; for (int i = k; i <= a.length; i++) b = Math.max(b, p[i] - p[i - k]); return b / (double) k; }""")),
+]
+MUTANTS["sliding-window-maximum"] = [
+    ("never-evicts-front", "reject", S("""
+    public int[] maxSlidingWindow(int[] a, int k) {
+        int[] o = new int[a.length - k + 1]; Deque<Integer> d = new ArrayDeque<>();
+        for (int i = 0; i < a.length; i++) { while (!d.isEmpty() && a[d.peekLast()] <= a[i]) d.pollLast(); d.addLast(i); if (i >= k - 1) o[i - k + 1] = a[d.peekFirst()]; }
+        return o;
+    }""", LIST)),
+    ("brute-force", "accept", S("""
+    public int[] maxSlidingWindow(int[] a, int k) { int[] o = new int[a.length - k + 1]; for (int i = 0; i < o.length; i++) { int m = a[i]; for (int j = i; j < i + k; j++) m = Math.max(m, a[j]); o[i] = m; } return o; }""")),
+]
+MUTANTS["sliding-window-median"] = [
+    ("int-overflow-mean", "reject", S("""
+    public double[] medianSlidingWindow(int[] a, int k) { double[] o = new double[a.length - k + 1]; for (int i = 0; i < o.length; i++) { int[] w = Arrays.copyOfRange(a, i, i + k); Arrays.sort(w); o[i] = (w[(k - 1) / 2] + w[k / 2]) / 2.0; } return o; }""", LIST)),
+    ("sort-each-window", "accept", S("""
+    public double[] medianSlidingWindow(int[] a, int k) { double[] o = new double[a.length - k + 1]; for (int i = 0; i < o.length; i++) { int[] w = Arrays.copyOfRange(a, i, i + k); Arrays.sort(w); o[i] = ((long) w[(k - 1) / 2] + w[k / 2]) / 2.0; } return o; }""", LIST)),
+]
+MUTANTS["valid-parentheses"] = [
+    ("counts-only", "reject", S("""
+    public boolean isValid(String s) { int a = 0, b = 0, c = 0; for (char x : s.toCharArray()) { if (x == '(') a++; if (x == ')') a--; if (x == '[') b++; if (x == ']') b--; if (x == '{') c++; if (x == '}') c--; if (a < 0 || b < 0 || c < 0) return false; } return a == 0 && b == 0 && c == 0; }""")),
+    ("replace-pairs", "accept", S("""
+    public boolean isValid(String s) { String p; do { p = s; s = s.replace("()", "").replace("[]", "").replace("{}", ""); } while (!s.equals(p)); return s.isEmpty(); }""")),
+]
+MUTANTS["backspace-string-compare"] = [
+    ("backspace-on-empty-crashes-or-counts", "reject", S("""
+    public boolean backspaceCompare(String s, String t) { return f(s).equals(f(t)); }
+    String f(String s) { StringBuilder b = new StringBuilder(); for (char c : s.toCharArray()) { if (c == '#') { if (b.length() > 0) b.setLength(b.length() - 1); else b.append('#'); } else b.append(c); } return b.toString(); }""")),
+    ("stack-build", "accept", S("""
+    public boolean backspaceCompare(String s, String t) { return f(s).equals(f(t)); }
+    String f(String s) { StringBuilder b = new StringBuilder(); for (char c : s.toCharArray()) { if (c == '#') { if (b.length() > 0) b.setLength(b.length() - 1); } else b.append(c); } return b.toString(); }""")),
+]
+MUTANTS["is-subsequence"] = [
+    ("contains-each-char", "reject", S("""
+    public boolean isSubsequence(String s, String t) { for (char c : s.toCharArray()) if (t.indexOf(c) < 0) return false; return true; }""")),
+    ("indexOf-from", "accept", S("""
+    public boolean isSubsequence(String s, String t) { int p = 0; for (char c : s.toCharArray()) { p = t.indexOf(c, p); if (p < 0) return false; p++; } return true; }""")),
+]
+MUTANTS["find-k-closest-elements"] = [
+    ("tie-prefers-larger", "reject", S("""
+    public List<Integer> findClosestElements(int[] a, int k, int x) { int l = 0, r = a.length - 1; while (r - l + 1 > k) { if (Math.abs(a[l] - x) >= Math.abs(a[r] - x)) l++; else r--; } List<Integer> o = new ArrayList<>(); for (int i = l; i <= r; i++) o.add(a[i]); return o; }""", LIST)),
+    ("shrink-both-ends", "accept", S("""
+    public List<Integer> findClosestElements(int[] a, int k, int x) { int l = 0, r = a.length - 1; while (r - l + 1 > k) { if (Math.abs(a[l] - x) > Math.abs(a[r] - x)) l++; else r--; } List<Integer> o = new ArrayList<>(); for (int i = l; i <= r; i++) o.add(a[i]); return o; }""", LIST)),
+]
+MUTANTS["trapping-rain-water"] = [
+    ("uses-global-max", "reject", S("""
+    public int trap(int[] h) { int m = 0; for (int x : h) m = Math.max(m, x); int w = 0; for (int i = 1; i < h.length - 1; i++) w += Math.max(0, m - h[i]); return w; }""")),
+    ("prefix-max-arrays", "accept", S("""
+    public int trap(int[] h) { int n = h.length; int[] L = new int[n], R = new int[n]; for (int i = 0; i < n; i++) L[i] = Math.max(i > 0 ? L[i - 1] : 0, h[i]); for (int i = n - 1; i >= 0; i--) R[i] = Math.max(i < n - 1 ? R[i + 1] : 0, h[i]); int w = 0; for (int i = 0; i < n; i++) w += Math.min(L[i], R[i]) - h[i]; return w; }""")),
+]
+MUTANTS["longest-palindromic-substring"] = [
+    ("odd-centres-only", "reject", S("""
+    public String longestPalindrome(String s) { int bs = 0, bl = 1; for (int c = 0; c < s.length(); c++) { int l = c, r = c; while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) { l--; r++; } if (r - l - 1 > bl) { bl = r - l - 1; bs = l + 1; } } return s.substring(bs, bs + bl); }""")),
+    ("dp-table-picks-other-tie", "accept", S("""
+    public String longestPalindrome(String s) {
+        int n = s.length(); boolean[][] d = new boolean[n][n]; String best = s.substring(n - 1);
+        for (int i = n - 1; i >= 0; i--) for (int j = i; j < n; j++) { d[i][j] = s.charAt(i) == s.charAt(j) && (j - i < 2 || d[i + 1][j - 1]); if (d[i][j] && j - i + 1 >= best.length()) best = s.substring(i, j + 1); }
+        return best;
+    }""")),
+]
+MUTANTS["palindromic-substrings"] = [
+    ("counts-distinct", "reject", S("""
+    public int countSubstrings(String s) { Set<String> seen = new HashSet<>(); for (int i = 0; i < s.length(); i++) for (int j = i + 1; j <= s.length(); j++) { String t = s.substring(i, j); if (new StringBuilder(t).reverse().toString().equals(t)) seen.add(t); } return seen.size(); }""", LIST)),
+    ("brute-force", "accept", S("""
+    public int countSubstrings(String s) { int c = 0; for (int i = 0; i < s.length(); i++) for (int j = i + 1; j <= s.length(); j++) { String t = s.substring(i, j); if (new StringBuilder(t).reverse().toString().equals(t)) c++; } return c; }""")),
+]
+MUTANTS["count-unique-characters-of-all-substrings-of-a-given-string"] = [
+    ("counts-distinct-not-unique", "reject", S("""
+    public int uniqueLetterString(String s) { int t = 0; for (int i = 0; i < s.length(); i++) { Set<Character> seen = new HashSet<>(); for (int j = i; j < s.length(); j++) { seen.add(s.charAt(j)); t += seen.size(); } } return t; }""", LIST)),
+    ("brute-force", "accept", S("""
+    public int uniqueLetterString(String s) { int t = 0; for (int i = 0; i < s.length(); i++) { int[] c = new int[26]; int u = 0; for (int j = i; j < s.length(); j++) { int x = s.charAt(j) - 'A'; if (++c[x] == 1) u++; else if (c[x] == 2) u--; t += u; } } return t; }""")),
+]
