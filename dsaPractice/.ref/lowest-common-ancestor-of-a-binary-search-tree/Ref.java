@@ -2,7 +2,7 @@ class Ref implements Problem {
     public Spec spec() {
         return Spec.method("lowestCommonAncestor", T.TREE_NODE, T.INT, T.INT).returns(T.TREE_NODE)
             // p and q arrive as values; each call gets the matching node objects of its own copy.
-            .prepare(a -> { TreeNode r = (TreeNode) a[0]; a[1] = find(r, (Integer) a[1]); a[2] = find(r, (Integer) a[2]); })
+            .prepare(a -> { Pre.check(!a[1].equals(a[2]), "p != q"); TreeNode r = (TreeNode) a[0]; a[1] = find(r, (Integer) a[1]); a[2] = find(r, (Integer) a[2]); })
             .judgeAs(T.INT, Ref::valueOf)
             .example("[6,2,8,0,4,7,9,null,null,3,5], 2, 8", "6").example("[6,2,8,0,4,7,9,null,null,3,5], 2, 4", "2")
             .example("[2,1], 2, 1", "2").example("[6,2,8,0,4,7,9,null,null,3,5], 3, 5", "4")
@@ -27,7 +27,7 @@ class Ref implements Problem {
     /** Relabel with distinct values: LCA and distance-K identify nodes by value. */
     static TreeNode distinct(TreeNode t, Gen g) {
         java.util.List<TreeNode> all = nodes(t);
-        int[] v = g.distinctInts(all.size(), all.size(), 0, 1000);
+        int[] v = g.distinctInts(all.size(), all.size(), 0, Math.max(1000, 4 * all.size()));
         for (int i = 0; i < all.size(); i++) all.get(i).val = v[i];
         return t;
     }

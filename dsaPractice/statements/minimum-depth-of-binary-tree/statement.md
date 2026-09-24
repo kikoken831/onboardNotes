@@ -5,7 +5,7 @@ LeetCode 111 · Easy · https://leetcode.com/problems/minimum-depth-of-binary-tr
 ## Brief
 
 Return the number of nodes on the shortest path from the root to a **leaf** (a node with no
-children). the standard `TreeNode` (`val`, `left`, `right`) is provided.
+children). The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

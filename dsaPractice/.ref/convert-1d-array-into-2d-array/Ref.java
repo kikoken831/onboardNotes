@@ -11,6 +11,7 @@ class Ref implements Problem {
             .patterns("Array", "Matrix", "Simulation").limitMs(2000).maxN(100000);
     }
     public int[][] construct2DArray(int[] original, int m, int n) {
+        Pre.check(m >= 1 && n >= 1, "1 <= m, n");
         if ((long) m * n != original.length) return new int[0][];
         int[][] out = new int[m][n];
         for (int i = 0; i < original.length; i++) out[i / n][i % n] = original[i];

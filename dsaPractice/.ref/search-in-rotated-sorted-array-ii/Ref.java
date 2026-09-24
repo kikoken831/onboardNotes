@@ -10,9 +10,13 @@ class Ref implements Problem {
                 for (int i = 0; i < s.length; i++) a[i] = s[(i + k) % s.length];
                 return new Object[]{ a, g.nextInt(-1, 7) };
             })
-            .patterns("Array", "Binary Search").limitMs(2000).maxN(200000);
+            .patterns("Array", "Binary Search").limitMs(2000).maxN(5000);
     }
     public boolean search(int[] a, int t) {
+        Pre.check(a.length >= 1, "1 <= nums.length");
+        int descents = 0;                                // all-equal and plain sorted arrays have none
+        for (int i = 1; i < a.length; i++) if (a[i] < a[i - 1]) descents++;
+        Pre.check(descents == 0 || (descents == 1 && a[a.length - 1] <= a[0]), "nums is a rotated non-decreasing array");
         int lo = 0, hi = a.length - 1;
         while (lo <= hi) {
             int m = (lo + hi) / 2;

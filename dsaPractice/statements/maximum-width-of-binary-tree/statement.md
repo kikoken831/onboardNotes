@@ -6,7 +6,7 @@ LeetCode 662 · Medium · https://leetcode.com/problems/maximum-width-of-binary-
 
 A level's width is the distance between its leftmost and rightmost non-null nodes, **counting
 the null positions between them** as if the tree were complete. Return the maximum width. The
-answer fits in 32 bits. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+answer fits in 32 bits. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

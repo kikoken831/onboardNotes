@@ -4,7 +4,7 @@ LeetCode 21 · Easy · https://leetcode.com/problems/merge-two-sorted-lists/
 
 ## Brief
 
-Merge two sorted lists into one sorted list by **splicing** their nodes together. the standard `ListNode` (`val`, `next`) is provided.
+Merge two sorted lists into one sorted list by **splicing** their nodes together. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

@@ -5,7 +5,7 @@ LeetCode 235 · Medium · https://leetcode.com/problems/lowest-common-ancestor-o
 ## Brief
 
 Given a BST and two of its nodes `p` and `q`, return their lowest common ancestor — the
-deepest node that has both as descendants (a node is a descendant of itself). the standard `TreeNode` (`val`, `left`, `right`) is provided.
+deepest node that has both as descendants (a node is a descendant of itself). The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 `p` and `q` are **nodes of the tree you're given**, not copies. Examples list them by value;
 the judge reports the value of the node you return.

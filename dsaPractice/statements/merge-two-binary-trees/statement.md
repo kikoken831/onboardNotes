@@ -5,7 +5,7 @@ LeetCode 617 · Easy · https://leetcode.com/problems/merge-two-binary-trees/
 ## Brief
 
 Overlay the trees: where both have a node, the merged node's value is the sum; otherwise use
-whichever node exists. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+whichever node exists. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

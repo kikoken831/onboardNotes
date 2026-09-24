@@ -15,6 +15,8 @@ class Ref implements Problem {
             .patterns("Array", "Two Pointers", "Greedy", "Sorting", "Heap (Priority Queue)").limitMs(2000).maxN(100000);
     }
     public int minMeetingRooms(int[][] intervals) {
+        Pre.check(intervals.length >= 1, "1 <= intervals.length");
+        for (int[] m : intervals) Pre.check(m.length == 2 && 0 <= m[0] && m[0] < m[1], "0 <= start < end");
         int[][] a = intervals.clone();
         Arrays.sort(a, (x, y) -> Integer.compare(x[0], y[0]));
         PriorityQueue<Integer> ends = new PriorityQueue<>();

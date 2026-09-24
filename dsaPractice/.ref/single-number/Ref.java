@@ -15,7 +15,7 @@ class Ref implements Problem {
                 for (int i = a.length - 1; i > 0; i--) { int j = g.nextInt(0, i); int t = a[i]; a[i] = a[j]; a[j] = t; }
                 return new Object[]{ a };
             })
-            .patterns("Array", "Bit Manipulation").limitMs(2000).maxN(200000);
+            .patterns("Array", "Bit Manipulation").limitMs(2000).maxN(14999);
     }
     public int singleNumber(int[] nums) {
         Pre.check(nums.length % 2 == 1, "odd length: pairs plus one");

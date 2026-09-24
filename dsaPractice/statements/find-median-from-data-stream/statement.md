@@ -26,15 +26,15 @@ of everything added so far (mean of the two middles for an even count). Answers 
 class MedianFinder {
 
     public MedianFinder() {
-        
+
     }
 
     public void addNum(int num) {
-        
+
     }
 
     public double findMedian() {
-        
+
     }
 }
 ```

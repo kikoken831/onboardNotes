@@ -4,7 +4,7 @@ LeetCode 107 · Medium · https://leetcode.com/problems/binary-tree-level-order-
 
 ## Brief
 
-Level order from the **bottom** level up; each level still left to right. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Level order from the **bottom** level up; each level still left to right. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

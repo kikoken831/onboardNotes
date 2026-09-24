@@ -9,6 +9,7 @@ Can `s` be split into a sequence of one or more dictionary words? Words may be r
 ## Constraints
 
 - `1 <= s.length <= 300`, `1 <= wordDict.length <= 1000`
+- all words in `wordDict` are unique
 
 ## Examples
 

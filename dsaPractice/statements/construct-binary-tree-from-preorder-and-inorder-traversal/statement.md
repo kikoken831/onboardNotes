@@ -5,7 +5,7 @@ LeetCode 105 · Medium · https://leetcode.com/problems/construct-binary-tree-fr
 ## Brief
 
 Given the preorder and inorder traversals of a tree with **distinct** values, rebuild it.
-the standard `TreeNode` (`val`, `left`, `right`) is provided.
+The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

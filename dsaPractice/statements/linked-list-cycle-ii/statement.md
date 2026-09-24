@@ -6,7 +6,7 @@ LeetCode 142 · Medium · https://leetcode.com/problems/linked-list-cycle-ii/
 
 Return the node where the cycle **begins**, or `null` if there is no cycle. As in 141, the
 cycle is described by `pos`, which you don't get. **Do not modify the list** — the judge
-checks. the standard `ListNode` (`val`, `next`) is provided.
+checks. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

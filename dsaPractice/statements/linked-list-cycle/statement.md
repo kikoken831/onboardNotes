@@ -6,7 +6,7 @@ LeetCode 141 · Easy · https://leetcode.com/problems/linked-list-cycle/
 
 Return whether the list contains a cycle. Test cases are written as `[values], pos`, where
 `pos` is the index the tail links back to (`-1`: no cycle). **`pos` is not passed to you**
-— you only get `head`. the standard `ListNode` (`val`, `next`) is provided.
+— you only get `head`. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

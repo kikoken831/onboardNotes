@@ -4,11 +4,11 @@ LeetCode 373 · Medium · https://leetcode.com/problems/find-k-pairs-with-smalle
 
 ## Brief
 
-Both arrays are sorted. Return the `k` pairs `(u, v)` — `u` from `nums1`, `v` from `nums2` — with the smallest sums, or all pairs if there are fewer than `k`. With ties, any correct selection is accepted.
+Both arrays are sorted. Return the `k` pairs `(u, v)` — `u` from `nums1`, `v` from `nums2` — with the smallest sums (`k` never exceeds `nums1.length * nums2.length`). With ties, any correct selection is accepted.
 
 ## Constraints
 
-- `1 <= lengths <= 10^5`, `1 <= k <= 10^4`
+- `1 <= lengths <= 10^5`, `1 <= k <= 10^4`, `k <= nums1.length * nums2.length`
 
 ## Examples
 

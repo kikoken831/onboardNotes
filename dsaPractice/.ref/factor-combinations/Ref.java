@@ -10,6 +10,7 @@ class Ref implements Problem {
             .patterns("Backtracking").limitMs(2000).maxN(10);
     }
     public List<List<Integer>> getFactors(int n) {
+        Pre.check(n >= 1 && n <= 10_000_000, "1 <= n <= 10^7");
         List<List<Integer>> out = new ArrayList<>();
         go(n, 2, new ArrayList<>(), out);
         return out;

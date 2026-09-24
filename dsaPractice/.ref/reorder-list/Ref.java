@@ -3,7 +3,7 @@ class Ref implements Problem {
         return Spec.method("reorderList", T.LIST_NODE).returns(T.VOID).inPlace(0)
             .exampleInPlace("[1,2,3,4]", "[1,4,2,3]").exampleInPlace("[1,2,3,4,5]", "[1,5,2,4,3]")
             .exampleInPlace("[1]", "[1]").exampleInPlace("[1,2]", "[1,2]")
-            .gen(g -> new Object[]{ g.list(1, 30, 0, 20) })
+            .gen(g -> new Object[]{ g.list(1, 30, 1, 20) })   // LeetCode: 1 <= Node.val
             .patterns("Linked List", "Two Pointers", "Stack", "Recursion").limitMs(2000).maxN(100000);
     }
     public void reorderList(ListNode head) {

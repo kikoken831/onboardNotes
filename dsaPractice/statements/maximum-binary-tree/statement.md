@@ -6,7 +6,7 @@ LeetCode 654 · Medium · https://leetcode.com/problems/maximum-binary-tree/
 
 Build the tree recursively: the root is the maximum value; the left subtree is built from the
 part of the array to its left, the right subtree from the part to its right. Values are
-distinct. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+distinct. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

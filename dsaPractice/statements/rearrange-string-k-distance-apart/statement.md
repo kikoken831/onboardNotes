@@ -40,7 +40,9 @@ it can be used again. If the heap runs dry while letters are still parked, it's 
 
 <details><summary>Hint 1</summary>
 
-The queue holds exactly the last `k - 1` letters used; when it reaches size `k`, the oldest is
-free again.
+After using a letter, push it onto a cooling queue. Once the queue holds `k` letters, the
+oldest was placed `k - 1` positions before the newest, so it may go at the very next position
+(distance `k`): pop it and, if copies remain, return it to the heap. Between steps the queue
+therefore holds the last `k - 1` letters used (fewer at the start).
 
 </details>

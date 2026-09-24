@@ -30,11 +30,11 @@ Design problem: implement `class ParkingSystem`.
 class ParkingSystem {
 
     public ParkingSystem(int big, int medium, int small) {
-        
+
     }
 
     public boolean addCar(int carType) {
-        
+
     }
 }
 ```

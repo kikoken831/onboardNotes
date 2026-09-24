@@ -25,11 +25,11 @@ Implement `class NumArray`: construct with `nums`; `sumRange(left, right)` retur
 class NumArray {
 
     public NumArray(int[] nums) {
-        
+
     }
 
     public int sumRange(int left, int right) {
-        
+
     }
 }
 ```

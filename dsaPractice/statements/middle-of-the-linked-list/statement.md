@@ -4,7 +4,7 @@ LeetCode 876 · Easy · https://leetcode.com/problems/middle-of-the-linked-list/
 
 ## Brief
 
-Return the middle node. With two middle nodes, return the **second**. the standard `ListNode` (`val`, `next`) is provided.
+Return the middle node. With two middle nodes, return the **second**. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

@@ -18,7 +18,7 @@ class Ref implements Problem {
 
     /** One 4-connected island, no lakes, grown by random walk. */
     private static Object[] island(Gen g) {
-        int r = g.size(1, 12), c = g.size(1, 12);
+        int r = g.side(1, 12), c = g.side(1, 12);
         int[][] a = new int[r][c];
         int x = g.nextInt(0, r - 1), y = g.nextInt(0, c - 1);
         a[x][y] = 1;

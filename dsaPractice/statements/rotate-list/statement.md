@@ -4,7 +4,7 @@ LeetCode 61 · Medium · https://leetcode.com/problems/rotate-list/
 
 ## Brief
 
-Rotate the list to the **right** by `k` places. `k` can be far larger than the length. the standard `ListNode` (`val`, `next`) is provided.
+Rotate the list to the **right** by `k` places. `k` can be far larger than the length. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

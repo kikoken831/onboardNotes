@@ -7,6 +7,7 @@ class Ref implements Problem {
             .example("[10]",                "false")
             .example("[5,5,10,20]",         "true")
             .example("[5,5,5,5,20,20]",     "false")
+            .example("[5,5,5,5,10,20,10]",  "true")    // paying 5+5+5 for the $20 strands the last $10
             .gen(g -> {
                 int n = g.size(1, 40);
                 int[] b = new int[n];

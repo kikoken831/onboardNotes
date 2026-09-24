@@ -8,7 +8,7 @@ class Ref implements Problem {
             .example("[[\"a\",\"b\"],[\"c\",\"d\"]], [\"abcb\"]", "[]")
             .example("[[\"a\",\"a\"]], [\"aaa\",\"aa\"]", "[\"aa\"]")           // each found word reported once
             .gen(g -> {
-                int r = g.size(1, 5), c = g.size(1, 5);
+                int r = g.side(1, 5), c = g.side(1, 5);
                 char[][] b = new char[r][c];
                 for (int i = 0; i < r; i++) for (int j = 0; j < c; j++) b[i][j] = "abc".charAt(g.nextInt(0, 2));
                 Set<String> w = new LinkedHashSet<>(Arrays.asList(g.words(1, 10, 1, 5, "abc")));

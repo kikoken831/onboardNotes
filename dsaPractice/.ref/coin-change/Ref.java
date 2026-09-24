@@ -7,6 +7,8 @@ class Ref implements Problem {
             .patterns("Array", "Dynamic Programming", "Breadth-First Search").limitMs(2000).maxN(10000);
     }
     public int coinChange(int[] coins, int amount) {
+        for (int c : coins) Pre.check(c >= 1, "1 <= coins[i]");
+        Pre.check(amount >= 0 && amount <= 10_000, "0 <= amount <= 10^4");
         int[] d = new int[amount + 1];
         java.util.Arrays.fill(d, Integer.MAX_VALUE);
         d[0] = 0;

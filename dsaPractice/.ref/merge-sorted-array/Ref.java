@@ -10,6 +10,7 @@ class Ref implements Problem {
             .exampleInPlace("[2,0], 1, [1], 1",             "[1,2]")
             .gen(g -> {
                 int m = g.size(0, 30), n = g.size(0, 30);
+                if (m + n == 0) { if (g.chance(0.5)) m = 1; else n = 1; }       // 1 <= m + n
                 int[] a = g.sortedInts(m, m, -20, 20);
                 int[] b = g.sortedInts(n, n, -20, 20);
                 int[] nums1 = new int[m + n];
@@ -22,8 +23,8 @@ class Ref implements Problem {
     }
 
     public void merge(int[] nums1, int m, int[] nums2, int n) {
-        Pre.check(m >= 0 && n >= 0 && nums1.length == m + n && nums2.length == n,
-                  "nums1.length == m + n, nums2.length == n");
+        Pre.check(m >= 0 && n >= 0 && m + n >= 1 && nums1.length == m + n && nums2.length == n,
+                  "1 <= m + n, nums1.length == m + n, nums2.length == n");
         Pre.sorted(java.util.Arrays.copyOf(nums1, m), false, "nums1[0..m)");
         Pre.sorted(nums2, false, "nums2");
         int i = m - 1, j = n - 1, w = m + n - 1;

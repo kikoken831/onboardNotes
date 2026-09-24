@@ -6,6 +6,9 @@ class Ref implements Problem {
             .patterns("Array", "Dynamic Programming").limitMs(2000).maxN(1000);
     }
     public int combinationSum4(int[] nums, int target) {
+        java.util.Set<Integer> seen = new java.util.HashSet<>();
+        for (int x : nums) Pre.check(x >= 1 && x <= 1000 && seen.add(x), "distinct nums, 1 <= nums[i] <= 1000");
+        Pre.check(target >= 1 && target <= 1000, "1 <= target <= 1000");
         long[] d = new long[target + 1];
         d[0] = 1;
         for (int t = 1; t <= target; t++) for (int x : nums) if (x <= t) d[t] += d[t - x];   // target outer: order matters

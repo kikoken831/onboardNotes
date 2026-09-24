@@ -29,11 +29,11 @@ Design problem: implement `class RecentCounter`.
 class RecentCounter {
 
     public RecentCounter() {
-        
+
     }
 
     public int ping(int t) {
-        
+
     }
 }
 ```
@@ -48,8 +48,9 @@ A **sliding window over a stream**: because times only increase, anything that f
 of the window never comes back — so a queue, evicting from the front, is enough. Each
 timestamp is added once and removed once.
 
-The window is **inclusive** (`t - 3000` counts). The judge pins both `3001 → 3001` (inside)
-and `1 → 3002` (outside).
+The window is **inclusive** (`t - 3000` counts). The judge pins both a ping at `1` then `3001`
+(exactly 3000 ms apart: inside, count 2) and a ping at `1` then `3002` (3001 ms apart:
+outside, count 1).
 
 ## Hints
 

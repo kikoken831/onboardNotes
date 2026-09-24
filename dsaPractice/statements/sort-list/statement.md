@@ -4,7 +4,7 @@ LeetCode 148 · Medium · https://leetcode.com/problems/sort-list/
 
 ## Brief
 
-Sort the linked list in ascending order and return its head. the standard `ListNode` (`val`, `next`) is provided.
+Sort the linked list in ascending order and return its head. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

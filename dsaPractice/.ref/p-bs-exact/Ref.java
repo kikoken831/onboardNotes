@@ -10,7 +10,7 @@ class Ref implements Problem {
             .example("[5], -5",            "-1")
             .example("[1,2], 2",           "1")
             .gen(g -> {
-                int[] a = g.strictlySortedInts(0, 60, -30, 30);
+                int[] a = g.strictlySortedInts(0, 60, -Math.max(30, g.forcedSize), Math.max(30, g.forcedSize));
                 // Half the searches should hit, or misses dominate and hitting paths
                 // go untested.
                 int target = (a.length > 0 && g.chance(0.5))

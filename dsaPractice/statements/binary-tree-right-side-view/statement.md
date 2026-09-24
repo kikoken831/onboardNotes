@@ -5,7 +5,7 @@ LeetCode 199 · Medium · https://leetcode.com/problems/binary-tree-right-side-v
 ## Brief
 
 Standing to the right of the tree, return the values you can see, top to bottom — the
-**last** node of each level. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+**last** node of each level. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

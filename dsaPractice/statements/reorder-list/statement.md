@@ -5,7 +5,7 @@ LeetCode 143 · Medium · https://leetcode.com/problems/reorder-list/
 ## Brief
 
 Reorder `L0 → L1 → … → Ln` into `L0 → Ln → L1 → Ln-1 → L2 → …` **in place**, by relinking
-nodes. Return nothing. the standard `ListNode` (`val`, `next`) is provided.
+nodes. Return nothing. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

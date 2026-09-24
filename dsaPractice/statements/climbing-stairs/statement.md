@@ -29,7 +29,7 @@ O(n), O(1) space.
 
 ## The skill
 
-**Ramp:** Tier 1 `p-dp-fib-memo-then-table`. `ways(n) = ways(n−1) + ways(n−2)` — Fibonacci shifted by one. Naive recursion is O(2ⁿ) and **times out at `n = 45`**, which the judge checks; that's the point of the problem.
+**Ramp:** Tier 1 `p-dp-fib-memo-then-table`. `ways(n) = ways(n−1) + ways(n−2)` — Fibonacci shifted by one. Naive recursion is O(φⁿ) and **far too slow at `n = 45`** (over 2 billion calls; the judge pins that case); that's the point of the problem.
 
 ## Hints
 

@@ -5,7 +5,7 @@ LeetCode 23 · Hard · https://leetcode.com/problems/merge-k-sorted-lists/
 ## Brief
 
 Merge an array of `k` sorted lists into one sorted list. Any list may be empty, and the
-array itself may be empty. the standard `ListNode` (`val`, `next`) is provided.
+array itself may be empty. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

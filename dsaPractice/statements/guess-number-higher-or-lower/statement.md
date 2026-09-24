@@ -38,7 +38,7 @@ n=2126753390, pick=1702766719   ->  1702766719
  */
 public class Solution extends GuessGame {
     public int guessNumber(int n) {
-        
+
     }
 }
 ```

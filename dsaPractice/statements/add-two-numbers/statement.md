@@ -6,7 +6,7 @@ LeetCode 2 · Medium · https://leetcode.com/problems/add-two-numbers/
 
 Two non-negative integers are stored as linked lists of digits, **least significant digit
 first**. Return their sum in the same form. There are no leading zeros except the number 0.
-the standard `ListNode` (`val`, `next`) is provided.
+The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

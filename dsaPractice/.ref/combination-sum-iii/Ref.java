@@ -10,6 +10,7 @@ class Ref implements Problem {
             .patterns("Array", "Backtracking").limitMs(2000).maxN(10);
     }
     public List<List<Integer>> combinationSum3(int k, int n) {
+        Pre.check(k >= 2 && k <= 9 && n >= 1 && n <= 60, "2 <= k <= 9, 1 <= n <= 60");
         List<List<Integer>> out = new ArrayList<>();
         go(1, k, n, new ArrayList<>(), out);
         return out;

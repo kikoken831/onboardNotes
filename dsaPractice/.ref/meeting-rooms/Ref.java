@@ -14,6 +14,7 @@ class Ref implements Problem {
             .patterns("Array", "Sorting").limitMs(2000).maxN(100000);
     }
     public boolean canAttendMeetings(int[][] intervals) {
+        for (int[] m : intervals) Pre.check(m.length == 2 && 0 <= m[0] && m[0] < m[1], "0 <= start < end");
         int[][] a = intervals.clone();
         Arrays.sort(a, (x, y) -> Integer.compare(x[0], y[0]));
         for (int i = 1; i < a.length; i++) if (a[i][0] < a[i - 1][1]) return false;

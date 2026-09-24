@@ -10,7 +10,8 @@ the property (complete, valid, givens unchanged), so any correct fill passes.
 
 ## Constraints
 
-- `board` is 9×9 of `'1'`–`'9'` and `'.'`; solvable
+- `board` is 9×9 of `'1'`–`'9'` and `'.'`; solvable (LeetCode guarantees exactly one
+  solution; the judge's random boards may have several, and any valid completion is accepted)
 
 ## Examples
 

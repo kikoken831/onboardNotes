@@ -31,11 +31,11 @@ Design problem: implement `class AutocompleteSystem`.
 class AutocompleteSystem {
 
     public AutocompleteSystem(String[] sentences, int[] times) {
-        
+
     }
 
     public List<String> input(char c) {
-        
+
     }
 }
 ```

@@ -5,7 +5,7 @@ LeetCode 113 · Medium · https://leetcode.com/problems/path-sum-ii/
 ## Brief
 
 Return **every** root-to-leaf path whose values sum to `targetSum`, as lists of values. Paths
-in any order. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+in any order. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

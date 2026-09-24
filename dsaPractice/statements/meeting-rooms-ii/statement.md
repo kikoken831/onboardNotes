@@ -9,7 +9,7 @@ meetings. A room freed at `t` can host a meeting starting at `t`.
 
 ## Constraints
 
-- `1 <= n <= 10^4`
+- `1 <= n <= 10^4`, `0 <= start < end <= 10^6`
 
 ## Examples
 

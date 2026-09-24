@@ -4,7 +4,7 @@ LeetCode 100 · Easy · https://leetcode.com/problems/same-tree/
 
 ## Brief
 
-Are the two trees structurally identical with equal values? the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Are the two trees structurally identical with equal values? The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

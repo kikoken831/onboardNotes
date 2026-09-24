@@ -4,8 +4,9 @@ class Ref implements Problem {
             .example("[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 3", "true")
             .example("[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 13", "false").example("[[1]], 1", "true").example("[[1],[3]], 2", "false")
             .gen(g -> {
-                int m = g.size(1, 8), n = g.size(1, 8);
-                int[] v = g.strictlySortedInts(m * n, m * n, -200, 200);
+                int m = g.side(1, 8), n = g.side(1, 8);
+                int span = Math.max(200, m * n);                          // room for m*n distinct values at timing sizes
+                int[] v = g.strictlySortedInts(m * n, m * n, -span, span);
                 if (v.length < m * n) { m = 1; n = v.length; }
                 int[][] a = new int[m][n];
                 for (int i = 0; i < m * n; i++) a[i / n][i % n] = v[i];

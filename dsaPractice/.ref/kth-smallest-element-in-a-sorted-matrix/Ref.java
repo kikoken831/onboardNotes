@@ -14,6 +14,12 @@ class Ref implements Problem {
     }
     public int kthSmallest(int[][] a, int k) {
         int n = a.length;
+        Pre.check(n >= 1, "n >= 1");
+        for (int[] row : a) Pre.check(row.length == n, "matrix is n x n");
+        for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) {
+            if (i > 0) Pre.check(a[i - 1][j] <= a[i][j], "columns sorted ascending");
+            if (j > 0) Pre.check(a[i][j - 1] <= a[i][j], "rows sorted ascending");
+        }
         Pre.check(k >= 1 && k <= n * n, "1 <= k <= n^2");
         int lo = a[0][0], hi = a[n - 1][n - 1];
         while (lo < hi) {                                   // binary search on the value

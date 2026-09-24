@@ -4,7 +4,7 @@ LeetCode 203 · Easy · https://leetcode.com/problems/remove-linked-list-element
 
 ## Brief
 
-Remove every node whose value equals `val` and return the new head. the standard `ListNode` (`val`, `next`) is provided.
+Remove every node whose value equals `val` and return the new head. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

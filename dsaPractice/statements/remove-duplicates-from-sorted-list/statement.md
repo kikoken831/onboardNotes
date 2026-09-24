@@ -4,7 +4,7 @@ LeetCode 83 · Easy · https://leetcode.com/problems/remove-duplicates-from-sort
 
 ## Brief
 
-The list is sorted. Delete duplicates so each value appears once, and return the head. the standard `ListNode` (`val`, `next`) is provided.
+The list is sorted. Delete duplicates so each value appears once, and return the head. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

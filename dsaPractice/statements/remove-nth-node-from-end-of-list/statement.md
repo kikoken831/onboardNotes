@@ -4,7 +4,7 @@ LeetCode 19 · Medium · https://leetcode.com/problems/remove-nth-node-from-end-
 
 ## Brief
 
-Remove the `n`-th node from the **end** of the list and return the head. the standard `ListNode` (`val`, `next`) is provided.
+Remove the `n`-th node from the **end** of the list and return the head. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

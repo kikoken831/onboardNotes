@@ -5,7 +5,7 @@ LeetCode 328 · Medium · https://leetcode.com/problems/odd-even-linked-list/
 ## Brief
 
 Group the nodes at **odd positions** (1st, 3rd, …) followed by those at even positions,
-keeping relative order within each group. Positions, not values. the standard `ListNode` (`val`, `next`) is provided.
+keeping relative order within each group. Positions, not values. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

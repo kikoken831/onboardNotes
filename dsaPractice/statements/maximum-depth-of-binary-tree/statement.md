@@ -4,7 +4,7 @@ LeetCode 104 · Easy · https://leetcode.com/problems/maximum-depth-of-binary-tr
 
 ## Brief
 
-Return the number of **nodes** on the longest root-to-leaf path. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Return the number of **nodes** on the longest root-to-leaf path. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

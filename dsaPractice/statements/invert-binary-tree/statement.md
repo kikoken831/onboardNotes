@@ -4,7 +4,7 @@ LeetCode 226 · Easy · https://leetcode.com/problems/invert-binary-tree/
 
 ## Brief
 
-Mirror the tree — swap every node's left and right children — and return the root. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Mirror the tree — swap every node's left and right children — and return the root. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

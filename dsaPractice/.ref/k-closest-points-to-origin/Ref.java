@@ -20,6 +20,11 @@ class Ref implements Problem {
             .patterns("Array", "Math", "Divide and Conquer", "Geometry", "Sorting", "Heap (Priority Queue)").limitMs(2000).maxN(200000);
     }
     public int[][] kClosest(int[][] points, int k) {
+        Pre.check(1 <= k && k <= points.length, "1 <= k <= points.length");
+        long[] s = new long[points.length];
+        for (int i = 0; i < points.length; i++) s[i] = d(points[i]);
+        Arrays.sort(s);
+        Pre.check(k == points.length || s[k - 1] < s[k], "the answer is unique");
         PriorityQueue<int[]> far = new PriorityQueue<>((a, b) -> Long.compare(d(b), d(a)));   // max-heap of the k closest
         for (int[] p : points) { far.add(p); if (far.size() > k) far.poll(); }
         return far.toArray(new int[0][]);
