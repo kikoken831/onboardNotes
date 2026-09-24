@@ -487,3 +487,239 @@ MUTANTS["middle-of-the-linked-list"] = [
     ("count-then-walk", "accept", S("""
     public ListNode middleNode(ListNode h) { int n = 0; for (ListNode p = h; p != null; p = p.next) n++; ListNode p = h; for (int i = 0; i < n / 2; i++) p = p.next; return p; }""")),
 ]
+
+# --------------------------------------------------------------------- batch 4: trees
+
+MUTANTS["validate-binary-search-tree"] = [
+    ("checks-children-only", "reject", S("""
+    public boolean isValidBST(TreeNode n) { if (n == null) return true; if (n.left != null && n.left.val >= n.val) return false; if (n.right != null && n.right.val <= n.val) return false; return isValidBST(n.left) && isValidBST(n.right); }""")),
+    ("int-bounds", "reject", S("""
+    public boolean isValidBST(TreeNode n) { return ok(n, Integer.MIN_VALUE, Integer.MAX_VALUE); }
+    boolean ok(TreeNode n, int lo, int hi) { if (n == null) return true; return n.val > lo && n.val < hi && ok(n.left, lo, n.val) && ok(n.right, n.val, hi); }""")),
+    ("inorder-strictly-increasing", "accept", S("""
+    Long prev = null;
+    public boolean isValidBST(TreeNode n) { prev = null; return in(n); }
+    boolean in(TreeNode n) { if (n == null) return true; if (!in(n.left)) return false; if (prev != null && n.val <= prev) return false; prev = (long) n.val; return in(n.right); }""")),
+]
+MUTANTS["same-tree"] = [
+    ("same-preorder-values", "reject", S("""
+    public boolean isSameTree(TreeNode p, TreeNode q) { List<Integer> a = new ArrayList<>(), b = new ArrayList<>(); w(p, a); w(q, b); return a.equals(b); }
+    void w(TreeNode n, List<Integer> o) { if (n == null) return; o.add(n.val); w(n.left, o); w(n.right, o); }""", LIST)),
+    ("bfs-pairs", "accept", S("""
+    public boolean isSameTree(TreeNode p, TreeNode q) { Deque<TreeNode[]> d = new ArrayDeque<>(); d.add(new TreeNode[]{p, q});
+        while (!d.isEmpty()) { TreeNode[] x = d.poll(); if (x[0] == null && x[1] == null) continue; if (x[0] == null || x[1] == null || x[0].val != x[1].val) return false;
+            d.add(new TreeNode[]{x[0].left, x[1].left}); d.add(new TreeNode[]{x[0].right, x[1].right}); } return true; }""", LIST)),
+]
+MUTANTS["binary-tree-level-order-traversal"] = [
+    ("size-read-inside-loop", "reject", S("""
+    public List<List<Integer>> levelOrder(TreeNode r) { List<List<Integer>> o = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); if (r != null) q.add(r);
+        while (!q.isEmpty()) { List<Integer> l = new ArrayList<>(); for (int i = 0; i < q.size(); i++) { TreeNode x = q.poll(); l.add(x.val); if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } o.add(l); } return o; }""", LIST)),
+    ("dfs-with-depth", "accept", S("""
+    public List<List<Integer>> levelOrder(TreeNode r) { List<List<Integer>> o = new ArrayList<>(); go(r, 0, o); return o; }
+    void go(TreeNode n, int d, List<List<Integer>> o) { if (n == null) return; if (o.size() == d) o.add(new ArrayList<>()); o.get(d).add(n.val); go(n.left, d + 1, o); go(n.right, d + 1, o); }""", LIST)),
+]
+MUTANTS["binary-tree-zigzag-level-order-traversal"] = [
+    ("swaps-child-enqueue-order", "reject", S("""
+    public List<List<Integer>> zigzagLevelOrder(TreeNode r) { List<List<Integer>> o = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); if (r != null) q.add(r); boolean rev = false;
+        while (!q.isEmpty()) { List<Integer> l = new ArrayList<>(); for (int n = q.size(); n > 0; n--) { TreeNode x = q.poll(); l.add(x.val);
+            if (rev) { if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } else { if (x.right != null) q.add(x.right); if (x.left != null) q.add(x.left); } }
+            o.add(l); rev = !rev; } return o; }""", LIST)),
+    ("reverse-odd-levels", "accept", S("""
+    public List<List<Integer>> zigzagLevelOrder(TreeNode r) { List<List<Integer>> o = new ArrayList<>(); go(r, 0, o); for (int i = 1; i < o.size(); i += 2) Collections.reverse(o.get(i)); return o; }
+    void go(TreeNode n, int d, List<List<Integer>> o) { if (n == null) return; if (o.size() == d) o.add(new ArrayList<>()); o.get(d).add(n.val); go(n.left, d + 1, o); go(n.right, d + 1, o); }""", LIST)),
+]
+MUTANTS["maximum-depth-of-binary-tree"] = [
+    ("counts-edges", "reject", S("""
+    public int maxDepth(TreeNode r) { if (r == null) return 0; if (r.left == null && r.right == null) return 0; return 1 + Math.max(maxDepth(r.left), maxDepth(r.right)); }""")),
+    ("bfs-levels", "accept", S("""
+    public int maxDepth(TreeNode r) { int d = 0; Deque<TreeNode> q = new ArrayDeque<>(); if (r != null) q.add(r); while (!q.isEmpty()) { d++; for (int n = q.size(); n > 0; n--) { TreeNode x = q.poll(); if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } } return d; }""", LIST)),
+]
+MUTANTS["construct-binary-tree-from-preorder-and-inorder-traversal"] = [
+    ("everything-goes-left", "reject", S("""
+    public TreeNode buildTree(int[] p, int[] in) { TreeNode r = new TreeNode(p[0]), c = r; for (int i = 1; i < p.length; i++) { c.left = new TreeNode(p[i]); c = c.left; } return r; }""")),
+    ("linear-search-recursion", "accept", S("""
+    public TreeNode buildTree(int[] p, int[] in) { return b(p, 0, p.length - 1, in, 0, in.length - 1); }
+    TreeNode b(int[] p, int ps, int pe, int[] in, int is, int ie) { if (ps > pe) return null; TreeNode n = new TreeNode(p[ps]); int m = is; while (in[m] != p[ps]) m++; int L = m - is;
+        n.left = b(p, ps + 1, ps + L, in, is, m - 1); n.right = b(p, ps + L + 1, pe, in, m + 1, ie); return n; }""")),
+]
+MUTANTS["binary-tree-level-order-traversal-ii"] = [
+    ("reverses-within-levels", "reject", S("""
+    public List<List<Integer>> levelOrderBottom(TreeNode r) { List<List<Integer>> o = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); if (r != null) q.add(r);
+        while (!q.isEmpty()) { List<Integer> l = new ArrayList<>(); for (int n = q.size(); n > 0; n--) { TreeNode x = q.poll(); l.add(x.val); if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } Collections.reverse(l); o.add(0, l); }
+        Collections.reverse(o); return o; }""", LIST)),
+    ("bfs-then-reverse", "accept", S("""
+    public List<List<Integer>> levelOrderBottom(TreeNode r) { List<List<Integer>> o = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); if (r != null) q.add(r);
+        while (!q.isEmpty()) { List<Integer> l = new ArrayList<>(); for (int n = q.size(); n > 0; n--) { TreeNode x = q.poll(); l.add(x.val); if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } o.add(l); }
+        Collections.reverse(o); return o; }""", LIST)),
+]
+MUTANTS["minimum-depth-of-binary-tree"] = [
+    ("min-of-both-sides", "reject", S("""
+    public int minDepth(TreeNode r) { return r == null ? 0 : 1 + Math.min(minDepth(r.left), minDepth(r.right)); }""")),
+    ("bfs-first-leaf", "accept", S("""
+    public int minDepth(TreeNode r) { if (r == null) return 0; Deque<TreeNode> q = new ArrayDeque<>(); q.add(r); int d = 0;
+        while (!q.isEmpty()) { d++; for (int n = q.size(); n > 0; n--) { TreeNode x = q.poll(); if (x.left == null && x.right == null) return d; if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } } return d; }""", LIST)),
+]
+MUTANTS["path-sum"] = [
+    ("any-node-not-leaf", "reject", S("""
+    public boolean hasPathSum(TreeNode n, int t) { if (n == null) return false; if (n.val == t) return true; return hasPathSum(n.left, t - n.val) || hasPathSum(n.right, t - n.val); }""")),
+    ("empty-tree-target-zero-true", "reject", S("""
+    public boolean hasPathSum(TreeNode n, int t) { if (n == null) return t == 0; return hasPathSum(n.left, t - n.val) || hasPathSum(n.right, t - n.val); }""")),
+    ("iterative-stack", "accept", S("""
+    public boolean hasPathSum(TreeNode r, int t) { if (r == null) return false; Deque<Object[]> s = new ArrayDeque<>(); s.push(new Object[]{r, r.val});
+        while (!s.isEmpty()) { Object[] e = s.pop(); TreeNode n = (TreeNode) e[0]; int v = (Integer) e[1]; if (n.left == null && n.right == null && v == t) return true;
+            if (n.left != null) s.push(new Object[]{n.left, v + n.left.val}); if (n.right != null) s.push(new Object[]{n.right, v + n.right.val}); } return false; }""", LIST)),
+]
+MUTANTS["path-sum-ii"] = [
+    ("stores-shared-path", "reject", S("""
+    public List<List<Integer>> pathSum(TreeNode r, int t) { List<List<Integer>> o = new ArrayList<>(); go(r, t, new ArrayList<>(), o); return o; }
+    void go(TreeNode n, int t, List<Integer> p, List<List<Integer>> o) { if (n == null) return; p.add(n.val); if (n.left == null && n.right == null && t == n.val) o.add(p); go(n.left, t - n.val, p, o); go(n.right, t - n.val, p, o); p.remove(p.size() - 1); }""", LIST)),
+    ("copy-on-descent", "accept", S("""
+    public List<List<Integer>> pathSum(TreeNode r, int t) { List<List<Integer>> o = new ArrayList<>(); go(r, t, new ArrayList<>(), o); return o; }
+    void go(TreeNode n, int t, List<Integer> p, List<List<Integer>> o) { if (n == null) return; List<Integer> q = new ArrayList<>(p); q.add(n.val); if (n.left == null && n.right == null && t == n.val) o.add(q); go(n.left, t - n.val, q, o); go(n.right, t - n.val, q, o); }""", LIST)),
+]
+MUTANTS["binary-tree-maximum-path-sum"] = [
+    ("best-starts-at-zero", "reject", S("""
+    int b = 0;
+    public int maxPathSum(TreeNode r) { b = 0; g(r); return b; }
+    int g(TreeNode n) { if (n == null) return 0; int l = Math.max(0, g(n.left)), rr = Math.max(0, g(n.right)); b = Math.max(b, n.val + l + rr); return n.val + Math.max(l, rr); }""")),
+    ("no-clamp-negative-arms", "reject", S("""
+    int b = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode r) { b = Integer.MIN_VALUE; g(r); return b; }
+    int g(TreeNode n) { if (n == null) return 0; int l = g(n.left), rr = g(n.right); b = Math.max(b, n.val + l + rr); return n.val + Math.max(l, rr); }""")),
+    ("brute-every-pair-via-parents", "accept", S("""
+    public int maxPathSum(TreeNode r) {
+        List<TreeNode> all = new ArrayList<>(); Map<TreeNode, TreeNode> par = new IdentityHashMap<>(); Deque<TreeNode> q = new ArrayDeque<>(); q.add(r);
+        while (!q.isEmpty()) { TreeNode n = q.poll(); all.add(n); for (TreeNode c : new TreeNode[]{n.left, n.right}) if (c != null) { par.put(c, n); q.add(c); } }
+        int best = Integer.MIN_VALUE;
+        for (TreeNode a : all) { Map<TreeNode, Integer> up = new IdentityHashMap<>(); int s = 0; for (TreeNode x = a; x != null; x = par.get(x)) { s += x.val; up.put(x, s); }
+            for (TreeNode b : all) { int t = 0; TreeNode x = b; while (!up.containsKey(x)) { t += x.val; x = par.get(x); } best = Math.max(best, t + up.get(x)); } }
+        return best;
+    }""", LIST)),
+]
+MUTANTS["binary-tree-right-side-view"] = [
+    ("follows-right-children-only", "reject", S("""
+    public List<Integer> rightSideView(TreeNode r) { List<Integer> o = new ArrayList<>(); for (TreeNode n = r; n != null; n = n.right != null ? n.right : null) o.add(n.val); return o; }""", LIST)),
+    ("dfs-right-first", "accept", S("""
+    public List<Integer> rightSideView(TreeNode r) { List<Integer> o = new ArrayList<>(); go(r, 0, o); return o; }
+    void go(TreeNode n, int d, List<Integer> o) { if (n == null) return; if (d == o.size()) o.add(n.val); go(n.right, d + 1, o); go(n.left, d + 1, o); }""", LIST)),
+]
+MUTANTS["invert-binary-tree"] = [
+    ("reads-overwritten-child", "reject", S("""
+    public TreeNode invertTree(TreeNode r) { if (r == null) return null; r.left = invertTree(r.right); r.right = invertTree(r.left); return r; }""")),
+    ("bfs-swap", "accept", S("""
+    public TreeNode invertTree(TreeNode r) { Deque<TreeNode> q = new ArrayDeque<>(); if (r != null) q.add(r); while (!q.isEmpty()) { TreeNode n = q.poll(); TreeNode t = n.left; n.left = n.right; n.right = t; if (n.left != null) q.add(n.left); if (n.right != null) q.add(n.right); } return r; }""", LIST)),
+]
+MUTANTS["kth-smallest-element-in-a-bst"] = [
+    ("preorder-not-inorder", "reject", S("""
+    int k2, ans;
+    public int kthSmallest(TreeNode r, int k) { k2 = k; go(r); return ans; }
+    void go(TreeNode n) { if (n == null || k2 <= 0) return; if (--k2 == 0) { ans = n.val; return; } go(n.left); go(n.right); }""")),
+    ("collect-inorder", "accept", S("""
+    public int kthSmallest(TreeNode r, int k) { List<Integer> o = new ArrayList<>(); go(r, o); return o.get(k - 1); }
+    void go(TreeNode n, List<Integer> o) { if (n == null) return; go(n.left, o); o.add(n.val); go(n.right, o); }""", LIST)),
+]
+MUTANTS["lowest-common-ancestor-of-a-binary-search-tree"] = [
+    ("returns-a-copy", "reject", S("""
+    public TreeNode lowestCommonAncestor(TreeNode r, TreeNode p, TreeNode q) { TreeNode n = r; while (true) { if (p.val < n.val && q.val < n.val) n = n.left; else if (p.val > n.val && q.val > n.val) n = n.right; else return new TreeNode(n.val); } }""")),
+    ("general-tree-algorithm", "accept", S("""
+    public TreeNode lowestCommonAncestor(TreeNode r, TreeNode p, TreeNode q) { if (r == null || r == p || r == q) return r; TreeNode l = lowestCommonAncestor(r.left, p, q), rr = lowestCommonAncestor(r.right, p, q); return l != null && rr != null ? r : l != null ? l : rr; }""")),
+]
+MUTANTS["lowest-common-ancestor-of-a-binary-tree"] = [
+    ("returns-p-always-if-found-left", "reject", S("""
+    public TreeNode lowestCommonAncestor(TreeNode r, TreeNode p, TreeNode q) { if (r == null || r == p || r == q) return r; TreeNode l = lowestCommonAncestor(r.left, p, q); return l != null ? l : lowestCommonAncestor(r.right, p, q); }""")),
+    ("parent-map", "accept", S("""
+    public TreeNode lowestCommonAncestor(TreeNode r, TreeNode p, TreeNode q) { Map<TreeNode, TreeNode> par = new IdentityHashMap<>(); Deque<TreeNode> d = new ArrayDeque<>(); d.add(r); par.put(r, null);
+        while (!d.isEmpty()) { TreeNode n = d.poll(); for (TreeNode c : new TreeNode[]{n.left, n.right}) if (c != null) { par.put(c, n); d.add(c); } }
+        Set<TreeNode> anc = Collections.newSetFromMap(new IdentityHashMap<>()); for (TreeNode x = p; x != null; x = par.get(x)) anc.add(x); TreeNode x = q; while (!anc.contains(x)) x = par.get(x); return x; }""", LIST)),
+]
+MUTANTS["binary-tree-paths"] = [
+    ("every-node-not-leaves", "reject", S("""
+    public List<String> binaryTreePaths(TreeNode r) { List<String> o = new ArrayList<>(); go(r, "", o); return o; }
+    void go(TreeNode n, String p, List<String> o) { if (n == null) return; String s = p.isEmpty() ? "" + n.val : p + "->" + n.val; o.add(s); go(n.left, s, o); go(n.right, s, o); }""", LIST)),
+    ("stringbuilder-backtrack", "accept", S("""
+    public List<String> binaryTreePaths(TreeNode r) { List<String> o = new ArrayList<>(); go(r, new StringBuilder(), o); return o; }
+    void go(TreeNode n, StringBuilder b, List<String> o) { if (n == null) return; int len = b.length(); if (len > 0) b.append("->"); b.append(n.val);
+        if (n.left == null && n.right == null) o.add(b.toString()); else { go(n.left, b, o); go(n.right, b, o); } b.setLength(len); }""", LIST)),
+]
+MUTANTS["serialize-and-deserialize-binary-tree"] = [
+    ("static-field-cheat", "reject", D("""
+public class Codec {
+    static TreeNode last;
+    public String serialize(TreeNode root) { last = root; return "x"; }
+    public TreeNode deserialize(String data) { return last; }
+}""")),
+    ("preorder-without-null-markers", "reject", D("""
+public class Codec {
+    public String serialize(TreeNode r) { StringBuilder b = new StringBuilder(); s(r, b); return b.toString(); }
+    void s(TreeNode n, StringBuilder b) { if (n == null) return; b.append(n.val).append(','); s(n.left, b); s(n.right, b); }
+    public TreeNode deserialize(String d) { TreeNode root = null; for (String t : d.split(",")) if (!t.isEmpty()) root = ins(root, Integer.parseInt(t)); return root; }
+    TreeNode ins(TreeNode n, int v) { if (n == null) return new TreeNode(v); if (v < n.val) n.left = ins(n.left, v); else n.right = ins(n.right, v); return n; }
+}""")),
+    ("level-order-with-nulls", "accept", D("""
+public class Codec {
+    public String serialize(TreeNode r) { StringBuilder b = new StringBuilder(); Deque<TreeNode> q = new LinkedList<>(); q.add(r);
+        while (!q.isEmpty()) { TreeNode n = q.poll(); if (n == null) { b.append("n "); continue; } b.append(n.val).append(' '); q.add(n.left); q.add(n.right); } return b.toString(); }
+    public TreeNode deserialize(String d) { String[] t = d.trim().split(" "); if (t[0].equals("n")) return null; TreeNode r = new TreeNode(Integer.parseInt(t[0])); Deque<TreeNode> q = new ArrayDeque<>(); q.add(r); int i = 1;
+        while (!q.isEmpty()) { TreeNode n = q.poll(); if (!t[i].equals("n")) { n.left = new TreeNode(Integer.parseInt(t[i])); q.add(n.left); } i++; if (!t[i].equals("n")) { n.right = new TreeNode(Integer.parseInt(t[i])); q.add(n.right); } i++; } return r; }
+}""")),
+]
+MUTANTS["path-sum-iii"] = [
+    ("int-prefix-overflows", "reject", S("""
+    public int pathSum(TreeNode r, int t) { Map<Integer, Integer> m = new HashMap<>(); m.put(0, 1); return go(r, 0, t, m); }
+    int go(TreeNode n, int s, int t, Map<Integer, Integer> m) { if (n == null) return 0; s += n.val; int c = m.getOrDefault(s - t, 0); m.merge(s, 1, Integer::sum); c += go(n.left, s, t, m) + go(n.right, s, t, m); m.merge(s, -1, Integer::sum); return c; }""", LIST)),
+    ("no-backtrack-of-map", "reject", S("""
+    public int pathSum(TreeNode r, int t) { Map<Long, Integer> m = new HashMap<>(); m.put(0L, 1); return go(r, 0, t, m); }
+    int go(TreeNode n, long s, int t, Map<Long, Integer> m) { if (n == null) return 0; s += n.val; int c = m.getOrDefault(s - t, 0); m.merge(s, 1, Integer::sum); return c + go(n.left, s, t, m) + go(n.right, s, t, m); }""", LIST)),
+    ("double-recursion-long", "accept", S("""
+    public int pathSum(TreeNode r, int t) { if (r == null) return 0; return from(r, t) + pathSum(r.left, t) + pathSum(r.right, t); }
+    int from(TreeNode n, long t) { if (n == null) return 0; return (n.val == t ? 1 : 0) + from(n.left, t - n.val) + from(n.right, t - n.val); }""")),
+]
+MUTANTS["subtree-of-another-tree"] = [
+    ("string-contains-no-delimiter", "reject", S("""
+    public boolean isSubtree(TreeNode r, TreeNode s) { return ser(r).contains(ser(s)); }
+    String ser(TreeNode n) { return n == null ? "#" : n.val + ser(n.left) + ser(n.right); }""")),
+    ("serialise-with-delimiters", "accept", S("""
+    public boolean isSubtree(TreeNode r, TreeNode s) { return ser(r).contains(ser(s)); }
+    String ser(TreeNode n) { return n == null ? ",#" : "," + n.val + ser(n.left) + ser(n.right); }""")),
+]
+MUTANTS["merge-two-binary-trees"] = [
+    ("drops-nodes-only-in-second", "reject", S("""
+    public TreeNode mergeTrees(TreeNode a, TreeNode b) { if (a == null) return null; if (b == null) return a; a.val += b.val; a.left = mergeTrees(a.left, b.left); a.right = mergeTrees(a.right, b.right); return a; }""")),
+    ("in-place-into-first", "accept", S("""
+    public TreeNode mergeTrees(TreeNode a, TreeNode b) { if (a == null) return b; if (b == null) return a; a.val += b.val; a.left = mergeTrees(a.left, b.left); a.right = mergeTrees(a.right, b.right); return a; }""")),
+]
+MUTANTS["average-of-levels-in-binary-tree"] = [
+    ("int-sum-overflows", "reject", S("""
+    public List<Double> averageOfLevels(TreeNode r) { List<Double> o = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); q.add(r);
+        while (!q.isEmpty()) { int n = q.size(), s = 0; for (int i = 0; i < n; i++) { TreeNode x = q.poll(); s += x.val; if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } o.add((double) s / n); } return o; }""", LIST)),
+    ("double-sum", "accept", S("""
+    public List<Double> averageOfLevels(TreeNode r) { List<Double> o = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); q.add(r);
+        while (!q.isEmpty()) { int n = q.size(); double s = 0; for (int i = 0; i < n; i++) { TreeNode x = q.poll(); s += x.val; if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } o.add(s / n); } return o; }""", LIST)),
+]
+MUTANTS["maximum-binary-tree"] = [
+    ("max-root-sorted-children", "reject", S("""
+    public TreeNode constructMaximumBinaryTree(int[] a) { int[] b = a.clone(); Arrays.sort(b); TreeNode r = new TreeNode(b[b.length - 1]), c = r; for (int i = b.length - 2; i >= 0; i--) { c.right = new TreeNode(b[i]); c = c.right; } return r; }""", LIST)),
+    ("recursive", "accept", S("""
+    public TreeNode constructMaximumBinaryTree(int[] a) { return b(a, 0, a.length - 1); }
+    TreeNode b(int[] a, int lo, int hi) { if (lo > hi) return null; int m = lo; for (int i = lo; i <= hi; i++) if (a[i] > a[m]) m = i; TreeNode n = new TreeNode(a[m]); n.left = b(a, lo, m - 1); n.right = b(a, m + 1, hi); return n; }""")),
+]
+MUTANTS["maximum-width-of-binary-tree"] = [
+    ("counts-nodes-per-level", "reject", S("""
+    public int widthOfBinaryTree(TreeNode r) { int b = 0; Deque<TreeNode> q = new ArrayDeque<>(); q.add(r); while (!q.isEmpty()) { int n = q.size(); b = Math.max(b, n); for (int i = 0; i < n; i++) { TreeNode x = q.poll(); if (x.left != null) q.add(x.left); if (x.right != null) q.add(x.right); } } return b; }""", LIST)),
+    ("dfs-first-position-per-depth", "accept", S("""
+    List<Long> first = new ArrayList<>(); long best = 0;
+    public int widthOfBinaryTree(TreeNode r) { first.clear(); best = 0; go(r, 0, 0); return (int) best; }
+    void go(TreeNode n, int d, long pos) { if (n == null) return; if (first.size() == d) first.add(pos); pos -= first.get(d); first.set(d, first.get(d)); best = Math.max(best, pos + 1); go(n.left, d + 1, 2 * pos); go(n.right, d + 1, 2 * pos + 1); }""", LIST)),
+]
+MUTANTS["all-nodes-distance-k-in-binary-tree"] = [
+    ("only-downwards", "reject", S("""
+    public List<Integer> distanceK(TreeNode r, TreeNode t, int k) { List<Integer> o = new ArrayList<>(); go(t, k, o); return o; }
+    void go(TreeNode n, int k, List<Integer> o) { if (n == null) return; if (k == 0) { o.add(n.val); return; } go(n.left, k - 1, o); go(n.right, k - 1, o); }""", LIST)),
+    ("graph-bfs", "accept", S("""
+    public List<Integer> distanceK(TreeNode r, TreeNode t, int k) {
+        Map<TreeNode, List<TreeNode>> g = new IdentityHashMap<>(); Deque<TreeNode> q = new ArrayDeque<>(); q.add(r); g.put(r, new ArrayList<>());
+        while (!q.isEmpty()) { TreeNode n = q.poll(); for (TreeNode c : new TreeNode[]{n.left, n.right}) if (c != null) { g.computeIfAbsent(c, x -> new ArrayList<>()).add(n); g.get(n).add(c); q.add(c); } }
+        Map<TreeNode, Integer> dist = new IdentityHashMap<>(); dist.put(t, 0); q.add(t); List<Integer> o = new ArrayList<>();
+        while (!q.isEmpty()) { TreeNode n = q.poll(); if (dist.get(n) == k) o.add(n.val); for (TreeNode m : g.get(n)) if (!dist.containsKey(m)) { dist.put(m, dist.get(n) + 1); q.add(m); } }
+        return o; }""", LIST)),
+]

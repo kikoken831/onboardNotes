@@ -39,6 +39,34 @@ def classpath(problem=None):
     return os.pathsep.join(parts)
 
 
+_PUBLIC_CLASS = None
+
+
+def javac_source(src, work_dir):
+    """
+    The file to hand javac for `src`.
+
+    LeetCode's stubs for some problems declare a PUBLIC class that isn't Solution --
+    `public class Codec` (297, 271). Java requires a public class to live in a file of
+    the same name, so Solution.java would never compile as written. Compile a copy
+    named after the class instead; line numbers in errors are unchanged.
+    """
+    import re
+    global _PUBLIC_CLASS
+    if _PUBLIC_CLASS is None:
+        _PUBLIC_CLASS = re.compile(r"^\s*public\s+(?:final\s+|abstract\s+)*class\s+(\w+)", re.M)
+    with open(src) as f:
+        text = f.read()
+    m = _PUBLIC_CLASS.search(text)
+    if not m or m.group(1) + ".java" == os.path.basename(src):
+        return src
+    os.makedirs(work_dir, exist_ok=True)
+    out = os.path.join(work_dir, m.group(1) + ".java")
+    with open(out, "w") as f:
+        f.write(text)
+    return out
+
+
 def harness_class_names():
     return {f[:-5] for f in os.listdir(HARNESS_DIR_) if f.endswith(".java")}
 
@@ -135,7 +163,8 @@ def solution(problem, force=False):
     if not force and not _stale([p["solution"]], p["build_sol"], ".stamp"):
         return
     os.makedirs(p["build_sol"], exist_ok=True)
-    _javac(["-cp", classpath(problem), "-d", p["build_sol"], p["solution"]],
+    src = javac_source(p["solution"], os.path.join(p["build_sol"], "src"))
+    _javac(["-cp", classpath(problem), "-d", p["build_sol"], src],
            "your solution")
     check_no_shadowing(problem, p["build_sol"], "your solution")
     _touch(p["build_sol"], ".stamp")
