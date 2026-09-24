@@ -2,3 +2,4 @@ build/
 .progress.json
 solutions/*/.attempts/
 *.class
+.progress.json.tmp

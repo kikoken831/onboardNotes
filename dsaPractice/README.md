@@ -11,6 +11,8 @@ No network. No login. No Maven or Gradle. JDK 21 and Python 3 standard library o
 ./judge open  p-remove-value   # creates solutions/<slug>/Solution.java
 ./judge show  p-remove-value   # full statement (--hints to reveal hints)
 ./judge run   p-remove-value   # compile, test, grade
+./judge time  p-remove-value   # empirical growth curve of your solution
+./judge list  --tier 2 --todo  # browse (also --pattern, --group, --company, --solved)
 ```
 
 ---
@@ -84,7 +86,7 @@ one. Hence four tiers:
 
 | Tier | What | Count | Status |
 |---|---|---|---|
-| **0** | Java mechanics — measured JVM traps, predict-then-run | 20 items | ready |
+| **0** | Java mechanics — measured JVM traps, predict-then-run | 17 traps (read, not graded) | ready |
 | **1** | Authored primitives — one mechanical sub-skill each, 5–15 lines | 69 drills | **ready** |
 | **2** | Real LeetCode Easy below the target list's floor | 58 problems | **ready** |
 | **3** | The supplied target list | 179 problems | **ready** |
@@ -176,8 +178,11 @@ cat drills/00-java-mechanics/README.md    # tier 0, read it once
 ## Spaced re-solving
 
 Solving something once teaches you less than re-deriving it later from an empty file.
-When you get an `ACCEPTED`, the problem is scheduled for a blank-file re-solve at
-**day 1, 3, 7 and 21**. A failed re-solve resets it to day 1.
+Your first full `ACCEPTED` schedules a blank-file re-solve **1 day** later. Each
+successful re-solve pushes the next one further out — **3, then 7, then 21 days**, and
+21 days thereafter. A failed re-solve starts the ladder again at 1 day. Runs when nothing
+is due don't move the schedule either way, and `--fixed` / `-n 0` runs (pinned examples
+only) are logged but never count as solving.
 
 `judge next` surfaces due re-solves ahead of new problems. `judge open <slug> --reset`
 archives your previous attempt to `.attempts/` and gives you an empty file.
@@ -191,8 +196,8 @@ folklore.
 
 Drilling mechanics does not teach you to *recognise* which pattern a cold problem
 wants; transfer research is fairly clear that this kind of far transfer does not happen
-for free. So it gets its own drill — no code, 90 seconds, name the pattern and the
-invariant:
+for free. So it gets its own drill — no code, name the pattern and the invariant; aim for about
+90 seconds each (the drill doesn't time you):
 
 ```bash
 ./judge classify -n 10
@@ -221,7 +226,7 @@ almost always more useful than the reference, so try `judge run` first.
 
 Several ids in the source list have drifted from real LeetCode — `792` is Binary Search
 (really 704), `1250` is Longest Common Subsequence (really 1143), `745`/`746` are
-swapped, and fourteen others. Every slug is correct, so **the judge keys on slug** and
+each off by one (really 744/745), and fifteen others. Every slug is correct, so **the judge keys on slug** and
 carries the supplied id as a display label. The full correction map is in
 `problems.json` under `id_corrections`.
 
