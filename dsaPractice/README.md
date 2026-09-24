@@ -87,12 +87,11 @@ one. Hence four tiers:
 | **0** | Java mechanics — measured JVM traps, predict-then-run | 20 items | ready |
 | **1** | Authored primitives — one mechanical sub-skill each, 5–15 lines | 69 drills | **ready** |
 | **2** | Real LeetCode Easy below the target list's floor | 58 problems | **ready** |
-| **3** | The supplied target list | 179 problems | catalogued |
+| **3** | The supplied target list | 179 problems | **ready** |
 
-Tiers 1 and 2 are complete. Start at tier 1; tier 2 is where each tier 1 group pays off
-on a real LeetCode problem (24 of the 58 statements name the drill they ramp from). Tier
-3 is in the catalogue with statements and references still to be written;
-`judge list --ready` shows what is actually runnable today.
+All four tiers are complete. Start at tier 1; tier 2 is where each tier 1 group pays off
+on a real LeetCode problem, and tier 3 is the supplied list itself. `judge next` works
+through them in catalogue order.
 
 ### Design and interactive problems
 
@@ -112,6 +111,34 @@ Eight tier 2 problems aren't "a method on `Solution`":
 
 - **Interactive** (374) — `class Solution extends GuessGame`, calling the provided
   `guess(num)`. The pick is installed per test and never passed to you.
+
+Tier 3 adds a few more shapes, all matching leetcode.com:
+
+- **Your own class name** — 297 and 271 are `public class Codec`. A public class must live
+  in a file of the same name, so the judge compiles `Solution.java` from a copy named after
+  it; just write the class as LeetCode shows it. The judge then drives the round trip
+  itself (`deserialize(serialize(root))`, on **separate** instances), and rejects results
+  that reuse the input's nodes or list.
+- **Arguments that are nodes of the input** — 235/236's `p` and `q`, 863's `target`, and
+  141/142's cycle (`pos`) are given by value in the examples; each call receives the real
+  node objects inside its own copy of the tree or list. 142 also checks you didn't modify
+  the list.
+- **Provided classes** — 133's graph `Node` and 759's `Interval` are on the classpath for
+  those problems only. Don't declare them.
+- **Many correct answers** — Sudoku, Find Peak, Course Schedule II, Alien Dictionary,
+  Reorganize String and others are checked by property (valid, complete, consistent), not
+  against one expected output.
+
+A few judge behaviours worth knowing:
+
+- A **fresh `Solution` instance per test case**, as on LeetCode — instance fields reset;
+  `static` fields do not.
+- **Every** test is time-limited, including pinned examples; several pins exist precisely
+  because the naive solution is exponential on them.
+- An infinite loop is reported as `TIME LIMIT EXCEEDED` after 120 s rather than hanging.
+- Don't declare a top-level class whose name the judge already uses — `ListNode`,
+  `TreeNode`, `Spec`, `Gen`, `Match`, `Calls`, `Pre` and the rest of `harness/`. `judge run`
+  refuses such a solution and says which name clashed; a nested class is fine.
 
 Tier 1 is mandatory rather than optional for five patterns — **backtracking, trie,
 topological sort, union-find, and LIS/knapsack DP have no Easy entry point on LeetCode
