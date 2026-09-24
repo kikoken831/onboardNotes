@@ -5,7 +5,7 @@ LeetCode 437 · Medium · https://leetcode.com/problems/path-sum-iii/
 ## Brief
 
 Count the **downward** paths (parent to child, starting and ending anywhere) whose values sum
-to `targetSum`. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+to `targetSum`. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

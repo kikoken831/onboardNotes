@@ -5,7 +5,7 @@ LeetCode 297 · Hard · https://leetcode.com/problems/serialize-and-deserialize-
 ## Brief
 
 Design `class Codec`: `serialize(root)` turns a tree into a `String` (any format you like),
-and `deserialize(data)` rebuilds the **identical** tree from it. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+and `deserialize(data)` rebuilds the **identical** tree from it. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 The judge runs LeetCode's check — `new Codec().deserialize(new Codec().serialize(root))`, two
 **separate** instances — and requires the result to be structurally equal to the input and
@@ -29,12 +29,12 @@ public class Codec {
 
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        
+
     }
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        
+
     }
 }
 ```

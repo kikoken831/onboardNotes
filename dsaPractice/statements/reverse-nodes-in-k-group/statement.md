@@ -5,7 +5,7 @@ LeetCode 25 · Hard · https://leetcode.com/problems/reverse-nodes-in-k-group/
 ## Brief
 
 Reverse the nodes of the list `k` at a time. A final group of fewer than `k` nodes is left
-**as is**. Only node links may change, not values. the standard `ListNode` (`val`, `next`) is provided.
+**as is**. Only node links may change, not values. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

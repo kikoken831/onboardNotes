@@ -42,6 +42,11 @@ class Ref implements Problem {
         List<List<Integer>> adj = new ArrayList<>();
         for (int i = 0; i < n; i++) adj.add(new ArrayList<>());
         int[] in = new int[n];
+        Set<Long> uniq = new HashSet<>();
+        for (int[] p : pre) {
+            Pre.check(p.length == 2 && p[0] >= 0 && p[0] < n && p[1] >= 0 && p[1] < n, "0 <= a_i, b_i < numCourses");
+            Pre.check(uniq.add(p[0] * 1_000_000L + p[1]), "all prerequisite pairs are unique");
+        }
         for (int[] p : pre) { adj.get(p[1]).add(p[0]); in[p[0]]++; }
         Deque<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < n; i++) if (in[i] == 0) q.add(i);

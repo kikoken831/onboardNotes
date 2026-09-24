@@ -18,7 +18,10 @@ class Ref implements Problem {
                 int[] times = g.ints(sent.length, 1, 4);
                 Calls.Builder b = new Calls.Builder("AutocompleteSystem", sent, times);
                 int k = g.size(1, 30);
-                for (int i = 0; i < k; i++) b.call("input", g.chance(0.2) ? '#' : "ab ".charAt(g.nextInt(0, 2)));
+                for (int i = 0, typed = 0; i < k; i++) {                    // '#' only ends a non-empty sentence
+                    if (typed > 0 && g.chance(0.2)) { b.call("input", '#'); typed = 0; }
+                    else { b.call("input", "ab ".charAt(g.nextInt(0, 2))); typed++; }
+                }
                 return new Object[]{ b.build() };
             })
             .patterns("String", "Depth-First Search", "Design", "Trie", "Sorting").limitMs(2000).maxN(2000);
@@ -30,10 +33,11 @@ class AutocompleteSystem {
     private final StringBuilder cur = new StringBuilder();
     public AutocompleteSystem(String[] sentences, int[] times) {
         Pre.check(sentences.length == times.length, "equal lengths");
+        for (int i = 0; i < sentences.length; i++) Pre.check(sentences[i].length() >= 1 && times[i] >= 1, "1 <= sentences[i].length, 1 <= times[i]");
         for (int i = 0; i < sentences.length; i++) hot.merge(sentences[i], times[i], Integer::sum);
     }
     public List<String> input(char c) {
-        if (c == '#') { hot.merge(cur.toString(), 1, Integer::sum); cur.setLength(0); return new ArrayList<>(); }
+        if (c == '#') { Pre.check(cur.length() > 0, "'#' ends a non-empty sentence"); hot.merge(cur.toString(), 1, Integer::sum); cur.setLength(0); return new ArrayList<>(); }
         cur.append(c);
         String p = cur.toString();
         List<String> m = new ArrayList<>();

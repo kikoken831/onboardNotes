@@ -17,6 +17,8 @@ class Ref implements Problem {
             .patterns("Array").limitMs(2000).maxN(100000);
     }
     public int[][] insert(int[][] intervals, int[] nw) {
+        Pre.check(nw.length == 2 && nw[0] <= nw[1], "newInterval start <= end");
+        for (int[] iv : intervals) Pre.check(iv.length == 2 && iv[0] <= iv[1], "start_i <= end_i");
         for (int i = 1; i < intervals.length; i++) Pre.check(intervals[i][0] > intervals[i - 1][1], "sorted, non-overlapping");
         List<int[]> out = new ArrayList<>();
         int s = nw[0], e = nw[1], i = 0, n = intervals.length;

@@ -4,7 +4,7 @@ class Ref implements Problem {
             .exampleInPlace("[[1,2,3],[4,5,6],[7,8,9]]", "[[7,4,1],[8,5,2],[9,6,3]]")
             .exampleInPlace("[[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]", "[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]")
             .exampleInPlace("[[1]]", "[[1]]").exampleInPlace("[[1,2],[3,4]]", "[[3,1],[4,2]]")
-            .gen(g -> { int n = g.size(1, 10); return new Object[]{ g.grid(n, n, n, n, -9, 9) }; })
+            .gen(g -> { int n = g.side(1, 10); return new Object[]{ g.grid(n, n, n, n, -9, 9) }; })
             .patterns("Array", "Math", "Matrix").limitMs(2000).maxN(20000);
     }
     public void rotate(int[][] m) {

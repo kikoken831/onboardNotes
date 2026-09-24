@@ -14,7 +14,7 @@ class Ref implements Problem {
                 for (int i = 0; i < all.size(); i++) all.get(i).val = v[i];
                 return new Object[]{ t, all.get(g.nextInt(0, all.size() - 1)).val, g.nextInt(0, 5) };
             })
-            .patterns("Hash Table", "Tree", "Depth-First Search", "Breadth-First Search").limitMs(2000).maxN(20000);
+            .patterns("Hash Table", "Tree", "Depth-First Search", "Breadth-First Search").limitMs(2000).maxN(500);
     }
     static List<TreeNode> nodes(TreeNode r) { List<TreeNode> a = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); if (r != null) q.add(r); while (!q.isEmpty()) { TreeNode n = q.poll(); a.add(n); if (n.left != null) q.add(n.left); if (n.right != null) q.add(n.right); } return a; }
     static TreeNode find(TreeNode r, int v) {

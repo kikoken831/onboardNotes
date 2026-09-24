@@ -6,7 +6,7 @@ class Ref implements Problem {
             .compare(Cmp.SET_OF_SEQS)
             .example("4", "[[\".Q..\",\"...Q\",\"Q...\",\"..Q.\"],[\"..Q.\",\"Q...\",\"...Q\",\".Q..\"]]").example("1", "[[\"Q\"]]")
             .example("2", "[]").example("3", "[]")
-            .gen(g -> new Object[]{ g.nextInt(1, 8) })
+            .gen(g -> new Object[]{ g.nextInt(1, 9) })
             .patterns("Array", "Backtracking").limitMs(2000).maxN(9);
     }
     public List<List<String>> solveNQueens(int n) {

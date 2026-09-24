@@ -11,10 +11,11 @@ class Ref implements Problem {
     static int[][] disjoint(Gen g) {
         int n = g.size(0, 12), x = -1;
         int[][] a = new int[n][];
-        for (int i = 0; i < n; i++) { x += g.nextInt(1, 4); int e = x + g.nextInt(0, 4); a[i] = new int[]{ x, e }; x = e; }
+        for (int i = 0; i < n; i++) { x += g.nextInt(1, 4); int e = x + g.nextInt(1, 4); a[i] = new int[]{ x, e }; x = e; }
         return a;
     }
     public int[][] intervalIntersection(int[][] A, int[][] B) {
+        for (int[][] L : new int[][][]{ A, B }) for (int[] iv : L) Pre.check(iv.length == 2 && iv[0] < iv[1], "start_i < end_i");
         for (int[][] L : new int[][][]{ A, B }) for (int i = 1; i < L.length; i++) Pre.check(L[i][0] > L[i - 1][1], "sorted, disjoint");
         List<int[]> out = new ArrayList<>();
         int i = 0, j = 0;

@@ -21,11 +21,13 @@ class Ref implements Problem {
                 }
             })
             .example("\"aabbcc\", 3", "\"abcabc\"").example("\"aaabc\", 3", "\"\"").example("\"aaadbbcc\", 2", "\"abacabcd\"")
-            .example("\"aa\", 0", "\"aa\"").example("\"a\", 5", "\"a\"")
-            .gen(g -> new Object[]{ g.string(1, 12, g.chance(0.5) ? "aabc" : "abcd"), g.nextInt(0, 4) })
+            .example("\"aa\", 0", "\"aa\"").example("\"a\", 1", "\"a\"")
+            .gen(g -> { String s = g.string(1, 12, g.chance(0.5) ? "aabc" : "abcd"); return new Object[]{ s, g.nextInt(0, Math.min(4, s.length())) }; })
             .patterns("Hash Table", "String", "Greedy", "Sorting", "Heap (Priority Queue)").limitMs(2000).maxN(1000);
     }
     public String rearrangeString(String s, int k) {
+        Pre.check(s.length() >= 1 && 0 <= k && k <= s.length(), "1 <= s.length, 0 <= k <= s.length");
+        for (char x : s.toCharArray()) Pre.check(x >= 'a' && x <= 'z', "lowercase letters");
         if (k <= 1) return s;
         int[] c = new int[26];
         for (char x : s.toCharArray()) c[x - 'a']++;

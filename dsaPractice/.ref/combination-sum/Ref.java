@@ -5,12 +5,13 @@ class Ref implements Problem {
         return Spec.method("combinationSum", T.INT_ARRAY, T.INT).returns(T.LIST_LIST_INT)
             .compare(Cmp.SET_OF_SETS)
             .example("[2,3,6,7], 7", "[[2,2,3],[7]]").example("[2,3,5], 8", "[[2,2,2,2],[2,3,3],[3,5]]").example("[2], 1", "[]")
-            .example("[1], 2", "[[1,1]]")
+            .example("[2], 4", "[[2,2]]")
             .gen(g -> new Object[]{ g.distinctInts(1, 6, 2, 12), g.nextInt(1, 20) })
             .patterns("Array", "Backtracking").limitMs(2000).maxN(20);
     }
     public List<List<Integer>> combinationSum(int[] c, int target) {
-        Set<Integer> s = new HashSet<>(); for (int x : c) Pre.check(x >= 1 && s.add(x), "distinct positive candidates");
+        Set<Integer> s = new HashSet<>(); for (int x : c) Pre.check(x >= 2 && x <= 40 && s.add(x), "distinct candidates, 2 <= candidates[i] <= 40");
+        Pre.check(target >= 1 && target <= 40, "1 <= target <= 40");
         int[] a = c.clone(); Arrays.sort(a);
         List<List<Integer>> out = new ArrayList<>();
         go(a, 0, target, new ArrayList<>(), out);

@@ -5,7 +5,7 @@ LeetCode 572 · Easy · https://leetcode.com/problems/subtree-of-another-tree/
 ## Brief
 
 Is `subRoot` identical to some node of `root` **together with all of that node's
-descendants**? the standard `TreeNode` (`val`, `left`, `right`) is provided.
+descendants**? The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

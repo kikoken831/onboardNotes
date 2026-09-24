@@ -5,7 +5,7 @@ class Ref implements Problem {
             .example("[[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]", "3")
             .example("[[\"1\",\"0\",\"1\"]]", "2").example("[[\"0\"]]", "0").example("[[\"1\",\"0\"],[\"0\",\"1\"]]", "2")   // diagonal is not connected
             .gen(g -> {
-                int r = g.size(1, 12), c = g.size(1, 12);
+                int r = g.side(1, 12), c = g.side(1, 12);
                 char[][] a = new char[r][c];
                 for (int i = 0; i < r; i++) for (int j = 0; j < c; j++) a[i][j] = g.chance(0.45) ? '1' : '0';
                 return new Object[]{ a };

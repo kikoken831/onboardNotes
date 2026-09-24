@@ -11,7 +11,7 @@ class Ref implements Problem {
                 walk(t, pre, in);
                 return new Object[]{ pre.stream().mapToInt(i -> i).toArray(), in.stream().mapToInt(i -> i).toArray() };
             })
-            .patterns("Array", "Hash Table", "Divide and Conquer", "Tree").limitMs(2000).maxN(20000);
+            .patterns("Array", "Hash Table", "Divide and Conquer", "Tree").limitMs(2000).maxN(3000);
     }
     static TreeNode distinct(TreeNode t, Gen g) {
         List<TreeNode> all = new ArrayList<>(); Deque<TreeNode> q = new ArrayDeque<>(); q.add(t);

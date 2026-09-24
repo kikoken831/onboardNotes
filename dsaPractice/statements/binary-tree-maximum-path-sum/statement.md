@@ -6,7 +6,7 @@ LeetCode 124 · Hard · https://leetcode.com/problems/binary-tree-maximum-path-s
 
 A path is any sequence of nodes connected by edges, each used at most once; it need not
 pass through the root and must contain **at least one** node. Return the maximum path sum.
-the standard `TreeNode` (`val`, `left`, `right`) is provided.
+The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

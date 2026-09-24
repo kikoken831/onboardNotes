@@ -33,8 +33,9 @@ O(h) — not O(n). Don't search both sides.
 ## The skill
 
 Using the BST invariant to discard half the tree at each step. The iterative loop is two
-lines; a full-tree DFS gives the right answer and misses the point, and the judge's timing
-mode will show the difference on a deep tree.
+lines; a full-tree DFS gives the right answer and misses the point: it is O(n) however the tree is
+shaped, while the BST walk is O(h). (The judge's generated BSTs are balanced, never deep
+chains.)
 
 ## Hints
 

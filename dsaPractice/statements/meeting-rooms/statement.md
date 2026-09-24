@@ -9,7 +9,7 @@ all of them? A meeting ending at `t` and another starting at `t` do not conflict
 
 ## Constraints
 
-- `0 <= n <= 10^4`, `start < end`
+- `0 <= n <= 10^4`, `0 <= start < end <= 10^6`
 
 ## Examples
 

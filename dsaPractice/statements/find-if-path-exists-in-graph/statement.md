@@ -44,6 +44,8 @@ Two traps the judge covers: edges are **undirected** (add both directions), and
 <details><summary>Hint 1</summary>
 
 At `n = 2 × 10^5`, recursive DFS can overflow the stack on a long chain. BFS with a queue
-doesn't.
+doesn't. The judge's inputs are much smaller (n ≤ 30 in stress, at most 20 000 random-graph nodes
+in time mode, never a long chain), so passing here doesn't guarantee a recursive DFS
+survives LeetCode's largest tests.
 
 </details>

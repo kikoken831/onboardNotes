@@ -4,7 +4,7 @@ LeetCode 206 · Easy · https://leetcode.com/problems/reverse-linked-list/
 
 ## Brief
 
-Reverse the list and return the new head. the standard `ListNode` (`val`, `next`) is provided.
+Reverse the list and return the new head. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

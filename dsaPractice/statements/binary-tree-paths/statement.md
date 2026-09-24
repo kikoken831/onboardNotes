@@ -4,7 +4,7 @@ LeetCode 257 · Easy · https://leetcode.com/problems/binary-tree-paths/
 
 ## Brief
 
-Return every root-to-leaf path as a string `"a->b->c"`, in any order. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Return every root-to-leaf path as a string `"a->b->c"`, in any order. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

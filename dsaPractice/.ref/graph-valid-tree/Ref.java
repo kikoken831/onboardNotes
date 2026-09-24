@@ -16,6 +16,12 @@ class Ref implements Problem {
     }
     static int find(int[] p, int x) { while (p[x] != x) x = p[x] = p[p[x]]; return x; }
     public boolean validTree(int n, int[][] edges) {
+        Pre.check(n >= 1, "1 <= n");
+        java.util.Set<Long> seen = new java.util.HashSet<>();
+        for (int[] e : edges) {
+            Pre.check(e.length == 2 && e[0] >= 0 && e[0] < n && e[1] >= 0 && e[1] < n && e[0] != e[1], "0 <= a_i, b_i < n, no self-loops");
+            Pre.check(seen.add(Math.min(e[0], e[1]) * 1_000_000L + Math.max(e[0], e[1])), "no repeated edges");
+        }
         if (edges.length != n - 1) return false;             // a tree has exactly n - 1 edges
         int[] p = new int[n];
         for (int i = 0; i < n; i++) p[i] = i;

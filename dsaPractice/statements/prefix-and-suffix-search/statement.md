@@ -25,11 +25,11 @@ returns the **largest index** of a word with that prefix **and** that suffix, or
 class WordFilter {
 
     public WordFilter(String[] words) {
-        
+
     }
 
     public int f(String pref, String suff) {
-        
+
     }
 }
 ```

@@ -13,6 +13,11 @@ class Ref implements Problem {
                 Set<Node> clone = Collections.newSetFromMap(new IdentityHashMap<>());
                 reach((Node) ret, clone);
                 for (Node n : clone) if (original.contains(n)) return "the result contains node " + n.val + " from the ORIGINAL graph -- it must be a deep copy";
+                Set<Integer> vals = new HashSet<>();
+                for (Node n : clone) {
+                    if (n.val < 1) return "the result contains a node with val " + n.val + " -- vals run from 1 to n";
+                    if (!vals.add(n.val)) return "the result contains two different nodes with val " + n.val + " -- each original node must be copied exactly once";
+                }
                 return adjacency((Node) ret);
             })
             .example("[[2,4],[1,3],[2,4],[1,3]]", "[[2,4],[1,3],[2,4],[1,3]]").example("[[]]", "[[]]").example("[]", "[]")
@@ -34,6 +39,17 @@ class Ref implements Problem {
         Node[] n = new Node[adj.length];
         for (int i = 0; i < adj.length; i++) n[i] = new Node(i + 1);
         for (int i = 0; i < adj.length; i++) for (int v : adj[i]) { Pre.check(v >= 1 && v <= adj.length && v != i + 1, "valid neighbour"); n[i].neighbors.add(n[v - 1]); }
+        for (int i = 0; i < adj.length; i++) {
+            Set<Integer> s = new HashSet<>();
+            for (int v : adj[i]) {
+                Pre.check(s.add(v), "no repeated edges");
+                boolean back = false; for (int w : adj[v - 1]) back |= w == i + 1;
+                Pre.check(back, "undirected: " + (i + 1) + " lists " + v + " so " + v + " lists " + (i + 1));
+            }
+        }
+        Set<Node> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+        reach(n[0], seen);
+        Pre.check(seen.size() == adj.length, "connected");
         return n[0];
     }
     static void reach(Node s, Set<Node> out) {

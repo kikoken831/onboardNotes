@@ -4,7 +4,7 @@ LeetCode 103 · Medium · https://leetcode.com/problems/binary-tree-zigzag-level
 
 ## Brief
 
-Level order, but alternate direction: left-to-right, then right-to-left, and so on. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Level order, but alternate direction: left-to-right, then right-to-left, and so on. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

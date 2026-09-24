@@ -15,6 +15,12 @@ class Ref implements Problem {
         return LcCodec.buildList(d);
     }
     public ListNode addTwoNumbers(ListNode a, ListNode b) {
+        for (ListNode l : new ListNode[]{ a, b }) {
+            Pre.check(l != null, "each list has at least one node");
+            ListNode last = l;
+            for (ListNode x = l; x != null; x = x.next) { Pre.check(x.val >= 0 && x.val <= 9, "digits 0-9"); last = x; }
+            Pre.check(last == l || last.val != 0, "no leading zeros");
+        }
         ListNode dummy = new ListNode(0), t = dummy;
         int carry = 0;
         while (a != null || b != null || carry != 0) {

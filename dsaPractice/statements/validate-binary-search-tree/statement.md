@@ -6,7 +6,7 @@ LeetCode 98 · Medium · https://leetcode.com/problems/validate-binary-search-tr
 
 Is this a valid BST? Every value in a node's left subtree must be **strictly less**, and
 every value in its right subtree **strictly greater** — the whole subtree, not just the
-child. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+child. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

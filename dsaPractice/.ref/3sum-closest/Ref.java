@@ -11,7 +11,8 @@ class Ref implements Problem {
                 for (int attempt = 0; ; attempt++) {
                     int[] a = g.ints(3, 30, -20, 20);
                     int t = g.nextInt(-40, 40);
-                    if (uniqueClosest(a, t) || attempt > 50) return new Object[]{ a, t };
+                    if (uniqueClosest(a, t)) return new Object[]{ a, t };
+                    if (attempt > 50) return new Object[]{ new int[]{ -1, 2, 1, -4 }, 1 };   // closest sum 2 is unique
                 }
             })
             .patterns("Array", "Two Pointers", "Sorting").limitMs(2000).maxN(1000);

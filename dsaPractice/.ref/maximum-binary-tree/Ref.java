@@ -6,7 +6,7 @@ class Ref implements Problem {
             .example("[3,2,1,6,0,5]", "[6,3,5,null,2,0,null,null,1]").example("[3,2,1]", "[3,null,2,null,1]")
             .example("[1]", "[1]").example("[1,2,3]", "[3,2,null,1]")
             .gen(g -> new Object[]{ g.distinctInts(1, 40, 0, 1000) })
-            .patterns("Array", "Divide and Conquer", "Stack", "Tree", "Monotonic Stack").limitMs(2000).maxN(20000);
+            .patterns("Array", "Divide and Conquer", "Stack", "Tree", "Monotonic Stack").limitMs(2000).maxN(1000);
     }
     public TreeNode constructMaximumBinaryTree(int[] nums) {
         Set<Integer> s = new HashSet<>(); for (int x : nums) Pre.check(s.add(x), "distinct values");

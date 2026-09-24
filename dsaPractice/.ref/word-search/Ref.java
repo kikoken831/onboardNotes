@@ -6,7 +6,7 @@ class Ref implements Problem {
             .example("[[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], \"ABCB\"", "false")   // no reuse
             .example("[[\"a\"]], \"a\"", "true").example("[[\"a\",\"a\"]], \"aaa\"", "false")
             .gen(g -> {
-                int r = g.size(1, 5), c = g.size(1, 5);
+                int r = g.side(1, 5), c = g.side(1, 5);
                 char[][] b = new char[r][c];
                 for (int i = 0; i < r; i++) for (int j = 0; j < c; j++) b[i][j] = "abc".charAt(g.nextInt(0, 2));
                 return new Object[]{ b, g.lower3(1, 7) };

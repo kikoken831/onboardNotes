@@ -7,15 +7,17 @@ class Ref implements Problem {
             .example("[[1,2],[2,3],[3,4],[4,5]]", "2")                              // touching shares an arrow
             .example("[[-2147483646,-2147483645],[2147483646,2147483647]]", "2")   // a[1] - b[1] overflows
             .gen(g -> {
-                if (g.chance(0.15)) return new Object[]{ new int[][]{ { Integer.MIN_VALUE, g.nextInt(-5, 5) }, { g.nextInt(-5, 5), Integer.MAX_VALUE }, { 0, 0 } } };
+                if (g.chance(0.15)) return new Object[]{ new int[][]{ { Integer.MIN_VALUE, g.nextInt(-5, 5) }, { g.nextInt(-5, 5), Integer.MAX_VALUE }, { g.nextInt(-5, 4), 5 } } };
                 int n = g.size(1, 25);
                 int[][] a = new int[n][];
-                for (int i = 0; i < n; i++) { int s = g.nextInt(0, 30); a[i] = new int[]{ s, s + g.nextInt(0, 8) }; }
+                for (int i = 0; i < n; i++) { int s = g.nextInt(0, 30); a[i] = new int[]{ s, s + g.nextInt(1, 8) }; }
                 return new Object[]{ a };
             })
             .patterns("Array", "Greedy", "Sorting").limitMs(2000).maxN(100000);
     }
     public int findMinArrowShots(int[][] points) {
+        Pre.check(points.length >= 1, "1 <= points.length");
+        for (int[] p : points) Pre.check(p.length == 2 && p[0] < p[1], "xstart < xend");
         int[][] a = points.clone();
         Arrays.sort(a, (x, y) -> Integer.compare(x[1], y[1]));
         int arrows = 0;

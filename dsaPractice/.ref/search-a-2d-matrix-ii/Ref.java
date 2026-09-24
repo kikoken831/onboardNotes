@@ -5,7 +5,7 @@ class Ref implements Problem {
             .example("[[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], 20", "false")
             .example("[[-5]], -5", "true").example("[[1,1]], 2", "false")
             .gen(g -> {
-                int m = g.size(1, 8), n = g.size(1, 8);
+                int m = g.side(1, 8), n = g.side(1, 8);
                 int[][] a = new int[m][n];
                 for (int i = 0; i < m; i++) for (int j = 0; j < n; j++)
                     a[i][j] = Math.max(i > 0 ? a[i - 1][j] : -30, j > 0 ? a[i][j - 1] : -30) + g.nextInt(0, 4);

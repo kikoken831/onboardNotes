@@ -5,7 +5,7 @@ LeetCode 92 · Medium · https://leetcode.com/problems/reverse-linked-list-ii/
 ## Brief
 
 Reverse the nodes from position `left` to `right` (1-indexed, inclusive) and return the
-head. the standard `ListNode` (`val`, `next`) is provided.
+head. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

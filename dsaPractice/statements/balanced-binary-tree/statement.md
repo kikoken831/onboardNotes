@@ -29,7 +29,8 @@ public boolean isBalanced(TreeNode root)
 ## Target complexity
 
 O(n). The top-down version that recomputes heights is O(n log n) on balanced trees and
-O(n²) on a chain.
+can degrade towards O(n²) on deep skewed ones. The judge's generated trees are never deep
+chains, so timing won't expose that case; aim for the single pass anyway.
 
 ## The skill
 

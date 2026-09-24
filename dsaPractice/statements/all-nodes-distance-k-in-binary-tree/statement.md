@@ -5,7 +5,7 @@ LeetCode 863 · Medium · https://leetcode.com/problems/all-nodes-distance-k-in-
 ## Brief
 
 Return the values of every node exactly `k` edges from `target`, in any order. `target` is a
-**node of the tree you're given**; examples list it by value. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+**node of the tree you're given**; examples list it by value. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

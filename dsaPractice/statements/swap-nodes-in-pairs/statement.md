@@ -4,7 +4,7 @@ LeetCode 24 · Medium · https://leetcode.com/problems/swap-nodes-in-pairs/
 
 ## Brief
 
-Swap every two adjacent **nodes** (not just their values) and return the head. the standard `ListNode` (`val`, `next`) is provided.
+Swap every two adjacent **nodes** (not just their values) and return the head. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

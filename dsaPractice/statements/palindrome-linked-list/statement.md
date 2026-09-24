@@ -4,7 +4,7 @@ LeetCode 234 · Easy · https://leetcode.com/problems/palindrome-linked-list/
 
 ## Brief
 
-Return whether the list reads the same forwards and backwards. the standard `ListNode` (`val`, `next`) is provided.
+Return whether the list reads the same forwards and backwards. The standard `ListNode` (`val`, `next`) is provided.
 
 ## Constraints
 

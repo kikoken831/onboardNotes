@@ -4,7 +4,7 @@ LeetCode 230 · Medium · https://leetcode.com/problems/kth-smallest-element-in-
 
 ## Brief
 
-Return the `k`-th smallest value (1-indexed) in a BST. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Return the `k`-th smallest value (1-indexed) in a BST. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

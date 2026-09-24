@@ -27,12 +27,17 @@ class Ref implements Problem {
                 }
             })
             .example("[1,7,11], [2,4,6], 3", "[[1,2],[1,4],[1,6]]").example("[1,1,2], [1,2,3], 2", "[[1,1],[1,1]]")
-            .example("[1,2], [3], 3", "[[1,3],[2,3]]")                         // k exceeds the number of pairs
-            .gen(g -> new Object[]{ g.sortedInts(1, 10, -10, 10), g.sortedInts(1, 10, -10, 10), g.nextInt(1, 30) })
+            .example("[1,2], [3], 2", "[[1,3],[2,3]]")                         // k == m*n: every pair
+            .gen(g -> {
+                int[] a = g.sortedInts(1, 10, -10, 10), b = g.sortedInts(1, 10, -10, 10);
+                return new Object[]{ a, b, g.nextInt(1, Math.min(30, a.length * b.length)) };   // LeetCode: k <= m*n
+            })
             .patterns("Array", "Heap (Priority Queue)").limitMs(2000).maxN(20000);
     }
     public List<List<Integer>> kSmallestPairs(int[] a, int[] b, int k) {
         Pre.sorted(a, false, "nums1"); Pre.sorted(b, false, "nums2");
+        Pre.check(a.length >= 1 && b.length >= 1, "1 <= nums1.length, nums2.length");
+        Pre.check(k >= 1 && (long) k <= (long) a.length * b.length, "1 <= k <= nums1.length * nums2.length");
         PriorityQueue<int[]> pq = new PriorityQueue<>((x, y) -> Long.compare((long) a[x[0]] + b[x[1]], (long) a[y[0]] + b[y[1]]));
         for (int i = 0; i < Math.min(a.length, k); i++) pq.add(new int[]{ i, 0 });
         List<List<Integer>> out = new ArrayList<>();

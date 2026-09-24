@@ -5,7 +5,7 @@ LeetCode 236 · Medium · https://leetcode.com/problems/lowest-common-ancestor-o
 ## Brief
 
 As LC 235, but for an arbitrary binary tree — no ordering to exploit. `p` and `q` are nodes
-of the tree you're given. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+of the tree you're given. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

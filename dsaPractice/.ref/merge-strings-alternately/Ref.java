@@ -6,7 +6,7 @@ class Ref implements Problem {
             .example("\"ab\", \"pqrs\"",  "\"apbqrs\"")
             .example("\"abcd\", \"pq\"",  "\"apbqcd\"")
             .example("\"a\", \"z\"",      "\"az\"")
-            .gen(g -> new Object[]{ g.lower(1, 20), g.string(1, 20, "XYZW") })
+            .gen(g -> new Object[]{ g.lower(1, 20), g.string(1, 20, "wxyz") })
             .patterns("Two Pointers", "String")
             .limitMs(2000)
             .maxN(100000);

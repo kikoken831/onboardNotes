@@ -10,6 +10,8 @@ class Ref implements Problem {
             .patterns("Array", "Backtracking").limitMs(2000).maxN(20);
     }
     public List<List<Integer>> combinationSum2(int[] c, int target) {
+        for (int x : c) Pre.check(x >= 1 && x <= 50, "1 <= candidates[i] <= 50");
+        Pre.check(target >= 1 && target <= 30, "1 <= target <= 30");
         int[] a = c.clone(); Arrays.sort(a);
         List<List<Integer>> out = new ArrayList<>();
         go(a, 0, target, new ArrayList<>(), out);

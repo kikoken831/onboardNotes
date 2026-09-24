@@ -9,6 +9,7 @@ Can `nums` be divided into `k` non-empty subsets with equal sums?
 ## Constraints
 
 - `1 <= k <= n <= 16`, `1 <= nums[i] <= 10^4`
+- each distinct value occurs at most 4 times
 
 ## Examples
 

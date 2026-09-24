@@ -4,7 +4,7 @@ LeetCode 102 · Medium · https://leetcode.com/problems/binary-tree-level-order-
 
 ## Brief
 
-Return the node values level by level, left to right. the standard `TreeNode` (`val`, `left`, `right`) is provided.
+Return the node values level by level, left to right. The standard `TreeNode` (`val`, `left`, `right`) is provided.
 
 ## Constraints
 

@@ -8,7 +8,7 @@ LeetCode 852 · Medium · https://leetcode.com/problems/peak-index-in-a-mountain
 
 ## Constraints
 
-- `3 <= n <= 10^5`, a valid mountain
+- `3 <= n <= 10^5`, `0 <= arr[i] <= 10^6`, a valid mountain
 
 ## Examples
 

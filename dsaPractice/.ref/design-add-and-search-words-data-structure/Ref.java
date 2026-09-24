@@ -13,7 +13,11 @@ class Ref implements Problem {
                 int n = g.size(1, 50);
                 for (int i = 0; i < n; i++) {
                     if (g.chance(0.4)) b.call("addWord", g.string(1, 4, "ab"));
-                    else b.call("search", g.string(1, 4, "ab.."));
+                    else {
+                        String w = g.string(1, 4, "ab..");
+                        while (w.chars().filter(c -> c == '.').count() > 2) w = w.replaceFirst("\\.", "a");   // LeetCode: at most 2 dots
+                        b.call("search", w);
+                    }
                 }
                 return new Object[]{ b.build() };
             })
@@ -26,7 +30,7 @@ class WordDictionary {
     private boolean word;
     public WordDictionary() {}
     public void addWord(String w) { WordDictionary t = this; for (char c : w.toCharArray()) { if (t.next[c - 'a'] == null) t.next[c - 'a'] = new WordDictionary(); t = t.next[c - 'a']; } t.word = true; }
-    public boolean search(String w) { return find(w, 0); }
+    public boolean search(String w) { Pre.check(w.chars().filter(c -> c == '.').count() <= 2, "at most 2 dots in word for search queries"); return find(w, 0); }
     private boolean find(String w, int i) {
         if (i == w.length()) return word;
         char c = w.charAt(i);

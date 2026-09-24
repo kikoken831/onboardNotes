@@ -53,7 +53,7 @@ class Ref implements Problem {
             .example("3, []",                        "[0,1,2]")
             .example("2, [[0,0]]",                   "[]")
             .gen(g -> {
-                int n = g.nextInt(1, 20);
+                int n = g.forcedSize >= 0 ? g.forcedSize : g.nextInt(1, 20);   // timing: n nodes
                 // Mostly acyclic (built from a random topological order), sometimes
                 // not, so both branches are exercised.
                 int[][] edges = g.chance(0.7) ? g.dag(n, g.size(0, 25)) : randomEdges(g, n);
