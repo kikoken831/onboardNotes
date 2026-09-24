@@ -1286,3 +1286,161 @@ MUTANTS["clone-graph"] = [
     Map<Node, Node> m = new IdentityHashMap<>();
     public Node cloneGraph(Node node) { if (node == null) return null; if (m.containsKey(node)) return m.get(node); Node c = new Node(node.val); m.put(node, c); for (Node v : node.neighbors) c.neighbors.add(cloneGraph(v)); return c; }""", LIST)),
 ]
+
+# ------------------------------------------------------- batch 9: tries and design
+
+MUTANTS["implement-trie-prefix-tree"] = [
+    ("no-word-flag", "reject", D("""
+class Trie {
+    Trie[] n = new Trie[26];
+    public void insert(String w) { Trie t = this; for (char c : w.toCharArray()) { if (t.n[c - 'a'] == null) t.n[c - 'a'] = new Trie(); t = t.n[c - 'a']; } }
+    public boolean search(String w) { Trie t = this; for (char c : w.toCharArray()) { t = t.n[c - 'a']; if (t == null) return false; } return true; }
+    public boolean startsWith(String p) { return search(p); }
+}""")),
+    ("hashset-of-prefixes", "accept", D("""
+class Trie {
+    Set<String> words = new HashSet<>(), pre = new HashSet<>();
+    public void insert(String w) { words.add(w); for (int i = 0; i <= w.length(); i++) pre.add(w.substring(0, i)); }
+    public boolean search(String w) { return words.contains(w); }
+    public boolean startsWith(String p) { return pre.contains(p); }
+}""")),
+]
+MUTANTS["design-add-and-search-words-data-structure"] = [
+    ("dot-matches-any-length", "reject", D("""
+class WordDictionary {
+    List<String> w = new ArrayList<>();
+    public void addWord(String s) { w.add(s); }
+    public boolean search(String s) { String re = s.replace(".", ".*"); for (String x : w) if (x.matches(re)) return true; return false; }
+}""")),
+    ("list-with-regex", "accept", D("""
+class WordDictionary {
+    List<String> w = new ArrayList<>();
+    public void addWord(String s) { w.add(s); }
+    public boolean search(String s) { for (String x : w) if (x.matches(s)) return true; return false; }
+}""")),
+]
+MUTANTS["word-search-ii"] = [
+    ("reports-duplicates", "reject", S("""
+    public List<String> findWords(char[][] b, String[] ws) { List<String> o = new ArrayList<>(); for (String w : ws) for (int i = 0; i < b.length; i++) for (int j = 0; j < b[0].length; j++) if (d(b, w, i, j, 0)) o.add(w); return o; }
+    boolean d(char[][] b, String w, int i, int j, int k) { if (i < 0 || j < 0 || i >= b.length || j >= b[0].length || b[i][j] != w.charAt(k)) return false; if (k == w.length() - 1) return true; char c = b[i][j]; b[i][j] = '#';
+        boolean r = d(b, w, i + 1, j, k + 1) || d(b, w, i - 1, j, k + 1) || d(b, w, i, j + 1, k + 1) || d(b, w, i, j - 1, k + 1); b[i][j] = c; return r; }""", LIST)),
+    ("word-search-per-word", "accept", S("""
+    public List<String> findWords(char[][] b, String[] ws) { List<String> o = new ArrayList<>(); outer: for (String w : ws) for (int i = 0; i < b.length; i++) for (int j = 0; j < b[0].length; j++) if (d(b, w, i, j, 0)) { o.add(w); continue outer; } return o; }
+    boolean d(char[][] b, String w, int i, int j, int k) { if (i < 0 || j < 0 || i >= b.length || j >= b[0].length || b[i][j] != w.charAt(k)) return false; if (k == w.length() - 1) return true; char c = b[i][j]; b[i][j] = '#';
+        boolean r = d(b, w, i + 1, j, k + 1) || d(b, w, i - 1, j, k + 1) || d(b, w, i, j + 1, k + 1) || d(b, w, i, j - 1, k + 1); b[i][j] = c; return r; }""", LIST)),
+]
+MUTANTS["longest-word-in-dictionary"] = [
+    ("ignores-tie-break", "reject", S("""
+    public String longestWord(String[] w) { Set<String> s = new HashSet<>(Arrays.asList(w)); String b = ""; for (String x : w) { boolean ok = true; for (int i = 1; i < x.length(); i++) if (!s.contains(x.substring(0, i))) ok = false; if (ok && x.length() >= b.length()) b = x; } return b; }""", LIST)),
+    ("sort-then-build", "accept", S("""
+    public String longestWord(String[] w) { String[] a = w.clone(); Arrays.sort(a); Set<String> built = new HashSet<>(); built.add(""); String b = ""; for (String x : a) if (built.contains(x.substring(0, x.length() - 1))) { built.add(x); if (x.length() > b.length()) b = x; } return b; }""", LIST)),
+]
+MUTANTS["prefix-and-suffix-search"] = [
+    ("smallest-index", "reject", D("""
+class WordFilter {
+    String[] w;
+    public WordFilter(String[] words) { w = words; }
+    public int f(String p, String s) { for (int i = 0; i < w.length; i++) if (w[i].startsWith(p) && w[i].endsWith(s)) return i; return -1; }
+}""")),
+    ("scan-from-back", "accept", D("""
+class WordFilter {
+    String[] w;
+    public WordFilter(String[] words) { w = words; }
+    public int f(String p, String s) { for (int i = w.length - 1; i >= 0; i--) if (w[i].startsWith(p) && w[i].endsWith(s)) return i; return -1; }
+}""")),
+]
+MUTANTS["design-search-autocomplete-system"] = [
+    ("never-records-typed-sentences", "reject", D("""
+class AutocompleteSystem {
+    Map<String, Integer> h = new HashMap<>(); StringBuilder cur = new StringBuilder();
+    public AutocompleteSystem(String[] s, int[] t) { for (int i = 0; i < s.length; i++) h.put(s[i], t[i]); }
+    public List<String> input(char c) { if (c == '#') { cur.setLength(0); return new ArrayList<>(); } cur.append(c); String p = cur.toString(); List<String> m = new ArrayList<>();
+        for (String s : h.keySet()) if (s.startsWith(p)) m.add(s); m.sort((x, y) -> h.get(x).equals(h.get(y)) ? x.compareTo(y) : h.get(y) - h.get(x)); return new ArrayList<>(m.subList(0, Math.min(3, m.size()))); }
+}""")),
+    ("tie-break-reversed", "reject", D("""
+class AutocompleteSystem {
+    Map<String, Integer> h = new HashMap<>(); StringBuilder cur = new StringBuilder();
+    public AutocompleteSystem(String[] s, int[] t) { for (int i = 0; i < s.length; i++) h.put(s[i], t[i]); }
+    public List<String> input(char c) { if (c == '#') { h.merge(cur.toString(), 1, Integer::sum); cur.setLength(0); return new ArrayList<>(); } cur.append(c); String p = cur.toString(); List<String> m = new ArrayList<>();
+        for (String s : h.keySet()) if (s.startsWith(p)) m.add(s); m.sort((x, y) -> h.get(x).equals(h.get(y)) ? y.compareTo(x) : h.get(y) - h.get(x)); return new ArrayList<>(m.subList(0, Math.min(3, m.size()))); }
+}""")),
+    ("trie-with-sentence-sets", "accept", D("""
+class AutocompleteSystem {
+    class N { Map<Character, N> k = new HashMap<>(); Set<String> s = new HashSet<>(); }
+    N root = new N(), at; Map<String, Integer> h = new HashMap<>(); StringBuilder cur = new StringBuilder();
+    public AutocompleteSystem(String[] s, int[] t) { for (int i = 0; i < s.length; i++) add(s[i], t[i]); at = root; }
+    void add(String s, int t) { h.merge(s, t, Integer::sum); N n = root; for (char c : s.toCharArray()) { n = n.k.computeIfAbsent(c, x -> new N()); n.s.add(s); } }
+    public List<String> input(char c) { if (c == '#') { add(cur.toString(), 1); cur.setLength(0); at = root; return new ArrayList<>(); } cur.append(c);
+        if (at != null) at = at.k.get(c); if (at == null) return new ArrayList<>(); List<String> m = new ArrayList<>(at.s);
+        m.sort((x, y) -> h.get(x).equals(h.get(y)) ? x.compareTo(y) : h.get(y) - h.get(x)); return new ArrayList<>(m.subList(0, Math.min(3, m.size()))); }
+}""")),
+]
+MUTANTS["index-pairs-of-a-string"] = [
+    ("unsorted-by-word-order", "reject", S("""
+    public int[][] indexPairs(String t, String[] ws) { List<int[]> o = new ArrayList<>(); for (String w : ws) for (int i = 0; i + w.length() <= t.length(); i++) if (t.startsWith(w, i)) o.add(new int[]{i, i + w.length() - 1}); return o.toArray(new int[0][]); }""", LIST)),
+    ("trie-walk", "accept", S("""
+    class N { N[] n = new N[26]; boolean w; }
+    public int[][] indexPairs(String t, String[] ws) { N r = new N(); for (String w : ws) { N x = r; for (char c : w.toCharArray()) { if (x.n[c - 'a'] == null) x.n[c - 'a'] = new N(); x = x.n[c - 'a']; } x.w = true; }
+        List<int[]> o = new ArrayList<>(); for (int i = 0; i < t.length(); i++) { N x = r; for (int j = i; j < t.length(); j++) { x = x.n[t.charAt(j) - 'a']; if (x == null) break; if (x.w) o.add(new int[]{i, j}); } } return o.toArray(new int[0][]); }""", LIST)),
+]
+MUTANTS["find-median-from-data-stream"] = [
+    ("heaps-unbalanced-routing", "reject", D("""
+class MedianFinder {
+    PriorityQueue<Integer> lo = new PriorityQueue<>(Collections.reverseOrder()), hi = new PriorityQueue<>();
+    public void addNum(int x) { if (lo.size() <= hi.size()) lo.add(x); else hi.add(x); }
+    public double findMedian() { return lo.size() > hi.size() ? lo.peek() : (lo.peek() + hi.peek()) / 2.0; }
+}""")),
+    ("sorted-list-insert", "accept", D("""
+class MedianFinder {
+    List<Integer> l = new ArrayList<>();
+    public void addNum(int x) { int i = Collections.binarySearch(l, x); l.add(i < 0 ? -i - 1 : i, x); }
+    public double findMedian() { int n = l.size(); return n % 2 == 1 ? l.get(n / 2) : (l.get(n / 2 - 1) + (double) l.get(n / 2)) / 2; }
+}""")),
+]
+MUTANTS["range-sum-query-immutable"] = [
+    ("exclusive-right", "reject", D("""
+class NumArray {
+    int[] p;
+    public NumArray(int[] a) { p = new int[a.length + 1]; for (int i = 0; i < a.length; i++) p[i + 1] = p[i] + a[i]; }
+    public int sumRange(int l, int r) { return p[r] - p[l]; }
+}""")),
+    ("loop-per-query", "accept", D("""
+class NumArray {
+    int[] a;
+    public NumArray(int[] a) { this.a = a.clone(); }
+    public int sumRange(int l, int r) { int s = 0; for (int i = l; i <= r; i++) s += a[i]; return s; }
+}""")),
+]
+MUTANTS["maximum-frequency-stack"] = [
+    ("tie-breaks-to-oldest", "reject", D("""
+class FreqStack {
+    Map<Integer, Integer> f = new HashMap<>(); List<Integer> s = new ArrayList<>();
+    public void push(int x) { f.merge(x, 1, Integer::sum); s.add(x); }
+    public int pop() { int best = -1, bi = -1; for (int i = 0; i < s.size(); i++) { int v = s.get(i); if (f.get(v) > best) { best = f.get(v); bi = i; } } int x = s.remove(bi); f.merge(x, -1, Integer::sum); return x; }
+}""")),
+    ("scan-latest-max", "accept", D("""
+class FreqStack {
+    Map<Integer, Integer> f = new HashMap<>(); List<Integer> s = new ArrayList<>();
+    public void push(int x) { f.merge(x, 1, Integer::sum); s.add(x); }
+    public int pop() { int best = -1, bi = -1; for (int i = 0; i < s.size(); i++) { int v = s.get(i); if (f.get(v) >= best) { best = f.get(v); bi = i; } } int x = s.remove(bi); f.merge(x, -1, Integer::sum); return x; }
+}""")),
+]
+MUTANTS["encode-and-decode-strings"] = [
+    ("static-field-cheat", "reject", D("""
+public class Codec {
+    static List<String> last;
+    public String encode(List<String> s) { last = s; return ""; }
+    public List<String> decode(String s) { return last; }
+}""")),
+    ("naive-delimiter", "reject", D("""
+public class Codec {
+    public String encode(List<String> s) { return String.join("#", s); }
+    public List<String> decode(String s) { return s.isEmpty() ? new ArrayList<>() : new ArrayList<>(Arrays.asList(s.split("#", -1))); }
+}""")),
+    ("escape-scheme", "accept", D("""
+public class Codec {
+    public String encode(List<String> s) { StringBuilder b = new StringBuilder(); for (String x : s) b.append(x.replace("/", "//").replace(",", "/,")).append(" ,"); return b.toString(); }
+    public List<String> decode(String s) { List<String> o = new ArrayList<>(); StringBuilder cur = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) { char c = s.charAt(i); if (c == '/') cur.append(s.charAt(++i)); else if (c == ',') { o.add(cur.substring(0, cur.length() - 1)); cur.setLength(0); } else cur.append(c); } return o; }
+}""")),
+]
