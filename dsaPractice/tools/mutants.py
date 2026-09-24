@@ -42,7 +42,8 @@ def run_one(problem, name, expect, source):
         src = os.path.join(tmp, "Solution.java")
         with open(src, "w") as f:
             f.write(source)
-        r = subprocess.run(["javac", "-cp", build.classpath(problem), "-d", tmp, src],
+        r = subprocess.run(["javac", "-cp", build.classpath(problem), "-d", tmp,
+                            build.javac_source(src, os.path.join(tmp, "src"))],
                            capture_output=True, text=True)
         if r.returncode != 0:
             return False, "mutant does not compile:\n" + (r.stdout + r.stderr)[:600]
