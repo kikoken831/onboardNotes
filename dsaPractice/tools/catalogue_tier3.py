@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Tier 3: the supplied 179-problem list, verbatim.
 

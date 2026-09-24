@@ -5,7 +5,9 @@ The schedule is the best-evidenced part of the whole design. Re-solving a proble
 an empty file after a delay is worth considerably more than re-reading a solution you
 already wrote, so `judge next` surfaces due re-solves ahead of new problems.
 
-Intervals are 1, 3, 7 and 21 days. A failed re-solve drops back to the first interval.
+Intervals are 1, 3, 7 and 21 days. Only a stress-tested ACCEPTED on a problem not yet
+solved, or on a re-solve that is due, moves the schedule forward. A failed DUE re-solve
+drops back to the first interval; attempts between re-solves change nothing.
 """
 
 import json
@@ -50,8 +52,24 @@ def entry(state, slug):
     })
 
 
-def record(slug, verdict, elapsed_ms=None):
-    """Log one attempt and advance or reset the retrieval schedule."""
+FAILURES = ("WRONG ANSWER", "RUNTIME ERROR", "TIME LIMIT EXCEEDED")
+
+
+def record(slug, verdict, elapsed_ms=None, full=True):
+    """
+    Log one attempt and move the retrieval schedule. Returns (entry, event).
+
+    `full` is False for a pinned-examples-only run (`--fixed`, `-n 0`); that never
+    counts as a solve. The schedule moves only on the attempts it is about:
+
+      first full ACCEPTED        solved; first re-solve due in INTERVALS_DAYS[0]
+      full ACCEPTED, re-solve due next interval (stage advances)
+      full ACCEPTED, not due     nothing -- practising early is not a re-solve
+      failure, re-solve due      back to the first interval (due in 1 day again)
+      failure, not due           nothing -- a failed practice run keeps its progress
+
+    event is one of: solved, advanced, not-due, reset, pinned-only, None.
+    """
     state = load()
     e = entry(state, slug)
     now = time.time()
@@ -59,24 +77,39 @@ def record(slug, verdict, elapsed_ms=None):
     e["attempts"] += 1
     e["last_verdict"] = verdict
     e["last_attempt"] = now
-    e["history"].append({"t": now, "v": verdict, "ms": elapsed_ms})
+    e["history"].append({"t": now, "v": verdict, "ms": elapsed_ms,
+                         **({} if full else {"pinned_only": True})})
     e["history"] = e["history"][-40:]
 
+    due = bool(e["solved"] and e.get("due") and e["due"] <= now)
+    event = None
+    last = len(INTERVALS_DAYS) - 1
+
     if verdict == "ACCEPTED":
-        if not e["solved"]:
+        if not full:
+            event = "pinned-only"
+        elif not e["solved"]:
             e["solved"] = True
             e["first_solved"] = now
-        stage = e.get("stage", 0)
-        e["due"] = now + INTERVALS_DAYS[min(stage, len(INTERVALS_DAYS) - 1)] * DAY
-        e["stage"] = min(stage + 1, len(INTERVALS_DAYS))
-    elif verdict in ("WRONG ANSWER", "RUNTIME ERROR", "TIME LIMIT EXCEEDED"):
-        # A failed re-solve means it did not stick. Back to the shortest interval.
-        if e["solved"]:
-            e["stage"] = 0
             e["due"] = now + INTERVALS_DAYS[0] * DAY
+            e["stage"] = 1
+            event = "solved"
+        elif due:
+            stage = e.get("stage", 0)
+            e["due"] = now + INTERVALS_DAYS[min(stage, last)] * DAY
+            e["stage"] = min(stage + 1, len(INTERVALS_DAYS))
+            event = "advanced"
+        else:
+            event = "not-due"
+    elif verdict in FAILURES and due:
+        # A failed re-solve means it did not stick: back to the first interval, as if
+        # solved for the first time today.
+        e["stage"] = 1
+        e["due"] = now + INTERVALS_DAYS[0] * DAY
+        event = "reset"
 
     save(state)
-    return e
+    return e, event
 
 
 def due_now(state=None):

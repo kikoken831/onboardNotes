@@ -87,19 +87,22 @@ public final class LcCodec {
     static List<String> splitTopLevel(String s) {
         List<String> out = new ArrayList<>();
         int depth = 0;
-        boolean inStr = false, esc = false;
+        boolean esc = false;
+        char quote = 0;                     // the open quote, '"' or '\'', or 0 outside a string
         StringBuilder cur = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (esc)                       { cur.append(c); esc = false; continue; }
-            if (inStr) {
+            if (quote != 0) {
                 cur.append(c);
-                if (c == '\\')      esc = true;
-                else if (c == '"')  inStr = false;
+                if (c == '\\')        esc = true;
+                else if (c == quote)  quote = 0;
                 continue;
             }
             switch (c) {
-                case '"':            inStr = true;  cur.append(c); break;
+                // Single quotes too: the parser accepts 'x' char literals, and a pinned
+                // ',' or '[' char must not split or unbalance the argument list.
+                case '"': case '\'': quote = c; cur.append(c); break;
                 case '[': case '{':  depth++;       cur.append(c); break;
                 case ']': case '}':  depth--;       cur.append(c); break;
                 case ',':

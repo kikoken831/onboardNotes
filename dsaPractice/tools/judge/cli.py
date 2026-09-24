@@ -305,17 +305,28 @@ def cmd_run(args):
 
     mode = "fixed" if args.fixed else "stress"
     iterations = 0 if args.fixed else args.n
+    # Pinned examples alone are not a solve: they are the examples you read in the
+    # statement. Only a stress-tested pass counts toward the schedule.
+    pinned_only = iterations <= 0
     started = time.time()
     verdict, out = build.run_judge(problem, mode, iterations, seed)
     elapsed = int((time.time() - started) * 1000)
 
     print(out)
     if verdict:
-        e = progress.record(problem["slug"], verdict, elapsed)
-        if verdict == "ACCEPTED" and e.get("due"):
+        e, event = progress.record(problem["slug"], verdict, elapsed, full=not pinned_only)
+        days = None
+        if e.get("due"):
             days = max(1, int((e["due"] - time.time()) / 86400 + 0.5))
-            print(dim("  scheduled for a blank-file re-solve in %d day%s"
-                      % (days, "" if days == 1 else "s")))
+        plural = lambda d: "" if d == 1 else "s"
+        if event == "pinned-only":
+            print(dim("  pinned examples only -- not counted as a solve; drop --fixed / -n 0 to stress test"))
+        elif event in ("solved", "advanced") and days:
+            print(dim("  scheduled for a blank-file re-solve in %d day%s" % (days, plural(days))))
+        elif event == "not-due" and days:
+            print(dim("  re-solve not due yet (in %d day%s) -- schedule unchanged" % (days, plural(days))))
+        elif event == "reset" and days:
+            print(dim("  re-solve failed -- back to the first interval (due in %d day%s)" % (days, plural(days))))
         print()
     sys.exit(0 if verdict == "ACCEPTED" else 1)
 
@@ -367,9 +378,11 @@ def cmd_verify(args):
             continue
 
         verdict, out = build.run_judge(p, "verify", 0, 1)
-        if verdict == "REFERENCE BUG":
-            bad.append((p["slug"], "disagrees with a pinned example"))
-            print("  %s %s" % (red("✗"), p["slug"]))
+        # Only an explicit VERIFIED is a pass. A crash, a timeout, a load error or a
+        # missing verdict line must never be read as "the reference is fine".
+        if verdict != "VERIFIED":
+            bad.append((p["slug"], verdict or "no verdict"))
+            print("  %s %s %s" % (red("✗"), p["slug"], dim(verdict or "no verdict")))
             for line in out.splitlines():
                 if line.strip():
                     print("    " + line)
