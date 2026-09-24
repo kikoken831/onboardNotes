@@ -130,9 +130,14 @@ public final class Judge {
             }
             return a -> spec.driver.run(() -> instantiate(cls), a);
         }
+        // A FRESH instance per call, as leetcode.com does for every test case. Reusing one
+        // instance leaks instance-field state between tests: a solution that initialises
+        // `Map memo = new HashMap<>()` as a field is correct on LeetCode but would carry the
+        // previous test's entries here and fail with a false WRONG ANSWER.
+        Class<?> cls = m.getDeclaringClass();
         return a -> {
             try {
-                return m.invoke(instance, a);
+                return m.invoke(instantiate(cls), a);
             } catch (InvocationTargetException e) {
                 throw e.getCause() != null ? e.getCause() : e;
             }
