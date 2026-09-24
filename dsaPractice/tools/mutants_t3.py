@@ -364,3 +364,126 @@ MUTANTS["count-unique-characters-of-all-substrings-of-a-given-string"] = [
     ("brute-force", "accept", S("""
     public int uniqueLetterString(String s) { int t = 0; for (int i = 0; i < s.length(); i++) { int[] c = new int[26]; int u = 0; for (int j = i; j < s.length(); j++) { int x = s.charAt(j) - 'A'; if (++c[x] == 1) u++; else if (c[x] == 2) u--; t += u; } } return t; }""")),
 ]
+
+# ------------------------------------------------------------ batch 3: linked lists
+
+MUTANTS["add-two-numbers"] = [
+    ("drops-final-carry", "reject", S("""
+    public ListNode addTwoNumbers(ListNode a, ListNode b) { ListNode d = new ListNode(0), t = d; int c = 0;
+        while (a != null || b != null) { int s = c + (a != null ? a.val : 0) + (b != null ? b.val : 0); t = t.next = new ListNode(s % 10); c = s / 10; if (a != null) a = a.next; if (b != null) b = b.next; }
+        return d.next; }""")),
+    ("recursive", "accept", S("""
+    public ListNode addTwoNumbers(ListNode a, ListNode b) { return go(a, b, 0); }
+    ListNode go(ListNode a, ListNode b, int c) { if (a == null && b == null && c == 0) return null; int s = c + (a != null ? a.val : 0) + (b != null ? b.val : 0); ListNode n = new ListNode(s % 10); n.next = go(a != null ? a.next : null, b != null ? b.next : null, s / 10); return n; }""")),
+]
+MUTANTS["remove-nth-node-from-end-of-list"] = [
+    ("no-dummy-head-removal-fails", "reject", S("""
+    public ListNode removeNthFromEnd(ListNode h, int n) { ListNode f = h, s = h; for (int i = 0; i < n; i++) f = f.next; if (f == null) return h; while (f.next != null) { f = f.next; s = s.next; } s.next = s.next.next; return h; }""")),
+    ("two-pass", "accept", S("""
+    public ListNode removeNthFromEnd(ListNode h, int n) { int len = 0; for (ListNode p = h; p != null; p = p.next) len++; ListNode d = new ListNode(0, h), p = d; for (int i = 0; i < len - n; i++) p = p.next; p.next = p.next.next; return d.next; }""")),
+]
+MUTANTS["merge-two-sorted-lists"] = [
+    ("drops-remainder", "reject", S("""
+    public ListNode mergeTwoLists(ListNode a, ListNode b) { ListNode d = new ListNode(0), t = d; while (a != null && b != null) { if (a.val <= b.val) { t.next = a; a = a.next; } else { t.next = b; b = b.next; } t = t.next; } t.next = null; return d.next; }""")),
+    ("recursive", "accept", S("""
+    public ListNode mergeTwoLists(ListNode a, ListNode b) { if (a == null) return b; if (b == null) return a; if (a.val <= b.val) { a.next = mergeTwoLists(a.next, b); return a; } b.next = mergeTwoLists(a, b.next); return b; }""")),
+]
+MUTANTS["merge-k-sorted-lists"] = [
+    ("null-heads-into-heap", "reject", S("""
+    public ListNode mergeKLists(ListNode[] ls) { PriorityQueue<ListNode> q = new PriorityQueue<>((x, y) -> x.val - y.val); for (ListNode l : ls) q.add(l); ListNode d = new ListNode(0), t = d; while (!q.isEmpty()) { ListNode n = q.poll(); t = t.next = n; if (n.next != null) q.add(n.next); } return d.next; }""", LIST)),
+    ("collect-sort-rebuild", "accept", S("""
+    public ListNode mergeKLists(ListNode[] ls) { List<Integer> v = new ArrayList<>(); for (ListNode l : ls) for (ListNode p = l; p != null; p = p.next) v.add(p.val); Collections.sort(v); ListNode d = new ListNode(0), t = d; for (int x : v) t = t.next = new ListNode(x); return d.next; }""", LIST)),
+]
+MUTANTS["swap-nodes-in-pairs"] = [
+    ("loses-rest-of-list", "reject", S("""
+    public ListNode swapPairs(ListNode h) { ListNode d = new ListNode(0, h), p = d; while (p.next != null && p.next.next != null) { ListNode a = p.next, b = a.next; b.next = a; p.next = b; a.next = null; p = a; } return d.next; }""")),
+    ("swap-values", "accept", S("""
+    public ListNode swapPairs(ListNode h) { for (ListNode p = h; p != null && p.next != null; p = p.next.next) { int t = p.val; p.val = p.next.val; p.next.val = t; } return h; }""")),
+]
+MUTANTS["reverse-nodes-in-k-group"] = [
+    ("reverses-short-tail-too", "reject", S("""
+    public ListNode reverseKGroup(ListNode h, int k) { List<Integer> v = new ArrayList<>(); for (ListNode p = h; p != null; p = p.next) v.add(p.val); for (int i = 0; i < v.size(); i += k) Collections.reverse(v.subList(i, Math.min(i + k, v.size()))); ListNode d = new ListNode(0), t = d; for (int x : v) t = t.next = new ListNode(x); return d.next; }""", LIST)),
+    ("array-rebuild-correct", "accept", S("""
+    public ListNode reverseKGroup(ListNode h, int k) { List<Integer> v = new ArrayList<>(); for (ListNode p = h; p != null; p = p.next) v.add(p.val); for (int i = 0; i + k <= v.size(); i += k) Collections.reverse(v.subList(i, i + k)); ListNode d = new ListNode(0), t = d; for (int x : v) t = t.next = new ListNode(x); return d.next; }""", LIST)),
+]
+MUTANTS["rotate-list"] = [
+    ("step-by-step-rotation", "reject", S("""
+    public ListNode rotateRight(ListNode h, int k) { if (h == null || h.next == null) return h; for (int r = 0; r < k; r++) { ListNode p = h; while (p.next.next != null) p = p.next; ListNode last = p.next; p.next = null; last.next = h; h = last; } return h; }""")),
+    ("ring-and-cut", "accept", S("""
+    public ListNode rotateRight(ListNode h, int k) { if (h == null) return h; int n = 1; ListNode t = h; while (t.next != null) { t = t.next; n++; } t.next = h; for (int i = 0; i < n - k % n; i++) t = t.next; ListNode nh = t.next; t.next = null; return nh; }""")),
+]
+MUTANTS["remove-duplicates-from-sorted-list"] = [
+    ("always-advances", "reject", S("""
+    public ListNode deleteDuplicates(ListNode h) { for (ListNode p = h; p != null && p.next != null; p = p.next) if (p.next.val == p.val) p.next = p.next.next; return h; }""")),
+    ("recursive", "accept", S("""
+    public ListNode deleteDuplicates(ListNode h) { if (h == null || h.next == null) return h; h.next = deleteDuplicates(h.next); return h.val == h.next.val ? h.next : h; }""")),
+]
+MUTANTS["reverse-linked-list-ii"] = [
+    ("off-by-one-right", "reject", S("""
+    public ListNode reverseBetween(ListNode h, int l, int r) { ListNode d = new ListNode(0, h), p = d; for (int i = 1; i < l; i++) p = p.next; ListNode c = p.next; for (int i = 0; i < r - l - 1; i++) { ListNode t = c.next; c.next = t.next; t.next = p.next; p.next = t; } return d.next; }""")),
+    ("values-in-list", "accept", S("""
+    public ListNode reverseBetween(ListNode h, int l, int r) { List<ListNode> ns = new ArrayList<>(); for (ListNode p = h; p != null; p = p.next) ns.add(p); for (int i = l - 1, j = r - 1; i < j; i++, j--) { int t = ns.get(i).val; ns.get(i).val = ns.get(j).val; ns.get(j).val = t; } return h; }""", LIST)),
+]
+MUTANTS["linked-list-cycle"] = [
+    ("counts-to-a-limit", "reject", S("""
+    public boolean hasCycle(ListNode h) { int n = 0; for (ListNode p = h; p != null; p = p.next) if (++n > 5) return true; return false; }""")),
+    ("visited-set", "accept", S("""
+    public boolean hasCycle(ListNode h) { Set<ListNode> s = new HashSet<>(); for (ListNode p = h; p != null; p = p.next) if (!s.add(p)) return true; return false; }""", LIST)),
+]
+MUTANTS["linked-list-cycle-ii"] = [
+    ("returns-meeting-point", "reject", S("""
+    public ListNode detectCycle(ListNode h) { ListNode s = h, f = h; while (f != null && f.next != null) { s = s.next; f = f.next.next; if (s == f) return s; } return null; }""")),
+    ("marks-nodes-by-modifying", "reject", S("""
+    public ListNode detectCycle(ListNode h) { for (ListNode p = h; p != null; p = p.next) { if (p.val == Integer.MIN_VALUE) return p; p.val = Integer.MIN_VALUE; } return null; }""")),
+    ("visited-set", "accept", S("""
+    public ListNode detectCycle(ListNode h) { Set<ListNode> s = new HashSet<>(); for (ListNode p = h; p != null; p = p.next) if (!s.add(p)) return p; return null; }""", LIST)),
+]
+MUTANTS["reorder-list"] = [
+    ("forgets-to-cut-middle", "reject", S("""
+    public void reorderList(ListNode h) {
+        ListNode s = h, f = h; while (f.next != null && f.next.next != null) { s = s.next; f = f.next.next; }
+        ListNode sec = s.next, prev = null; while (sec != null) { ListNode t = sec.next; sec.next = prev; prev = sec; sec = t; }
+        for (ListNode a = h, b = prev; b != null; ) { ListNode an = a.next, bn = b.next; a.next = b; b.next = an; a = an; b = bn; }
+    }""")),
+    ("list-of-nodes", "accept", S("""
+    public void reorderList(ListNode h) { List<ListNode> ns = new ArrayList<>(); for (ListNode p = h; p != null; p = p.next) ns.add(p); int i = 0, j = ns.size() - 1;
+        while (i < j) { ns.get(i).next = ns.get(j); i++; if (i == j) break; ns.get(j).next = ns.get(i); j--; } ns.get(i).next = null; }""", LIST)),
+]
+MUTANTS["sort-list"] = [
+    ("split-from-head-infinite", "reject", S("""
+    public ListNode sortList(ListNode h) { if (h == null || h.next == null) return h; ListNode s = h, f = h; while (f != null && f.next != null) { s = s.next; f = f.next.next; } ListNode r = s.next; s.next = null; return m(sortList(h), sortList(r)); }
+    ListNode m(ListNode a, ListNode b) { ListNode d = new ListNode(0), t = d; while (a != null && b != null) { if (a.val <= b.val) { t.next = a; a = a.next; } else { t.next = b; b = b.next; } t = t.next; } t.next = a != null ? a : b; return d.next; }""")),
+    ("insertion-sort", "accept", S("""
+    public ListNode sortList(ListNode h) { ListNode d = new ListNode(Integer.MIN_VALUE); while (h != null) { ListNode nx = h.next, p = d; while (p.next != null && p.next.val <= h.val) p = p.next; h.next = p.next; p.next = h; h = nx; } return d.next; }""")),
+]
+MUTANTS["remove-linked-list-elements"] = [
+    ("misses-leading-run", "reject", S("""
+    public ListNode removeElements(ListNode h, int v) { if (h != null && h.val == v) h = h.next; for (ListNode p = h; p != null && p.next != null; ) if (p.next.val == v) p.next = p.next.next; else p = p.next; return h; }""")),
+    ("recursive", "accept", S("""
+    public ListNode removeElements(ListNode h, int v) { if (h == null) return null; h.next = removeElements(h.next, v); return h.val == v ? h.next : h; }""")),
+]
+MUTANTS["reverse-linked-list"] = [
+    ("recursive-no-null-out", "reject", S("""
+    public ListNode reverseList(ListNode h) { if (h == null || h.next == null) return h; ListNode r = reverseList(h.next); h.next.next = h; return r; }""")),
+    ("recursive", "accept", S("""
+    public ListNode reverseList(ListNode h) { if (h == null || h.next == null) return h; ListNode r = reverseList(h.next); h.next.next = h; h.next = null; return r; }""")),
+]
+MUTANTS["palindrome-linked-list"] = [
+    ("first-equals-last-only", "reject", S("""
+    public boolean isPalindrome(ListNode h) { ListNode t = h; while (t.next != null) t = t.next; return h.val == t.val; }""")),
+    ("reverse-second-half", "accept", S("""
+    public boolean isPalindrome(ListNode h) { ListNode s = h, f = h; while (f != null && f.next != null) { s = s.next; f = f.next.next; } ListNode p = null; while (s != null) { ListNode t = s.next; s.next = p; p = s; s = t; }
+        for (ListNode a = h, b = p; b != null; a = a.next, b = b.next) if (a.val != b.val) return false; return true; }""")),
+]
+MUTANTS["odd-even-linked-list"] = [
+    ("partitions-by-value", "reject", S("""
+    public ListNode oddEvenList(ListNode h) { ListNode o = new ListNode(0), e = new ListNode(0), a = o, b = e; for (ListNode p = h; p != null; p = p.next) { if (p.val % 2 == 1) a = a.next = p; else b = b.next = p; } b.next = null; a.next = e.next; return o.next; }""")),
+    ("index-based", "accept", S("""
+    public ListNode oddEvenList(ListNode h) { ListNode o = new ListNode(0), e = new ListNode(0), a = o, b = e; int i = 1; for (ListNode p = h; p != null; p = p.next, i++) { if (i % 2 == 1) a = a.next = p; else b = b.next = p; } b.next = null; a.next = e.next; return o.next; }""")),
+]
+MUTANTS["middle-of-the-linked-list"] = [
+    ("first-middle", "reject", S("""
+    public ListNode middleNode(ListNode h) { ListNode s = h, f = h; while (f.next != null && f.next.next != null) { s = s.next; f = f.next.next; } return s; }""")),
+    ("count-then-walk", "accept", S("""
+    public ListNode middleNode(ListNode h) { int n = 0; for (ListNode p = h; p != null; p = p.next) n++; ListNode p = h; for (int i = 0; i < n / 2; i++) p = p.next; return p; }""")),
+]
