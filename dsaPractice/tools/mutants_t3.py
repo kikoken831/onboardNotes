@@ -723,3 +723,159 @@ MUTANTS["all-nodes-distance-k-in-binary-tree"] = [
         while (!q.isEmpty()) { TreeNode n = q.poll(); if (dist.get(n) == k) o.add(n.val); for (TreeNode m : g.get(n)) if (!dist.containsKey(m)) { dist.put(m, dist.get(n) + 1); q.add(m); } }
         return o; }""", LIST)),
 ]
+
+# --------------------------------------------- batch 5: binary search / intervals / matrix
+
+MUTANTS["binary-search"] = [
+    ("lo-lt-hi-misses-last", "reject", S("""
+    public int search(int[] a, int t) { int lo = 0, hi = a.length - 1; while (lo < hi) { int m = (lo + hi) / 2; if (a[m] == t) return m; if (a[m] < t) lo = m + 1; else hi = m - 1; } return -1; }""")),
+    ("half-open", "accept", S("""
+    public int search(int[] a, int t) { int lo = 0, hi = a.length; while (lo < hi) { int m = (lo + hi) >>> 1; if (a[m] < t) lo = m + 1; else hi = m; } return lo < a.length && a[lo] == t ? lo : -1; }""")),
+]
+MUTANTS["find-smallest-letter-greater-than-target"] = [
+    ("greater-or-equal", "reject", S("""
+    public char nextGreatestLetter(char[] l, char t) { for (char c : l) if (c >= t) return c; return l[0]; }""")),
+    ("linear-scan", "accept", S("""
+    public char nextGreatestLetter(char[] l, char t) { for (char c : l) if (c > t) return c; return l[0]; }""")),
+]
+MUTANTS["peak-index-in-a-mountain-array"] = [
+    ("compares-with-previous-off-by-one", "reject", S("""
+    public int peakIndexInMountainArray(int[] a) { int lo = 1, hi = a.length - 1; while (lo < hi) { int m = (lo + hi) / 2; if (a[m] > a[m - 1]) lo = m + 1; else hi = m; } return lo; }""")),
+    ("linear", "accept", S("""
+    public int peakIndexInMountainArray(int[] a) { int i = 0; while (a[i + 1] > a[i]) i++; return i; }""")),
+]
+MUTANTS["search-in-rotated-sorted-array"] = [
+    ("strict-lt-sorted-half-test", "reject", S("""
+    public int search(int[] a, int t) { int lo = 0, hi = a.length - 1; while (lo <= hi) { int m = (lo + hi) / 2; if (a[m] == t) return m;
+        if (a[lo] < a[m]) { if (a[lo] <= t && t < a[m]) hi = m - 1; else lo = m + 1; } else { if (a[m] < t && t <= a[hi]) lo = m + 1; else hi = m - 1; } } return -1; }""")),
+    ("find-pivot-then-search", "accept", S("""
+    public int search(int[] a, int t) { int lo = 0, hi = a.length - 1; while (lo < hi) { int m = (lo + hi) / 2; if (a[m] > a[hi]) lo = m + 1; else hi = m; } int p = lo, n = a.length; lo = 0; hi = n - 1;
+        while (lo <= hi) { int m = (lo + hi) / 2, r = (m + p) % n; if (a[r] == t) return r; if (a[r] < t) lo = m + 1; else hi = m - 1; } return -1; }""")),
+]
+MUTANTS["search-in-rotated-sorted-array-ii"] = [
+    ("lc33-without-duplicate-case", "reject", S("""
+    public boolean search(int[] a, int t) { int lo = 0, hi = a.length - 1; while (lo <= hi) { int m = (lo + hi) / 2; if (a[m] == t) return true;
+        if (a[lo] <= a[m]) { if (a[lo] <= t && t < a[m]) hi = m - 1; else lo = m + 1; } else { if (a[m] < t && t <= a[hi]) lo = m + 1; else hi = m - 1; } } return false; }""")),
+    ("linear", "accept", S("""
+    public boolean search(int[] a, int t) { for (int x : a) if (x == t) return true; return false; }""")),
+]
+MUTANTS["find-minimum-in-rotated-sorted-array"] = [
+    ("compares-with-left-end", "reject", S("""
+    public int findMin(int[] a) { int lo = 0, hi = a.length - 1; while (lo < hi) { int m = (lo + hi) / 2; if (a[m] >= a[lo]) lo = m + 1; else hi = m; } return a[lo]; }""")),
+    ("linear", "accept", S("""
+    public int findMin(int[] a) { int m = a[0]; for (int x : a) m = Math.min(m, x); return m; }""")),
+]
+MUTANTS["find-peak-element"] = [
+    ("returns-global-max-index-off-by-one", "reject", S("""
+    public int findPeakElement(int[] a) { int b = 0; for (int i = 1; i < a.length; i++) if (a[i] > a[b]) b = i; return b == 0 ? 0 : b - 1; }""")),
+    ("linear-first-descent", "accept", S("""
+    public int findPeakElement(int[] a) { for (int i = 0; i + 1 < a.length; i++) if (a[i] > a[i + 1]) return i; return a.length - 1; }""")),
+]
+MUTANTS["search-a-2d-matrix"] = [
+    ("divides-by-rows", "reject", S("""
+    public boolean searchMatrix(int[][] a, int t) { int m = a.length, n = a[0].length, lo = 0, hi = m * n - 1; while (lo <= hi) { int x = (lo + hi) / 2, v = a[x / m % m][x % n]; if (v == t) return true; if (v < t) lo = x + 1; else hi = x - 1; } return false; }""")),
+    ("row-then-column", "accept", S("""
+    public boolean searchMatrix(int[][] a, int t) { for (int[] r : a) if (r[0] <= t && t <= r[r.length - 1]) return Arrays.binarySearch(r, t) >= 0; return false; }""", LIST)),
+]
+MUTANTS["search-a-2d-matrix-ii"] = [
+    ("top-left-greedy", "reject", S("""
+    public boolean searchMatrix(int[][] a, int t) { int r = 0, c = 0; while (r < a.length && c < a[0].length) { if (a[r][c] == t) return true; if (c + 1 < a[0].length && a[r][c + 1] <= t) c++; else r++; } return false; }""")),
+    ("binary-search-each-row", "accept", S("""
+    public boolean searchMatrix(int[][] a, int t) { for (int[] r : a) { int lo = 0, hi = r.length - 1; while (lo <= hi) { int m = (lo + hi) / 2; if (r[m] == t) return true; if (r[m] < t) lo = m + 1; else hi = m - 1; } } return false; }""")),
+]
+MUTANTS["kth-smallest-element-in-a-sorted-matrix"] = [
+    ("reads-row-major-index", "reject", S("""
+    public int kthSmallest(int[][] a, int k) { int n = a.length; return a[(k - 1) / n][(k - 1) % n]; }""")),
+    ("heap", "accept", S("""
+    public int kthSmallest(int[][] a, int k) { int n = a.length; PriorityQueue<int[]> q = new PriorityQueue<>((x, y) -> a[x[0]][x[1]] - a[y[0]][y[1]]);
+        for (int i = 0; i < n; i++) q.add(new int[]{i, 0}); int[] c = null; for (int i = 0; i < k; i++) { c = q.poll(); if (c[1] + 1 < n) q.add(new int[]{c[0], c[1] + 1}); } return a[c[0]][c[1]]; }""", LIST)),
+]
+MUTANTS["median-of-two-sorted-arrays"] = [
+    ("average-of-medians", "reject", S("""
+    public double findMedianSortedArrays(int[] a, int[] b) { if (a.length == 0) return m(b); if (b.length == 0) return m(a); return (m(a) + m(b)) / 2; }
+    double m(int[] x) { int n = x.length; return n % 2 == 1 ? x[n / 2] : (x[n / 2 - 1] + x[n / 2]) / 2.0; }""")),
+    ("merge", "accept", S("""
+    public double findMedianSortedArrays(int[] a, int[] b) { int[] c = new int[a.length + b.length]; int i = 0, j = 0, k = 0;
+        while (i < a.length || j < b.length) c[k++] = j >= b.length || (i < a.length && a[i] <= b[j]) ? a[i++] : b[j++];
+        int n = c.length; return n % 2 == 1 ? c[n / 2] : (c[n / 2 - 1] + (double) c[n / 2]) / 2; }""")),
+]
+MUTANTS["merge-intervals"] = [
+    ("takes-next-end-not-max", "reject", S("""
+    public int[][] merge(int[][] a) { Arrays.sort(a, (x, y) -> x[0] - y[0]); List<int[]> o = new ArrayList<>(); for (int[] v : a) { if (!o.isEmpty() && v[0] <= o.get(o.size() - 1)[1]) o.get(o.size() - 1)[1] = v[1]; else o.add(v.clone()); } return o.toArray(new int[0][]); }""", LIST)),
+    ("touching-not-merged", "reject", S("""
+    public int[][] merge(int[][] a) { Arrays.sort(a, (x, y) -> x[0] - y[0]); List<int[]> o = new ArrayList<>(); for (int[] v : a) { if (!o.isEmpty() && v[0] < o.get(o.size() - 1)[1]) o.get(o.size() - 1)[1] = Math.max(o.get(o.size() - 1)[1], v[1]); else o.add(v.clone()); } return o.toArray(new int[0][]); }""", LIST)),
+    ("coverage-array", "accept", S("""
+    public int[][] merge(int[][] a) { int max = 0; for (int[] v : a) max = Math.max(max, v[1]); int[] start = new int[max + 2]; int[] reach = new int[max + 2]; Arrays.fill(reach, -1);
+        for (int[] v : a) reach[v[0]] = Math.max(reach[v[0]], v[1]); List<int[]> o = new ArrayList<>(); int s = -1, e = -1;
+        for (int x = 0; x <= max; x++) { if (reach[x] < 0) continue; if (s >= 0 && x <= e) e = Math.max(e, reach[x]); else { if (s >= 0) o.add(new int[]{s, e}); s = x; e = reach[x]; } }
+        o.add(new int[]{s, e}); return o.toArray(new int[0][]); }""", LIST)),
+]
+MUTANTS["insert-interval"] = [
+    ("appends-then-no-sort", "reject", S("""
+    public int[][] insert(int[][] a, int[] nw) { List<int[]> o = new ArrayList<>(); int s = nw[0], e = nw[1]; for (int[] v : a) { if (v[1] < s || v[0] > e) o.add(v); else { s = Math.min(s, v[0]); e = Math.max(e, v[1]); } } o.add(new int[]{s, e}); return o.toArray(new int[0][]); }""", LIST)),
+    ("append-sort-merge", "accept", S("""
+    public int[][] insert(int[][] a, int[] nw) { List<int[]> l = new ArrayList<>(Arrays.asList(a)); l.add(nw); l.sort((x, y) -> x[0] - y[0]); List<int[]> o = new ArrayList<>();
+        for (int[] v : l) { if (!o.isEmpty() && v[0] <= o.get(o.size() - 1)[1]) o.get(o.size() - 1)[1] = Math.max(o.get(o.size() - 1)[1], v[1]); else o.add(v.clone()); } return o.toArray(new int[0][]); }""", LIST)),
+]
+MUTANTS["non-overlapping-intervals"] = [
+    ("sort-by-start-keep-first", "reject", S("""
+    public int eraseOverlapIntervals(int[][] a) { Arrays.sort(a, (x, y) -> x[0] - y[0]); int kept = 0; long end = Long.MIN_VALUE; for (int[] v : a) if (v[0] >= end) { kept++; end = v[1]; } return a.length - kept; }""", LIST)),
+    ("sort-by-start-keep-earlier-end", "accept", S("""
+    public int eraseOverlapIntervals(int[][] a) { Arrays.sort(a, (x, y) -> x[0] - y[0]); int rm = 0, end = a[0][1]; for (int i = 1; i < a.length; i++) { if (a[i][0] < end) { rm++; end = Math.min(end, a[i][1]); } else end = a[i][1]; } return rm; }""", LIST)),
+]
+MUTANTS["minimum-number-of-arrows-to-burst-balloons"] = [
+    ("subtracting-comparator", "reject", S("""
+    public int findMinArrowShots(int[][] p) { Arrays.sort(p, (x, y) -> x[1] - y[1]); int n = 0; long at = Long.MIN_VALUE; for (int[] b : p) if (b[0] > at) { n++; at = b[1]; } return n; }""", LIST)),
+    ("touching-needs-new-arrow", "reject", S("""
+    public int findMinArrowShots(int[][] p) { Arrays.sort(p, (x, y) -> Integer.compare(x[1], y[1])); int n = 0; long at = Long.MIN_VALUE; for (int[] b : p) if (b[0] >= at) { n++; at = b[1]; } return n; }""", LIST)),
+    ("sort-by-start-shrink", "accept", S("""
+    public int findMinArrowShots(int[][] p) { Arrays.sort(p, (x, y) -> Integer.compare(x[0], y[0])); int n = 1; long end = p[0][1]; for (int i = 1; i < p.length; i++) { if (p[i][0] > end) { n++; end = p[i][1]; } else end = Math.min(end, p[i][1]); } return n; }""", LIST)),
+]
+MUTANTS["interval-list-intersections"] = [
+    ("advances-by-start", "reject", S("""
+    public int[][] intervalIntersection(int[][] A, int[][] B) { List<int[]> o = new ArrayList<>(); int i = 0, j = 0; while (i < A.length && j < B.length) { int lo = Math.max(A[i][0], B[j][0]), hi = Math.min(A[i][1], B[j][1]); if (lo <= hi) o.add(new int[]{lo, hi}); if (A[i][0] < B[j][0]) i++; else j++; } return o.toArray(new int[0][]); }""", LIST)),
+    ("all-pairs-then-sort", "accept", S("""
+    public int[][] intervalIntersection(int[][] A, int[][] B) { List<int[]> o = new ArrayList<>(); for (int[] a : A) for (int[] b : B) { int lo = Math.max(a[0], b[0]), hi = Math.min(a[1], b[1]); if (lo <= hi) o.add(new int[]{lo, hi}); } o.sort((x, y) -> x[0] - y[0]); return o.toArray(new int[0][]); }""", LIST)),
+]
+MUTANTS["meeting-rooms"] = [
+    ("back-to-back-conflicts", "reject", S("""
+    public boolean canAttendMeetings(int[][] a) { Arrays.sort(a, (x, y) -> x[0] - y[0]); for (int i = 1; i < a.length; i++) if (a[i][0] <= a[i - 1][1]) return false; return true; }""", LIST)),
+    ("all-pairs", "accept", S("""
+    public boolean canAttendMeetings(int[][] a) { for (int i = 0; i < a.length; i++) for (int j = i + 1; j < a.length; j++) if (a[i][0] < a[j][1] && a[j][0] < a[i][1]) return false; return true; }""")),
+]
+MUTANTS["meeting-rooms-ii"] = [
+    ("overlap-with-previous-only", "reject", S("""
+    public int minMeetingRooms(int[][] a) { Arrays.sort(a, (x, y) -> x[0] - y[0]); int best = 1, cur = 1; for (int i = 1; i < a.length; i++) { cur = a[i][0] < a[i - 1][1] ? cur + 1 : 1; best = Math.max(best, cur); } return best; }""", LIST)),
+    ("sweep-line", "accept", S("""
+    public int minMeetingRooms(int[][] a) { int n = a.length; int[] s = new int[n], e = new int[n]; for (int i = 0; i < n; i++) { s[i] = a[i][0]; e[i] = a[i][1]; } Arrays.sort(s); Arrays.sort(e);
+        int rooms = 0, j = 0; for (int i = 0; i < n; i++) { if (s[i] < e[j]) rooms++; else j++; } return rooms; }""", LIST)),
+]
+MUTANTS["rotate-image"] = [
+    ("counter-clockwise", "reject", S("""
+    public void rotate(int[][] m) { int n = m.length; for (int[] r : m) for (int i = 0, j = n - 1; i < j; i++, j--) { int t = r[i]; r[i] = r[j]; r[j] = t; } for (int i = 0; i < n; i++) for (int j = i + 1; j < n; j++) { int t = m[i][j]; m[i][j] = m[j][i]; m[j][i] = t; } }""")),
+    ("four-way-rings", "accept", S("""
+    public void rotate(int[][] m) { int n = m.length; for (int i = 0; i < n / 2; i++) for (int j = i; j < n - 1 - i; j++) { int t = m[i][j]; m[i][j] = m[n - 1 - j][i]; m[n - 1 - j][i] = m[n - 1 - i][n - 1 - j]; m[n - 1 - i][n - 1 - j] = m[j][n - 1 - i]; m[j][n - 1 - i] = t; } }""")),
+]
+MUTANTS["spiral-matrix"] = [
+    ("no-single-row-guard", "reject", S("""
+    public List<Integer> spiralOrder(int[][] m) { List<Integer> o = new ArrayList<>(); int t = 0, b = m.length - 1, l = 0, r = m[0].length - 1;
+        while (t <= b && l <= r) { for (int j = l; j <= r; j++) o.add(m[t][j]); for (int i = t + 1; i <= b; i++) o.add(m[i][r]); for (int j = r - 1; j >= l; j--) o.add(m[b][j]); for (int i = b - 1; i > t; i--) o.add(m[i][l]); t++; b--; l++; r--; }
+        return o; }""", LIST)),
+    ("direction-vector", "accept", S("""
+    public List<Integer> spiralOrder(int[][] m) { int R = m.length, C = m[0].length; boolean[][] s = new boolean[R][C]; int[] dr = {0, 1, 0, -1}, dc = {1, 0, -1, 0}; List<Integer> o = new ArrayList<>(); int r = 0, c = 0, d = 0;
+        for (int k = 0; k < R * C; k++) { o.add(m[r][c]); s[r][c] = true; int nr = r + dr[d], nc = c + dc[d]; if (nr < 0 || nc < 0 || nr >= R || nc >= C || s[nr][nc]) { d = (d + 1) % 4; nr = r + dr[d]; nc = c + dc[d]; } r = nr; c = nc; } return o; }""", LIST)),
+]
+MUTANTS["set-matrix-zeroes"] = [
+    ("zeroes-while-scanning", "reject", S("""
+    public void setZeroes(int[][] m) { for (int i = 0; i < m.length; i++) for (int j = 0; j < m[0].length; j++) if (m[i][j] == 0) { for (int k = 0; k < m.length; k++) m[k][j] = 0; for (int k = 0; k < m[0].length; k++) m[i][k] = 0; } }""")),
+    ("first-row-col-flags", "accept", S("""
+    public void setZeroes(int[][] m) { int R = m.length, C = m[0].length; boolean col0 = false;
+        for (int i = 0; i < R; i++) { if (m[i][0] == 0) col0 = true; for (int j = 1; j < C; j++) if (m[i][j] == 0) { m[i][0] = 0; m[0][j] = 0; } }
+        for (int i = R - 1; i >= 0; i--) { for (int j = C - 1; j >= 1; j--) if (m[i][0] == 0 || m[0][j] == 0) m[i][j] = 0; if (col0) m[i][0] = 0; } }""")),
+]
+MUTANTS["convert-1d-array-into-2d-array"] = [
+    ("returns-null-when-impossible", "reject", S("""
+    public int[][] construct2DArray(int[] a, int m, int n) { if (m * n != a.length) return null; int[][] o = new int[m][n]; for (int i = 0; i < a.length; i++) o[i / n][i % n] = a[i]; return o; }""")),
+    ("row-copy", "accept", S("""
+    public int[][] construct2DArray(int[] a, int m, int n) { if ((long) m * n != a.length) return new int[0][]; int[][] o = new int[m][]; for (int i = 0; i < m; i++) o[i] = Arrays.copyOfRange(a, i * n, i * n + n); return o; }""", LIST)),
+]
