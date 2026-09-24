@@ -879,3 +879,154 @@ MUTANTS["convert-1d-array-into-2d-array"] = [
     ("row-copy", "accept", S("""
     public int[][] construct2DArray(int[] a, int m, int n) { if ((long) m * n != a.length) return new int[0][]; int[][] o = new int[m][]; for (int i = 0; i < m; i++) o[i] = Arrays.copyOfRange(a, i * n, i * n + n); return o; }""", LIST)),
 ]
+
+# ----------------------------------------------------------- batch 6: backtracking
+
+MUTANTS["letter-combinations-of-a-phone-number"] = [
+    ("empty-input-gives-empty-string", "reject", S("""
+    String[] K = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    public List<String> letterCombinations(String d) { List<String> o = new ArrayList<>(); o.add(""); for (char c : d.toCharArray()) { List<String> n = new ArrayList<>(); for (String p : o) for (char x : K[c - '0'].toCharArray()) n.add(p + x); o = n; } return o; }""", LIST)),
+    ("iterative-bfs", "accept", S("""
+    String[] K = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    public List<String> letterCombinations(String d) { if (d.isEmpty()) return new ArrayList<>(); List<String> o = new ArrayList<>(); o.add(""); for (char c : d.toCharArray()) { List<String> n = new ArrayList<>(); for (String p : o) for (char x : K[c - '0'].toCharArray()) n.add(p + x); o = n; } return o; }""", LIST)),
+]
+MUTANTS["generate-parentheses"] = [
+    ("close-when-close-positive", "reject", S("""
+    public List<String> generateParenthesis(int n) { List<String> o = new ArrayList<>(); go(n, n, "", o); return o; }
+    void go(int op, int cl, String s, List<String> o) { if (op == 0 && cl == 0) { o.add(s); return; } if (op > 0) go(op - 1, cl, s + "(", o); if (cl > 0) go(op, cl - 1, s + ")", o); }""", LIST)),
+    ("filter-all-strings", "accept", S("""
+    public List<String> generateParenthesis(int n) { List<String> o = new ArrayList<>(); for (int m = 0; m < 1 << 2 * n; m++) { int bal = 0; StringBuilder b = new StringBuilder(); boolean ok = true;
+        for (int i = 0; i < 2 * n && ok; i++) { boolean open = (m >> i & 1) == 1; b.append(open ? '(' : ')'); bal += open ? 1 : -1; if (bal < 0) ok = false; } if (ok && bal == 0) o.add(b.toString()); } return o; }""", LIST)),
+]
+MUTANTS["sudoku-solver"] = [
+    ("fills-without-checking-boxes", "reject", S("""
+    public void solveSudoku(char[][] b) { go(b); }
+    boolean go(char[][] b) { for (int i = 0; i < 9; i++) for (int j = 0; j < 9; j++) if (b[i][j] == '.') { for (char d = '1'; d <= '9'; d++) { boolean ok = true; for (int k = 0; k < 9; k++) if (b[i][k] == d || b[k][j] == d) ok = false; if (ok) { b[i][j] = d; if (go(b)) return true; b[i][j] = '.'; } } return false; } return true; }""")),
+    ("plain-backtracking", "accept", S("""
+    public void solveSudoku(char[][] b) { go(b); }
+    boolean go(char[][] b) { for (int i = 0; i < 9; i++) for (int j = 0; j < 9; j++) if (b[i][j] == '.') { for (char d = '1'; d <= '9'; d++) if (ok(b, i, j, d)) { b[i][j] = d; if (go(b)) return true; b[i][j] = '.'; } return false; } return true; }
+    boolean ok(char[][] b, int r, int c, char d) { for (int k = 0; k < 9; k++) if (b[r][k] == d || b[k][c] == d || b[r / 3 * 3 + k / 3][c / 3 * 3 + k % 3] == d) return false; return true; }""")),
+]
+MUTANTS["combination-sum"] = [
+    ("restarts-at-zero-gives-permutations", "reject", S("""
+    public List<List<Integer>> combinationSum(int[] c, int t) { List<List<Integer>> o = new ArrayList<>(); go(c, t, new ArrayList<>(), o); return o; }
+    void go(int[] c, int r, List<Integer> cur, List<List<Integer>> o) { if (r == 0) { o.add(new ArrayList<>(cur)); return; } for (int x : c) if (x <= r) { cur.add(x); go(c, r - x, cur, o); cur.remove(cur.size() - 1); } }""", LIST)),
+    ("dp-over-targets", "accept", S("""
+    public List<List<Integer>> combinationSum(int[] c, int t) { List<List<List<Integer>>> d = new ArrayList<>(); for (int i = 0; i <= t; i++) d.add(new ArrayList<>()); d.get(0).add(new ArrayList<>());
+        for (int x : c) for (int s = x; s <= t; s++) for (List<Integer> p : d.get(s - x)) { List<Integer> q = new ArrayList<>(p); q.add(x); d.get(s).add(q); } return d.get(t); }""", LIST)),
+]
+MUTANTS["combination-sum-ii"] = [
+    ("skip-dup-with-j-gt-0", "reject", S("""
+    public List<List<Integer>> combinationSum2(int[] c, int t) { Arrays.sort(c); List<List<Integer>> o = new ArrayList<>(); go(c, 0, t, new ArrayList<>(), o); return o; }
+    void go(int[] a, int i, int r, List<Integer> cur, List<List<Integer>> o) { if (r == 0) { o.add(new ArrayList<>(cur)); return; } for (int j = i; j < a.length && a[j] <= r; j++) { if (j > 0 && a[j] == a[j - 1]) continue; cur.add(a[j]); go(a, j + 1, r - a[j], cur, o); cur.remove(cur.size() - 1); } }""", LIST)),
+    ("include-exclude-with-set", "accept", S("""
+    public List<List<Integer>> combinationSum2(int[] c, int t) { Arrays.sort(c); Set<List<Integer>> s = new HashSet<>(); go(c, 0, t, new ArrayList<>(), s); return new ArrayList<>(s); }
+    void go(int[] a, int i, int r, List<Integer> cur, Set<List<Integer>> s) { if (r == 0) { s.add(new ArrayList<>(cur)); return; } if (i == a.length || r < 0) return; cur.add(a[i]); go(a, i + 1, r - a[i], cur, s); cur.remove(cur.size() - 1); go(a, i + 1, r, cur, s); }""", LIST)),
+]
+MUTANTS["permutations"] = [
+    ("stores-live-list", "reject", S("""
+    public List<List<Integer>> permute(int[] a) { List<List<Integer>> o = new ArrayList<>(); go(a, new boolean[a.length], new ArrayList<>(), o); return o; }
+    void go(int[] a, boolean[] u, List<Integer> c, List<List<Integer>> o) { if (c.size() == a.length) { o.add(c); return; } for (int i = 0; i < a.length; i++) if (!u[i]) { u[i] = true; c.add(a[i]); go(a, u, c, o); c.remove(c.size() - 1); u[i] = false; } }""", LIST)),
+    ("swap-in-place", "accept", S("""
+    public List<List<Integer>> permute(int[] a) { List<List<Integer>> o = new ArrayList<>(); go(a, 0, o); return o; }
+    void go(int[] a, int k, List<List<Integer>> o) { if (k == a.length) { List<Integer> l = new ArrayList<>(); for (int x : a) l.add(x); o.add(l); return; } for (int i = k; i < a.length; i++) { int t = a[k]; a[k] = a[i]; a[i] = t; go(a, k + 1, o); t = a[k]; a[k] = a[i]; a[i] = t; } }""", LIST)),
+]
+MUTANTS["permutations-ii"] = [
+    ("lc46-produces-duplicates", "reject", S("""
+    public List<List<Integer>> permuteUnique(int[] a) { List<List<Integer>> o = new ArrayList<>(); go(a, new boolean[a.length], new ArrayList<>(), o); return o; }
+    void go(int[] a, boolean[] u, List<Integer> c, List<List<Integer>> o) { if (c.size() == a.length) { o.add(new ArrayList<>(c)); return; } for (int i = 0; i < a.length; i++) if (!u[i]) { u[i] = true; c.add(a[i]); go(a, u, c, o); c.remove(c.size() - 1); u[i] = false; } }""", LIST)),
+    ("set-of-lists", "accept", S("""
+    public List<List<Integer>> permuteUnique(int[] a) { Set<List<Integer>> s = new HashSet<>(); go(a, new boolean[a.length], new ArrayList<>(), s); return new ArrayList<>(s); }
+    void go(int[] a, boolean[] u, List<Integer> c, Set<List<Integer>> o) { if (c.size() == a.length) { o.add(new ArrayList<>(c)); return; } for (int i = 0; i < a.length; i++) if (!u[i]) { u[i] = true; c.add(a[i]); go(a, u, c, o); c.remove(c.size() - 1); u[i] = false; } }""", LIST)),
+]
+MUTANTS["n-queens"] = [
+    ("checks-one-diagonal", "reject", S("""
+    public List<List<String>> solveNQueens(int n) { List<List<String>> o = new ArrayList<>(); go(0, n, new int[n], o); return o; }
+    void go(int r, int n, int[] q, List<List<String>> o) { if (r == n) { List<String> b = new ArrayList<>(); for (int c : q) { char[] x = new char[n]; Arrays.fill(x, '.'); x[c] = 'Q'; b.add(new String(x)); } o.add(b); return; }
+        for (int c = 0; c < n; c++) { boolean ok = true; for (int i = 0; i < r; i++) if (q[i] == c || q[i] - i == c - r) ok = false; if (ok) { q[r] = c; go(r + 1, n, q, o); } } }""", LIST)),
+    ("scan-previous-rows", "accept", S("""
+    public List<List<String>> solveNQueens(int n) { List<List<String>> o = new ArrayList<>(); go(0, n, new int[n], o); return o; }
+    void go(int r, int n, int[] q, List<List<String>> o) { if (r == n) { List<String> b = new ArrayList<>(); for (int c : q) { char[] x = new char[n]; Arrays.fill(x, '.'); x[c] = 'Q'; b.add(new String(x)); } o.add(b); return; }
+        for (int c = 0; c < n; c++) { boolean ok = true; for (int i = 0; i < r; i++) if (q[i] == c || Math.abs(q[i] - c) == r - i) ok = false; if (ok) { q[r] = c; go(r + 1, n, q, o); } } }""", LIST)),
+]
+MUTANTS["combinations"] = [
+    ("allows-repeats", "reject", S("""
+    public List<List<Integer>> combine(int n, int k) { List<List<Integer>> o = new ArrayList<>(); go(1, n, k, new ArrayList<>(), o); return o; }
+    void go(int s, int n, int k, List<Integer> c, List<List<Integer>> o) { if (c.size() == k) { o.add(new ArrayList<>(c)); return; } for (int v = s; v <= n; v++) { c.add(v); go(v, n, k, c, o); c.remove(c.size() - 1); } }""", LIST)),
+    ("bitmask-popcount", "accept", S("""
+    public List<List<Integer>> combine(int n, int k) { List<List<Integer>> o = new ArrayList<>(); for (int m = 0; m < 1 << n; m++) if (Integer.bitCount(m) == k) { List<Integer> l = new ArrayList<>(); for (int i = 0; i < n; i++) if ((m >> i & 1) == 1) l.add(i + 1); o.add(l); } return o; }""", LIST)),
+]
+MUTANTS["subsets"] = [
+    ("misses-empty-set", "reject", S("""
+    public List<List<Integer>> subsets(int[] a) { List<List<Integer>> o = new ArrayList<>(); for (int m = 1; m < 1 << a.length; m++) { List<Integer> s = new ArrayList<>(); for (int i = 0; i < a.length; i++) if ((m >> i & 1) == 1) s.add(a[i]); o.add(s); } return o; }""", LIST)),
+    ("cascading", "accept", S("""
+    public List<List<Integer>> subsets(int[] a) { List<List<Integer>> o = new ArrayList<>(); o.add(new ArrayList<>()); for (int x : a) { int n = o.size(); for (int i = 0; i < n; i++) { List<Integer> s = new ArrayList<>(o.get(i)); s.add(x); o.add(s); } } return o; }""", LIST)),
+]
+MUTANTS["word-search"] = [
+    ("never-restores-cell", "reject", S("""
+    public boolean exist(char[][] b, String w) { for (int i = 0; i < b.length; i++) for (int j = 0; j < b[0].length; j++) if (d(b, w, i, j, 0)) return true; return false; }
+    boolean d(char[][] b, String w, int i, int j, int k) { if (i < 0 || j < 0 || i >= b.length || j >= b[0].length || b[i][j] != w.charAt(k)) return false; if (k == w.length() - 1) return true; b[i][j] = '#';
+        return d(b, w, i + 1, j, k + 1) || d(b, w, i - 1, j, k + 1) || d(b, w, i, j + 1, k + 1) || d(b, w, i, j - 1, k + 1); }""")),
+    ("allows-reuse", "reject", S("""
+    public boolean exist(char[][] b, String w) { for (int i = 0; i < b.length; i++) for (int j = 0; j < b[0].length; j++) if (d(b, w, i, j, 0)) return true; return false; }
+    boolean d(char[][] b, String w, int i, int j, int k) { if (i < 0 || j < 0 || i >= b.length || j >= b[0].length || b[i][j] != w.charAt(k)) return false; if (k == w.length() - 1) return true;
+        return d(b, w, i + 1, j, k + 1) || d(b, w, i - 1, j, k + 1) || d(b, w, i, j + 1, k + 1) || d(b, w, i, j - 1, k + 1); }""")),
+    ("visited-array-restored", "accept", S("""
+    boolean[][] v;
+    public boolean exist(char[][] b, String w) { v = new boolean[b.length][b[0].length]; for (int i = 0; i < b.length; i++) for (int j = 0; j < b[0].length; j++) if (d(b, w, i, j, 0)) return true; return false; }
+    boolean d(char[][] b, String w, int i, int j, int k) { if (i < 0 || j < 0 || i >= b.length || j >= b[0].length || v[i][j] || b[i][j] != w.charAt(k)) return false; if (k == w.length() - 1) return true; v[i][j] = true;
+        boolean r = d(b, w, i + 1, j, k + 1) || d(b, w, i - 1, j, k + 1) || d(b, w, i, j + 1, k + 1) || d(b, w, i, j - 1, k + 1); v[i][j] = false; return r; }""")),
+]
+MUTANTS["subsets-ii"] = [
+    ("no-dedupe", "reject", S("""
+    public List<List<Integer>> subsetsWithDup(int[] a) { List<List<Integer>> o = new ArrayList<>(); o.add(new ArrayList<>()); for (int x : a) { int n = o.size(); for (int i = 0; i < n; i++) { List<Integer> s = new ArrayList<>(o.get(i)); s.add(x); o.add(s); } } return o; }""", LIST)),
+    ("sorted-set", "accept", S("""
+    public List<List<Integer>> subsetsWithDup(int[] a) { Arrays.sort(a); Set<List<Integer>> s = new HashSet<>(); for (int m = 0; m < 1 << a.length; m++) { List<Integer> l = new ArrayList<>(); for (int i = 0; i < a.length; i++) if ((m >> i & 1) == 1) l.add(a[i]); s.add(l); } return new ArrayList<>(s); }""", LIST)),
+]
+MUTANTS["palindrome-partitioning"] = [
+    ("only-single-chars", "reject", S("""
+    public List<List<String>> partition(String s) { List<String> p = new ArrayList<>(); for (char c : s.toCharArray()) p.add("" + c); List<List<String>> o = new ArrayList<>(); o.add(p); return o; }""", LIST)),
+    ("dp-table-backtrack", "accept", S("""
+    boolean[][] pal;
+    public List<List<String>> partition(String s) { int n = s.length(); pal = new boolean[n][n]; for (int i = n - 1; i >= 0; i--) for (int j = i; j < n; j++) pal[i][j] = s.charAt(i) == s.charAt(j) && (j - i < 2 || pal[i + 1][j - 1]); List<List<String>> o = new ArrayList<>(); go(s, 0, new ArrayList<>(), o); return o; }
+    void go(String s, int i, List<String> c, List<List<String>> o) { if (i == s.length()) { o.add(new ArrayList<>(c)); return; } for (int j = i; j < s.length(); j++) if (pal[i][j]) { c.add(s.substring(i, j + 1)); go(s, j + 1, c, o); c.remove(c.size() - 1); } }""", LIST)),
+]
+MUTANTS["combination-sum-iii"] = [
+    ("any-size", "reject", S("""
+    public List<List<Integer>> combinationSum3(int k, int n) { List<List<Integer>> o = new ArrayList<>(); go(1, n, new ArrayList<>(), o); return o; }
+    void go(int s, int r, List<Integer> c, List<List<Integer>> o) { if (r == 0) { o.add(new ArrayList<>(c)); return; } for (int v = s; v <= 9 && v <= r; v++) { c.add(v); go(v + 1, r - v, c, o); c.remove(c.size() - 1); } }""", LIST)),
+    ("bitmask", "accept", S("""
+    public List<List<Integer>> combinationSum3(int k, int n) { List<List<Integer>> o = new ArrayList<>(); for (int m = 0; m < 512; m++) { if (Integer.bitCount(m) != k) continue; int s = 0; List<Integer> l = new ArrayList<>(); for (int i = 0; i < 9; i++) if ((m >> i & 1) == 1) { s += i + 1; l.add(i + 1); } if (s == n) o.add(l); } return o; }""", LIST)),
+]
+MUTANTS["factor-combinations"] = [
+    ("unordered-duplicates", "reject", S("""
+    public List<List<Integer>> getFactors(int n) { List<List<Integer>> o = new ArrayList<>(); go(n, new ArrayList<>(), o); return o; }
+    void go(int n, List<Integer> c, List<List<Integer>> o) { for (int f = 2; f < n; f++) if (n % f == 0) { c.add(f); List<Integer> x = new ArrayList<>(c); x.add(n / f); o.add(x); go(n / f, c, o); c.remove(c.size() - 1); } }""", LIST)),
+    ("brute-to-n-ordered", "accept", S("""
+    public List<List<Integer>> getFactors(int n) { List<List<Integer>> o = new ArrayList<>(); go(n, 2, new ArrayList<>(), o); return o; }
+    void go(int n, int lo, List<Integer> c, List<List<Integer>> o) { for (int f = lo; f < n; f++) if (n % f == 0 && n / f >= f) { c.add(f); List<Integer> x = new ArrayList<>(c); x.add(n / f); o.add(x); go(n / f, f, c, o); c.remove(c.size() - 1); } }""", LIST)),
+]
+MUTANTS["generalized-abbreviation"] = [
+    ("unmerged-counts", "reject", S("""
+    public List<String> generateAbbreviations(String w) { List<String> o = new ArrayList<>(); for (int m = 0; m < 1 << w.length(); m++) { StringBuilder b = new StringBuilder(); for (int i = 0; i < w.length(); i++) b.append((m >> i & 1) == 1 ? "1" : "" + w.charAt(i)); o.add(b.toString()); } return o; }""", LIST)),
+    ("bitmask-merged", "accept", S("""
+    public List<String> generateAbbreviations(String w) { List<String> o = new ArrayList<>(); for (int m = 0; m < 1 << w.length(); m++) { StringBuilder b = new StringBuilder(); int k = 0;
+        for (int i = 0; i < w.length(); i++) { if ((m >> i & 1) == 1) k++; else { if (k > 0) b.append(k); k = 0; b.append(w.charAt(i)); } } if (k > 0) b.append(k); o.add(b.toString()); } return o; }""", LIST)),
+]
+MUTANTS["letter-case-permutation"] = [
+    ("branches-on-digits", "reject", S("""
+    public List<String> letterCasePermutation(String s) { List<String> o = new ArrayList<>(); go(s.toCharArray(), 0, o); return o; }
+    void go(char[] c, int i, List<String> o) { if (i == c.length) { o.add(new String(c)); return; } c[i] = Character.toLowerCase(c[i]); go(c, i + 1, o); c[i] = Character.toUpperCase(c[i]); go(c, i + 1, o); }""", LIST)),
+    ("iterative", "accept", S("""
+    public List<String> letterCasePermutation(String s) { List<String> o = new ArrayList<>(); o.add(""); for (char c : s.toCharArray()) { List<String> n = new ArrayList<>(); for (String p : o) { if (Character.isLetter(c)) { n.add(p + Character.toLowerCase(c)); n.add(p + Character.toUpperCase(c)); } else n.add(p + c); } o = n; } return o; }""", LIST)),
+]
+MUTANTS["word-squares"] = [
+    ("no-word-reuse", "reject", S("""
+    public List<List<String>> wordSquares(String[] w) { List<List<String>> o = new ArrayList<>(); go(w, new ArrayList<>(), new boolean[w.length], o); return o; }
+    void go(String[] w, List<String> sq, boolean[] u, List<List<String>> o) { int L = w[0].length(), r = sq.size(); if (r == L) { o.add(new ArrayList<>(sq)); return; }
+        for (int i = 0; i < w.length; i++) { if (u[i]) continue; boolean ok = true; for (int k = 0; k < r; k++) if (sq.get(k).charAt(r) != w[i].charAt(k)) ok = false; if (ok) { u[i] = true; sq.add(w[i]); go(w, sq, u, o); sq.remove(sq.size() - 1); u[i] = false; } } }""", LIST)),
+    ("brute-check-each-row", "accept", S("""
+    public List<List<String>> wordSquares(String[] w) { List<List<String>> o = new ArrayList<>(); go(w, new ArrayList<>(), o); return o; }
+    void go(String[] w, List<String> sq, List<List<String>> o) { int L = w[0].length(), r = sq.size(); if (r == L) { o.add(new ArrayList<>(sq)); return; }
+        for (String x : w) { boolean ok = true; for (int k = 0; k < r; k++) if (sq.get(k).charAt(r) != x.charAt(k)) ok = false; if (ok) { sq.add(x); go(w, sq, o); sq.remove(sq.size() - 1); } } }""", LIST)),
+]
