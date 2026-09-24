@@ -62,24 +62,52 @@ public final class Deep {
         }
 
         if (v instanceof ListNode) {
-            // Handles cycles: 141/142 hand the solution a genuinely cyclic list.
+            // Iterative, not recursive: `judge time` builds 100k-node lists, and one stack
+            // frame per node overflows. Handles cycles: 141/142 hand the solution a
+            // genuinely cyclic list, so a node already copied is linked, not re-copied.
             ListNode src = (ListNode) v;
-            ListNode out = new ListNode(src.val);
-            seen.put(src, out);
-            out.next = (ListNode) copy(src.next, seen);
-            return out;
+            ListNode head = new ListNode(src.val);
+            seen.put(src, head);
+            ListNode tail = head;
+            for (ListNode p = src.next; p != null; p = p.next) {
+                Object done = seen.get(p);
+                if (done != null) { tail.next = (ListNode) done; break; }
+                ListNode n = new ListNode(p.val);
+                seen.put(p, n);
+                tail.next = n;
+                tail = n;
+            }
+            return head;
         }
 
         if (v instanceof TreeNode) {
+            // Explicit stack for the same reason: a degenerate tree is a 100k-deep chain.
             TreeNode src = (TreeNode) v;
-            TreeNode out = new TreeNode(src.val);
-            seen.put(src, out);
-            out.left  = (TreeNode) copy(src.left, seen);
-            out.right = (TreeNode) copy(src.right, seen);
-            return out;
+            TreeNode root = new TreeNode(src.val);
+            seen.put(src, root);
+            java.util.ArrayDeque<TreeNode[]> work = new java.util.ArrayDeque<>();
+            work.push(new TreeNode[]{ src, root });
+            while (!work.isEmpty()) {
+                TreeNode[] pair = work.pop();
+                TreeNode from = pair[0], to = pair[1];
+                to.left  = treeChild(from.left, seen, work);
+                to.right = treeChild(from.right, seen, work);
+            }
+            return root;
         }
 
         return v; // unknown immutable-ish type; nothing safe to do but pass through
+    }
+
+    private static TreeNode treeChild(TreeNode c, IdentityHashMap<Object, Object> seen,
+                                      java.util.ArrayDeque<TreeNode[]> work) {
+        if (c == null) return null;
+        Object done = seen.get(c);
+        if (done != null) return (TreeNode) done;
+        TreeNode n = new TreeNode(c.val);
+        seen.put(c, n);
+        work.push(new TreeNode[]{ c, n });
+        return n;
     }
 
     // ------------------------------------------------------------------ equals
@@ -110,8 +138,20 @@ public final class Deep {
             return p == null && q == null;
         }
         if (a instanceof TreeNode && b instanceof TreeNode) {
-            TreeNode p = (TreeNode) a, q = (TreeNode) b;
-            return p.val == q.val && eq(p.left, q.left, eps) && eq(p.right, q.right, eps);
+            // Iterative: a chain-shaped tree must not cost one stack frame per node.
+            java.util.ArrayDeque<TreeNode[]> st = new java.util.ArrayDeque<>();
+            st.push(new TreeNode[]{ (TreeNode) a, (TreeNode) b });
+            long guard = 0;
+            while (!st.isEmpty()) {
+                TreeNode[] pr = st.pop();
+                TreeNode p = pr[0], q = pr[1];
+                if (p == q) continue;
+                if (p == null || q == null || p.val != q.val) return false;
+                if (++guard > 20_000_000) throw new IllegalStateException("cycle while comparing trees");
+                st.push(new TreeNode[]{ p.left, q.left });
+                st.push(new TreeNode[]{ p.right, q.right });
+            }
+            return true;
         }
         if (a.getClass().isArray() && b.getClass().isArray()) {
             int n = java.lang.reflect.Array.getLength(a);

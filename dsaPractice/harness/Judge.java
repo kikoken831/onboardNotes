@@ -31,6 +31,15 @@ public final class Judge {
     static final String TLE  = "TIME LIMIT EXCEEDED";
     static final String CE   = "COMPILE/LOAD ERROR";
     static final String RBUG = "REFERENCE BUG";
+    /** `judge verify` success: the reference agrees with every pinned example. */
+    static final String VERIFIED = "VERIFIED";
+    static final String INTERNAL = "JUDGE ERROR";
+
+    /**
+     * Classes whose stack frames count as "yours" when pointing at a line number:
+     * Solution, or the design/driven class name. Set once the spec is loaded.
+     */
+    private static volatile String[] userClasses = { "Solution" };
 
     private final Spec spec;
     private final Object refInstance;
@@ -69,12 +78,26 @@ public final class Judge {
             return;
         }
 
-        switch (mode) {
-            case "verify": judge.verify();         break;
-            case "fixed":  judge.run(0, seed);     break;
-            case "time":   judge.timeCurve(seed);  break;
-            default:       judge.run(iters, seed); break;
+        try {
+            switch (mode) {
+                case "verify": judge.verify();         break;
+                case "fixed":  judge.run(0, seed);     break;
+                case "time":   judge.timeCurve(seed);  break;
+                default:       judge.run(iters, seed); break;
+            }
+        } catch (Throwable t) {
+            // Anything escaping a mode is a harness or spec problem (an unparseable pin, a
+            // checker that blew up outside the guarded paths). Say so with a verdict line
+            // rather than dying with a bare stack trace the CLI would read as "no verdict".
+            t.printStackTrace();
+            Report.fail("verify".equals(mode) ? RBUG : INTERNAL,
+                    "the judge itself failed: " + root(t)
+                    + "\n    This is a bug in the judge or the problem's spec, not in your solution.");
+            System.exit(1);
         }
+        System.out.flush();
+        // Abandoned shrink trials run on daemon threads; exit explicitly regardless.
+        System.exit(0);
     }
 
     // ------------------------------------------------------------------ setup
@@ -87,8 +110,11 @@ public final class Judge {
         Class<?> refClass = Class.forName("Ref", true, refLoader);
         this.refInstance = instantiate(refClass);
         this.spec = ((Problem) refInstance).spec();
+        if (spec.isDesign())      userClasses = new String[]{ "Solution", spec.designClass };
+        else if (spec.isDriven()) userClasses = new String[]{ "Solution", spec.drivenClass };
         this.refMethod = spec.isDesign() || spec.isDriven() ? null : find(refClass, spec);
         this.refDesign = spec.isDesign() ? Class.forName(spec.designClass, true, refLoader) : null;
+        if (refDesign != null) checkDesignSignature(refDesign, "the reference's");
         this.refCall = invoker(refLoader, refInstance, refMethod);
 
         if (refOnly) {
@@ -103,6 +129,7 @@ public final class Judge {
                 this.solInstance = null;
                 this.solMethod = null;
                 this.solDesign = loadDesign(solLoader);
+                checkDesignSignature(solDesign, "your");
                 this.solCall = null;
             } else if (spec.isDriven()) {
                 this.solInstance = null;
@@ -176,20 +203,111 @@ public final class Judge {
     private static Method find(Class<?> c, Spec spec) throws NoSuchMethodException {
         Class<?>[] sig = new Class<?>[spec.params.length];
         for (int i = 0; i < sig.length; i++) sig[i] = spec.params[i].javaType();
+        Method found = null;
         try {
-            Method m = c.getDeclaredMethod(spec.method, sig);
-            m.setAccessible(true);
-            return m;
+            found = c.getDeclaredMethod(spec.method, sig);
         } catch (NoSuchMethodException primary) {
             // Fall back to name + arity. List<Integer> vs int[] is a legitimate variation
             // and erasure means the reflective signature cannot distinguish list types.
             for (Method m : c.getDeclaredMethods()) {
                 if (m.getName().equals(spec.method) && m.getParameterCount() == sig.length) {
-                    m.setAccessible(true);
-                    return m;
+                    found = m;
+                    break;
                 }
             }
-            throw primary;
+            if (found == null) {
+                throw new NoSuchMethodException("no method " + spec.method + "("
+                    + typeList(sig) + ") in " + c.getSimpleName());
+            }
+            // Arguments are handed over exactly as parsed/generated, so a parameter that
+            // cannot hold them would otherwise surface as a baffling IllegalArgumentException
+            // on the first call. `prepare` rewires the arguments into other types (a graph
+            // Node, the tree's own p/q nodes), so the parsed types say nothing then.
+            if (spec.prepare == null) {
+                Class<?>[] have = found.getParameterTypes();
+                for (int i = 0; i < have.length; i++) {
+                    if (!accepts(have[i], spec.params[i])) {
+                        throw new IllegalStateException("signature mismatch: " + spec.method
+                            + " parameter " + (i + 1) + " is " + have[i].getSimpleName()
+                            + ", but the judge passes " + sig[i].getSimpleName()
+                            + " -- expected " + spec.method + "(" + typeList(sig) + ")");
+                    }
+                }
+            }
+        }
+        checkReturn(found, spec);
+        found.setAccessible(true);
+        return found;
+    }
+
+    /** Can a parameter declared as `param` receive the value the judge builds for `t`? */
+    private static boolean accepts(Class<?> param, T t) {
+        if (t.isList()) return param.isAssignableFrom(java.util.List.class);
+        Class<?> j = t.javaType();
+        if (j.isPrimitive()) return param == j || param.isAssignableFrom(box(j));
+        return param.isAssignableFrom(j);
+    }
+
+    /**
+     * Refuse a return type that cannot be the answer: long for an int answer, a scalar
+     * for an array answer. Leniency is kept where comparison is genuinely shape-agnostic
+     * (int[] vs List, List subtypes, boxed vs primitive). Skipped when the judged value is
+     * derived from the return by `judgeAs`, or is a mutated argument.
+     */
+    private static void checkReturn(Method m, Spec spec) {
+        if (spec.judgeAs != null || spec.inPlaceArg >= 0 || spec.ret == T.VOID) return;
+        Class<?> have = m.getReturnType();
+        if (!returnOk(have, spec.ret)) {
+            throw new IllegalStateException("signature mismatch: " + spec.method + " returns "
+                + have.getSimpleName() + ", but this problem expects "
+                + (spec.ret.isList() ? "List" : spec.ret.javaType().getSimpleName()));
+        }
+    }
+
+    private static boolean returnOk(Class<?> have, T want) {
+        Class<?> j = want.javaType();
+        boolean wantCollection = want.isList() || j.isArray();
+        if (wantCollection) {
+            if (java.util.List.class.isAssignableFrom(have)) return true;   // List, ArrayList...
+            if (!have.isArray()) return false;
+            return want.isList() || have == j;     // int[] for List<Integer>; else same array type
+        }
+        if (j.isPrimitive()) return have == j || have == box(j);
+        return j.isAssignableFrom(have);
+    }
+
+    private static Class<?> box(Class<?> p) {
+        if (p == int.class)     return Integer.class;
+        if (p == long.class)    return Long.class;
+        if (p == double.class)  return Double.class;
+        if (p == boolean.class) return Boolean.class;
+        if (p == char.class)    return Character.class;
+        return p;
+    }
+
+    private static String typeList(Class<?>[] sig) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < sig.length; i++) { if (i > 0) b.append(", "); b.append(sig[i].getSimpleName()); }
+        return b.toString();
+    }
+
+    /**
+     * A design class whose constructor or an operation is missing fails at load time with
+     * a plain message, not as a RUNTIME ERROR thrown from inside the first replay.
+     */
+    private void checkDesignSignature(Class<?> cls, String whose) throws Exception {
+        try {
+            ctor(cls);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(whose + " class " + spec.designClass
+                + " has no constructor " + spec.designClass + "(" + typeList(ctorSig()) + ")");
+        }
+        for (String op : spec.ops.keySet()) {
+            try {
+                opMethod(cls, op);
+            } catch (NoSuchMethodException e) {
+                throw new IllegalStateException(whose + " class is missing " + e.getMessage());
+            }
         }
     }
 
@@ -203,9 +321,9 @@ public final class Judge {
 
     private Outcome invoke(Invoker who, Object[] args) {
         Outcome o = new Outcome();
-        Object[] copy = Deep.copyAll(args);
         long t0 = System.nanoTime();
         try {
+            Object[] copy = Deep.copyAll(args);
             Object[] callArgs = prepared(copy);
             t0 = System.nanoTime();                       // time the call, not the wiring
             Object ret = who.call(callArgs);
@@ -218,6 +336,28 @@ public final class Judge {
         return o;
     }
 
+    /**
+     * Compare YOUR answer. A checker that throws on it (a validator handed a shape it did
+     * not expect, a comparison that trips over a cyclic structure) means your answer
+     * could not be accepted: that is a WRONG ANSWER, never a judge crash.
+     */
+    private String solDisagree(Object[] input, Object yours, Object expected) {
+        try {
+            return Match.disagree(spec, input, yours, expected);
+        } catch (Throwable t) {
+            return "could not check your answer: " + root(t);
+        }
+    }
+
+    /** Compare the REFERENCE's answer to a pin. A throw here is a reference bug. */
+    private String refDisagree(Object[] input, Object refAnswer, Object pinned) {
+        try {
+            return Match.disagree(spec, input, refAnswer, pinned);
+        } catch (Throwable t) {
+            return "could not check the reference's answer: " + root(t);
+        }
+    }
+
     // ------------------------------------------------------------------ modes
 
     /** Check the reference against every pinned example. This guards against MY bugs. */
@@ -226,6 +366,7 @@ public final class Judge {
         if (spec.examples.isEmpty()) {
             Report.warn("no pinned examples — nothing guards this problem against a bad reference");
             Report.ok("verify", "0 examples");
+            Report.verdict(VERIFIED, "0 examples");
             return;
         }
         int n = 0;
@@ -238,7 +379,7 @@ public final class Judge {
                 System.exit(1);
             }
             Object expected = LcCodec.parse(ex.expected, spec.judgedType());
-            String why = Match.disagree(spec, args, out.judged, expected);
+            String why = refDisagree(args, out.judged, expected);
             if (why != null) {
                 Report.fail(RBUG, "reference disagrees with pinned example"
                         + "\n    input     " + ex.args
@@ -250,6 +391,7 @@ public final class Judge {
             n++;
         }
         Report.ok("verify", n + " pinned example" + (n == 1 ? "" : "s"));
+        Report.verdict(VERIFIED, n + " pinned example" + (n == 1 ? "" : "s"));
     }
 
     private void run(int stressIterations, long seed) {
@@ -261,8 +403,11 @@ public final class Judge {
             Object expected = LcCodec.parse(ex.expected, spec.judgedType());
 
             Outcome refOut = invoke(refCall, args);
-            if (refOut.thrown != null || Match.disagree(spec, args, refOut.judged, expected) != null) {
+            String refWhy = refOut.thrown != null ? "threw " + root(refOut.thrown)
+                          : refDisagree(args, refOut.judged, expected);
+            if (refWhy != null) {
                 Report.fail(RBUG, "reference fails its own pinned example " + ex.args
+                        + "\n    " + refWhy
                         + "\n    This is a bug in the judge, not in your solution."
                         + "\n    Please report it rather than changing your code.");
                 System.exit(1);
@@ -274,7 +419,7 @@ public final class Judge {
                 Report.fail(RE, "threw on pinned example " + (passed + 1));
                 System.exit(1);
             }
-            String why = Match.disagree(spec, args, out.judged, expected);
+            String why = solDisagree(args, out.judged, expected);
             if (why != null) {
                 Report.example(false, ex.args, LcCodec.print(out.judged), LcCodec.print(expected), why);
                 Report.fail(WA, "failed pinned example " + (passed + 1));
@@ -330,10 +475,10 @@ public final class Judge {
 
             boolean threw = out.thrown != null;
             String why = threw ? root(out.thrown)
-                               : Match.disagree(spec, args, out.judged, refOut.judged);
+                               : solDisagree(args, out.judged, refOut.judged);
 
             if (threw || why != null) {
-                reportStressFailure(i, stressIterations, args, threw);
+                reportStressFailure(i, stressIterations, args, out, refOut, why);
                 System.exit(1);
             }
 
@@ -350,22 +495,52 @@ public final class Judge {
         Report.verdict(AC, null);
     }
 
-    private void reportStressFailure(int iteration, int total, Object[] args, boolean threw) {
+    /** Per-trial ceiling for a shrink attempt, and for the whole shrink. */
+    private long trialMs() { return Math.max(spec.limitMs, 1000); }
+    private static final long SHRINK_BUDGET_MS = 20_000;
+
+    private void reportStressFailure(int iteration, int total, Object[] args,
+                                     Outcome sol, Outcome ref, String why) {
         Report.section("stress", (iteration + 1) + "/" + total + " failed");
 
-        Object[] minimal = Shrink.minimise(args, trial -> {
+        // Print the failing case BEFORE shrinking. The shrinker runs your code on many
+        // variants; if one of them hangs or the process is killed, the counterexample
+        // must already be on screen.
+        StringBuilder u = new StringBuilder();
+        u.append("      failing input\n        ").append(Report.args(args, 1000));
+        if (sol.thrown != null) u.append("\n      yours     threw ").append(root(sol.thrown));
+        else                    u.append("\n      yours     ").append(Report.clip(LcCodec.print(sol.judged)));
+        u.append("\n      expected  ").append(Report.clip(LcCodec.print(ref.judged)));
+        if (sol.thrown == null && why != null) u.append("\n      ").append(why);
+        System.out.println(u);
+        System.out.println("      shrinking...");
+        System.out.flush();
+
+        String fallback = sol.thrown != null ? RE : WA;
+        Shrink.Result shrunk = Shrink.minimise(args, trial -> {
             Outcome r = invoke(refCall, trial);
-            if (r.thrown != null) return false;
+            if (r.thrown != null) return false;               // not a legal input
             Outcome s = invoke(solCall, trial);
             if (s.thrown != null) return true;
-            return Match.disagree(spec, trial, s.judged, r.judged) != null;
-        });
+            return solDisagree(trial, s.judged, r.judged) != null;
+        }, trialMs(), SHRINK_BUDGET_MS);
 
-        Outcome refMin = invoke(refCall, minimal);
-        Outcome solMin = invoke(solCall, minimal);
+        if (!shrunk.improved) {
+            Report.fail(fallback, (shrunk.note().isEmpty() ? "could not shrink it further"
+                                                            : "not minimised") + shrunk.note());
+            return;
+        }
+        Object[] minimal = shrunk.best;
+        Outcome[] both = Shrink.timed(() -> new Outcome[]{ invoke(refCall, minimal), invoke(solCall, minimal) },
+                                      2 * trialMs());
+        if (both == null) {
+            Report.fail(fallback, "minimised input (re-running it timed out)\n      " + Report.args(minimal));
+            return;
+        }
+        Outcome refMin = both[0], solMin = both[1];
 
         StringBuilder b = new StringBuilder();
-        b.append("minimised input\n      ").append(Report.args(minimal));
+        b.append("minimised input").append(shrunk.note()).append("\n      ").append(Report.args(minimal));
         if (solMin.thrown != null) {
             b.append("\n    yours     threw ").append(root(solMin.thrown));
         } else {
@@ -374,7 +549,7 @@ public final class Judge {
         b.append("\n    expected  ").append(LcCodec.print(refMin.judged));
 
         String reason = solMin.thrown != null ? null
-                      : Match.disagree(spec, minimal, solMin.judged, refMin.judged);
+                      : solDisagree(minimal, solMin.judged, refMin.judged);
         if (reason != null) b.append("\n    ").append(reason);
 
         Report.fail(solMin.thrown != null ? RE : WA, b.toString());
@@ -397,9 +572,16 @@ public final class Judge {
         }
         System.out.println("  " + Report.label("time") + "growth curve, n doubling");
 
-        int top = Math.max(64, spec.maxN);
+        // Doubling up to maxN; a small maxN marks an exponential problem, where doubling
+        // n is hopeless, so step n by one instead.
         int[] ladder = new int[5];
-        for (int i = 4; i >= 0; i--) { ladder[i] = top; top /= 2; }
+        if (spec.maxN < 64) {
+            for (int i = 0; i < 5; i++) ladder[i] = Math.max(1, spec.maxN - 4 + i);
+        } else {
+            int top = spec.maxN;
+            for (int i = 4; i >= 0; i--) { ladder[i] = top; top /= 2; }
+        }
+        int flat = 0;
 
         long prevNanos = 0;
         int prevSize = 0;
@@ -430,9 +612,10 @@ public final class Judge {
             // curve for a quadratic one. Copy first, measure second.
             long best = Long.MAX_VALUE;
             for (int r = 0; r < 7; r++) {
-                Object[] fresh = prepared(Deep.copyAll(args));
-                long t0 = System.nanoTime();
+                long t0 = 0;
                 try {
+                    Object[] fresh = prepared(Deep.copyAll(args));
+                    t0 = System.nanoTime();
                     solCall.call(fresh);
                 } catch (Throwable t) {
                     Report.warn("threw at n=" + n + ": " + root(t));
@@ -442,6 +625,10 @@ public final class Judge {
             }
 
             int size = Report.sizeOf(args);
+            if (any && size == prevSize && ++flat >= 2) {
+                Report.warn("input size stays at " + size + " -- the input is a number or a bounded size, so there is no growth curve to read");
+                return;
+            }
             Report.curve(size, prevSize, best, prevNanos);
             prevNanos = best;
             prevSize = size;
@@ -460,7 +647,8 @@ public final class Judge {
         long nanos;
     }
 
-    private final Map<Class<?>, Map<String, Method>> opCache = new HashMap<>();
+    // Concurrent: an abandoned shrink trial may still be replaying on another thread.
+    private final Map<Class<?>, Map<String, Method>> opCache = new java.util.concurrent.ConcurrentHashMap<>();
 
     /** Replays `calls` on a fresh instance. Callers pass their own copy. */
     private Replay replay(Class<?> cls, Calls calls) {
@@ -487,21 +675,44 @@ public final class Judge {
     }
 
     private Object construct(Class<?> cls, Object[] args) throws Exception {
-        Class<?>[] sig = new Class<?>[spec.ctorParams.length];
-        for (int i = 0; i < sig.length; i++) sig[i] = spec.ctorParams[i].javaType();
         Constructor<?> k;
         try {
-            k = cls.getDeclaredConstructor(sig);
+            k = ctor(cls);
         } catch (NoSuchMethodException e) {
             throw new IllegalStateException("no constructor " + spec.designClass + "("
-                + java.util.Arrays.toString(spec.ctorParams).replaceAll("[\\[\\]]", "") + ")");
+                + typeList(ctorSig()) + ")");
         }
-        k.setAccessible(true);
         return k.newInstance(args);
     }
 
+    private Class<?>[] ctorSig() {
+        Class<?>[] sig = new Class<?>[spec.ctorParams.length];
+        for (int i = 0; i < sig.length; i++) sig[i] = spec.ctorParams[i].javaType();
+        return sig;
+    }
+
+    /** Exact signature first; else the unique-arity constructor that can take the arguments. */
+    private Constructor<?> ctor(Class<?> cls) throws NoSuchMethodException {
+        Class<?>[] sig = ctorSig();
+        Constructor<?> k = null;
+        try {
+            k = cls.getDeclaredConstructor(sig);
+        } catch (NoSuchMethodException e) {
+            for (Constructor<?> c : cls.getDeclaredConstructors()) {
+                if (c.getParameterCount() != sig.length) continue;
+                boolean ok = true;
+                Class<?>[] have = c.getParameterTypes();
+                for (int i = 0; i < have.length && ok; i++) ok = accepts(have[i], spec.ctorParams[i]);
+                if (ok) { k = c; break; }
+            }
+            if (k == null) throw e;
+        }
+        k.setAccessible(true);
+        return k;
+    }
+
     private Method opMethod(Class<?> cls, String name) throws NoSuchMethodException {
-        Map<String, Method> cache = opCache.computeIfAbsent(cls, c -> new HashMap<>());
+        Map<String, Method> cache = opCache.computeIfAbsent(cls, c -> new java.util.concurrent.ConcurrentHashMap<>());
         Method m = cache.get(name);
         if (m != null) return m;
         Spec.Op op = spec.ops.get(name);
@@ -538,8 +749,16 @@ public final class Judge {
         return out;
     }
 
-    /** First call whose output differs, described; null if all agree. */
+    /** First call whose output differs, described; null if all agree. Never throws. */
     private String designDisagree(Calls calls, List<Object> yours, List<Object> expected) {
+        try {
+            return designDisagree0(calls, yours, expected);
+        } catch (Throwable t) {
+            return "could not compare the outputs: " + root(t);
+        }
+    }
+
+    private String designDisagree0(Calls calls, List<Object> yours, List<Object> expected) {
         for (int i = 0; i < expected.size(); i++) {
             Object y = i < yours.size() ? yours.get(i) : null, e = expected.get(i);
             if (!Deep.eq(y, e, spec.eps)) {
@@ -569,6 +788,7 @@ public final class Judge {
         if (spec.callExamples.isEmpty()) {
             Report.warn("no pinned examples — nothing guards this problem against a bad reference");
             Report.ok("verify", "0 examples");
+            Report.verdict(VERIFIED, "0 examples");
             return;
         }
         int n = 0;
@@ -588,6 +808,7 @@ public final class Judge {
             n++;
         }
         Report.ok("verify", n + " pinned example" + (n == 1 ? "" : "s"));
+        Report.verdict(VERIFIED, n + " pinned example" + (n == 1 ? "" : "s"));
     }
 
     private void runDesign(int stressIterations, long seed) {
@@ -649,7 +870,7 @@ public final class Judge {
             worstRef = Math.max(worstRef, ref.nanos);
 
             if (mine.thrown != null || designDisagree(calls, mine.out, ref.out) != null) {
-                reportDesignFailure(i, stressIterations, calls);
+                reportDesignFailure(i, stressIterations, calls, mine, ref);
                 System.exit(1);
             }
             if (mine.nanos / 1_000_000 > spec.limitMs) {
@@ -663,22 +884,44 @@ public final class Judge {
         Report.verdict(AC, null);
     }
 
-    private void reportDesignFailure(int iteration, int total, Calls failing) {
+    private void reportDesignFailure(int iteration, int total, Calls failing, Replay mine0, Replay ref0) {
         Report.section("stress", (iteration + 1) + "/" + total + " failed");
-        Object[] minimal = Shrink.minimise(new Object[]{ failing }, trial -> {
+
+        // As for method problems: the unshrunk failure goes on screen first.
+        StringBuilder u = new StringBuilder();
+        u.append("      failing case, ").append(failing.size()).append(" call").append(failing.size() == 1 ? "" : "s")
+         .append("\n        ").append(Report.clip(failing.toString().replace("\n      ", "\n        ")));
+        if (mine0.thrown != null) u.append("\n      yours     ").append(thrownAt(failing, mine0));
+        else                      u.append("\n      ").append(designDisagree(failing, mine0.out, ref0.out));
+        System.out.println(u);
+        System.out.println("      shrinking...");
+        System.out.flush();
+
+        String fallback = mine0.thrown != null ? RE : WA;
+        Shrink.Result shrunk = Shrink.minimise(new Object[]{ failing }, trial -> {
             Calls c = (Calls) trial[0];
             Replay r = replay(refDesign, c.deepCopy());
             if (r.thrown != null) return false;
             Replay s = replay(solDesign, c.deepCopy());
             return s.thrown != null || designDisagree(c, s.out, r.out) != null;
-        });
-        Calls c = (Calls) minimal[0];
-        Replay ref = replay(refDesign, c.deepCopy());
-        Replay mine = replay(solDesign, c.deepCopy());
+        }, trialMs(), SHRINK_BUDGET_MS);
+        if (!shrunk.improved) {
+            Report.fail(fallback, (shrunk.note().isEmpty() ? "could not shrink it further"
+                                                            : "not minimised") + shrunk.note());
+            return;
+        }
+        Calls c = (Calls) shrunk.best[0];
+        Replay[] both = Shrink.timed(() -> new Replay[]{ replay(refDesign, c.deepCopy()), replay(solDesign, c.deepCopy()) },
+                                     2 * trialMs());
+        if (both == null) {
+            Report.fail(fallback, "minimised to " + c.size() + " calls (re-running it timed out)\n      " + c);
+            return;
+        }
+        Replay ref = both[0], mine = both[1];
 
         StringBuilder b = new StringBuilder();
         b.append("minimised to ").append(c.size()).append(" call").append(c.size() == 1 ? "" : "s")
-         .append("\n      ").append(c);
+         .append(shrunk.note()).append("\n      ").append(c);
         if (mine.thrown != null) {
             b.append("\n    yours     ").append(thrownAt(c, mine));
         } else {
@@ -692,16 +935,29 @@ public final class Judge {
     private void timeCurveDesign(long seed) {
         if (spec.gen == null) { Report.warn("no generator declared — cannot measure a growth curve"); return; }
         System.out.println("  " + Report.label("time") + "growth curve, number of calls doubling");
-        int top = Math.max(64, spec.maxN);
+        // Doubling up to maxN; a small maxN marks an exponential problem, where doubling
+        // n is hopeless, so step n by one instead.
         int[] ladder = new int[5];
-        for (int i = 4; i >= 0; i--) { ladder[i] = top; top /= 2; }
+        if (spec.maxN < 64) {
+            for (int i = 0; i < 5; i++) ladder[i] = Math.max(1, spec.maxN - 4 + i);
+        } else {
+            int top = spec.maxN;
+            for (int i = 4; i >= 0; i--) { ladder[i] = top; top /= 2; }
+        }
+        int flat = 0;
         long prevNanos = 0;
         int prevSize = 0;
         for (int n : ladder) {
-            Gen g = new Gen(seed);
-            g.scale = 1.0;
-            g.forcedSize = n;
-            Calls calls = (Calls) spec.gen.apply(g)[0];
+            Calls calls;
+            try {
+                Gen g = new Gen(seed);
+                g.scale = 1.0;
+                g.forcedSize = n;
+                calls = (Calls) spec.gen.apply(g)[0];
+            } catch (Throwable t) {
+                Report.warn("generator failed at n=" + n + ": " + root(t));
+                continue;
+            }
             long best = Long.MAX_VALUE;
             for (int r = 0; r < 7; r++) {
                 Replay x = replay(solDesign, calls.deepCopy());
@@ -720,14 +976,17 @@ public final class Judge {
         String msg = c.getMessage();
         String name = c.getClass().getSimpleName();
         StackTraceElement where = null;
+        search:
         for (StackTraceElement e : c.getStackTrace()) {
-            if (e.getClassName().equals("Solution") || e.getClassName().startsWith("Solution$")) {
-                where = e;
-                break;
+            for (String u : userClasses) {
+                if (e.getClassName().equals(u) || e.getClassName().startsWith(u + "$")) {
+                    where = e;
+                    break search;
+                }
             }
         }
         String at = where != null
-            ? "  (Solution." + where.getMethodName() + " line " + where.getLineNumber() + ")"
+            ? "  (" + where.getClassName() + "." + where.getMethodName() + " line " + where.getLineNumber() + ")"
             : "";
         return name + (msg != null ? ": " + msg : "") + at;
     }

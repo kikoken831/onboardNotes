@@ -21,27 +21,98 @@ public final class Shrink {
 
     private static final int MAX_PASSES = 60;
 
-    public static Object[] minimise(Object[] failing, StillFails oracle) {
+    /** What a shrink produced: the smallest failing input found, and why it stopped. */
+    public static final class Result {
+        public final Object[] best;
+        public final boolean improved;
+        public final boolean outOfTime;
+        public final int timeouts;
+        Result(Object[] best, boolean improved, boolean outOfTime, int timeouts) {
+            this.best = best; this.improved = improved; this.outOfTime = outOfTime; this.timeouts = timeouts;
+        }
+        /** A short parenthetical for the report, or "" when the shrink ran to completion. */
+        public String note() {
+            List<String> bits = new ArrayList<>();
+            if (outOfTime) bits.add("shrink time budget used up; best found so far");
+            if (timeouts > 0) bits.add(timeouts + " trial" + (timeouts == 1 ? "" : "s") + " timed out and were skipped");
+            return bits.isEmpty() ? "" : "  (" + String.join("; ", bits) + ")";
+        }
+    }
+
+    /**
+     * @param trialMs  ceiling for ONE oracle call. A trial that runs longer is abandoned
+     *                 and treated as "not a valid shrink": a solution that loops forever on
+     *                 some smaller variant must not turn a found WRONG ANSWER into a hang.
+     * @param budgetMs ceiling for the whole shrink; afterwards the best so far is returned.
+     */
+    public static Result minimise(Object[] failing, StillFails oracle, long trialMs, long budgetMs) {
+        long deadline = System.nanoTime() + budgetMs * 1_000_000L;
         Object[] best = failing;
+        boolean any = false, outOfTime = false;
+        int[] timeouts = { 0 };
+        search:
         for (int pass = 0; pass < MAX_PASSES; pass++) {
             boolean improved = false;
             for (int i = 0; i < best.length; i++) {
-                for (Object candidate : candidates(best[i])) {
+                List<Object> cands;
+                try {
+                    cands = candidates(best[i]);
+                } catch (Throwable t) {
+                    continue;                                   // odd value: leave it be
+                }
+                for (Object candidate : cands) {
+                    long left = (deadline - System.nanoTime()) / 1_000_000L;
+                    if (left <= 0) { outOfTime = true; break search; }
                     Object[] trial = best.clone();
                     trial[i] = candidate;
-                    if (safeTest(oracle, trial)) { best = trial; improved = true; break; }
+                    if (safeTest(oracle, trial, Math.min(trialMs, left), timeouts)) {
+                        best = trial; improved = true; any = true; break;
+                    }
                 }
             }
             if (!improved) break;
         }
-        return best;
+        return new Result(best, any, outOfTime, timeouts[0]);
     }
 
-    private static boolean safeTest(StillFails oracle, Object[] args) {
+    private static boolean safeTest(StillFails oracle, Object[] args, long ms, int[] timeouts) {
+        Boolean r = timed(() -> oracle.test(Deep.copyAll(args)), ms);
+        if (r == null) {
+            if (!lastTimedOut.get()) return false;              // oracle threw: not a legal shrink
+            timeouts[0]++;
+            return false;                                       // too slow: not a usable shrink
+        }
+        return r;
+    }
+
+    private static final ThreadLocal<Boolean> lastTimedOut = ThreadLocal.withInitial(() -> false);
+
+    private static final java.util.concurrent.ExecutorService POOL =
+        java.util.concurrent.Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r, "shrink-trial");
+            t.setDaemon(true);                                  // never keeps the JVM alive
+            return t;
+        });
+
+    /**
+     * Run `task` on a worker thread for at most `ms`. Returns its value, or null if it
+     * threw or ran out of time. A stuck worker cannot be killed safely in Java; it is
+     * interrupted and abandoned (it is a daemon, and the judge exits when it reports).
+     */
+    public static <V> V timed(java.util.concurrent.Callable<V> task, long ms) {
+        lastTimedOut.set(false);
+        java.util.concurrent.Future<V> f = POOL.submit(task);
         try {
-            return oracle.test(Deep.copyAll(args));
-        } catch (Throwable t) {
-            return false; // reference blew up: not a legal shrink
+            return f.get(Math.max(1, ms), java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (java.util.concurrent.TimeoutException e) {
+            f.cancel(true);
+            lastTimedOut.set(true);
+            return null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        } catch (Throwable e) {
+            return null;
         }
     }
 

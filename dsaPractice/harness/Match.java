@@ -112,6 +112,15 @@ public final class Match {
      * which is what subsets/3sum/combination-sum need but permutations/n-queens must not.
      */
     private static String unordered(Object yours, Object expected, boolean sortInner) {
+        // asList(null) is an empty list, so without these guards null would pass for []
+        // and a bare 5 for [5].
+        if (yours == null && expected == null) return null;
+        if (yours == null)    return "returned null, expected " + LcCodec.print(expected);
+        if (expected == null) return "expected null, you returned " + LcCodec.print(yours);
+        if (Deep.isCollection(yours) != Deep.isCollection(expected)) {
+            return "returned " + LcCodec.print(yours) + ", expected " + LcCodec.print(expected)
+                 + (Deep.isCollection(expected) ? "  (a collection was expected)" : "  (a single value was expected)");
+        }
         String a = Deep.canonical(yours, sortInner, true);
         String b = Deep.canonical(expected, sortInner, true);
         if (a.equals(b)) return null;

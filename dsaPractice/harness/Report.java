@@ -73,11 +73,13 @@ public final class Report {
         if (exponent < 1.35) return "looks ~O(n)";
         if (exponent < 1.75) return "looks ~O(n log n)";
         if (exponent < 2.40) return "looks ~O(n²)";
+        if (sizeRatio < 1.5 && timeRatio > 1.6) return "looks exponential";
         return "looks worse than O(n²)";
     }
 
     public static void verdict(String v, String detail) {
-        String tag = Judge.AC.equals(v) ? green(bold(v)) : red(bold(v));
+        boolean good = Judge.AC.equals(v) || Judge.VERIFIED.equals(v);
+        String tag = good ? green(bold(v)) : red(bold(v));
         System.out.println();
         System.out.println("  " + tag + (detail != null ? dim("  " + detail) : ""));
         System.out.println("::verdict " + v);
@@ -90,13 +92,21 @@ public final class Report {
         System.out.println("::verdict " + v);
     }
 
+    /** Truncate one rendered value for display. */
+    public static String clip(String s) {
+        return s.length() > 400 ? s.substring(0, 397) + "..." : s;
+    }
+
     /** Render an argument list for display, truncating anything unreadably long. */
-    public static String args(Object[] a) {
+    public static String args(Object[] a) { return args(a, 160); }
+
+    /** As args(), with a caller-chosen per-argument length limit. */
+    public static String args(Object[] a, int limit) {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < a.length; i++) {
             if (i > 0) b.append(", ");
             String s = LcCodec.print(a[i]);
-            if (s.length() > 160) s = s.substring(0, 157) + "...";
+            if (s.length() > limit) s = s.substring(0, limit - 3) + "...";
             b.append(s);
         }
         return b.toString();
@@ -125,6 +135,18 @@ public final class Report {
             } else if (v instanceof ListNode) {
                 int n = 0;
                 for (ListNode p = (ListNode) v; p != null && n < 5_000_000; p = p.next) n++;
+                total += n;
+            } else if (v instanceof TreeNode) {
+                // Iterative: a degenerate (chain) tree of 100k nodes must not overflow.
+                int n = 0;
+                java.util.ArrayDeque<TreeNode> st = new java.util.ArrayDeque<>();
+                st.push((TreeNode) v);
+                while (!st.isEmpty() && n < 5_000_000) {
+                    TreeNode t = st.pop();
+                    n++;
+                    if (t.left != null)  st.push(t.left);
+                    if (t.right != null) st.push(t.right);
+                }
                 total += n;
             }
         }

@@ -1,6 +1,7 @@
 """Compilation: harness, reference, and your solution, with mtime caching."""
 
 import os
+import shutil
 import subprocess
 
 from . import catalogue
@@ -31,8 +32,8 @@ def classpath(problem=None):
             out = os.path.join(catalogue.ROOT, "build", "provided", name)
             src_dir = os.path.join(HARNESS_DIR_, "provided", name)
             srcs = [os.path.join(src_dir, f) for f in os.listdir(src_dir) if f.endswith(".java")]
-            if _stale(srcs, out, ".stamp"):
-                os.makedirs(out, exist_ok=True)
+            if _stale(srcs + [HARNESS_STAMP], out, ".stamp"):
+                _fresh_dir(out)
                 _javac(["-d", out] + srcs, "the provided %s classes" % name)
                 _touch(out, ".stamp")
             parts.append(out)
@@ -113,6 +114,21 @@ def _stale(sources, out_dir, marker):
     return _newest(sources) > os.path.getmtime(stamp)
 
 
+HARNESS_STAMP = os.path.join(BUILD_HARNESS, ".stamp")
+
+
+def _fresh_dir(d):
+    """
+    Empty a class output dir before compiling into it. javac only ever ADDS files: a
+    class you renamed or deleted leaves its old .class behind, which then trips
+    check_no_shadowing (or is loaded) long after the source stopped declaring it. The
+    .stamp goes too, so a failed compile is retried next time.
+    """
+    if os.path.isdir(d):
+        shutil.rmtree(d)
+    os.makedirs(d, exist_ok=True)
+
+
 def _touch(out_dir, marker):
     os.makedirs(out_dir, exist_ok=True)
     open(os.path.join(out_dir, marker), "w").close()
@@ -142,9 +158,11 @@ def reference(problem, force=False):
             "no reference for '%s' yet" % problem["slug"],
             "This problem is in the catalogue but not implemented.\n"
             "Run `judge list --todo` to see what is ready to solve.")
-    if not force and not _stale([p["ref"]], p["build_ref"], ".stamp"):
+    # The harness stamp counts as a source: a harness change (Spec, T, Problem...) must
+    # recompile everything compiled against it.
+    if not force and not _stale([p["ref"], HARNESS_STAMP], p["build_ref"], ".stamp"):
         return
-    os.makedirs(p["build_ref"], exist_ok=True)
+    _fresh_dir(p["build_ref"])
     _javac(["-cp", classpath(problem), "-d", p["build_ref"], p["ref"]],
            "the reference for " + problem["slug"])
     _touch(p["build_ref"], ".stamp")
@@ -160,9 +178,9 @@ def solution(problem, force=False):
         raise CompileError(
             "you have not started '%s' yet" % problem["slug"],
             "Run:  judge open %s" % problem["slug"])
-    if not force and not _stale([p["solution"]], p["build_sol"], ".stamp"):
+    if not force and not _stale([p["solution"], HARNESS_STAMP], p["build_sol"], ".stamp"):
         return
-    os.makedirs(p["build_sol"], exist_ok=True)
+    _fresh_dir(p["build_sol"])
     src = javac_source(p["solution"], os.path.join(p["build_sol"], "src"))
     _javac(["-cp", classpath(problem), "-d", p["build_sol"], src],
            "your solution")
@@ -185,6 +203,9 @@ def reference_as_solution(problem, force=False):
 
     out_dir = os.path.join(catalogue.ROOT, "build", "selftest", problem["slug"])
     src_dir = os.path.join(out_dir, "src")
+    if not force and not _stale([p["ref"], HARNESS_STAMP], out_dir, ".stamp"):
+        return out_dir
+    _fresh_dir(out_dir)
     os.makedirs(src_dir, exist_ok=True)
 
     with open(p["ref"]) as f:

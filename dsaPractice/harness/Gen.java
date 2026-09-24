@@ -27,6 +27,7 @@ public final class Gen {
      * the timing bound are different numbers.
      */
     public int forcedSize = -1;
+    private boolean forcedUsed;
 
     public Gen(long seed) { this.rnd = new Random(seed); }
 
@@ -78,7 +79,10 @@ public final class Gen {
      * of iterations. sqrt(scale) plus a floor fixes that.
      */
     public int size(int min, int max) {
-        if (forcedSize >= 0) return Math.max(min, forcedSize);
+        // Timing: the first size drawn is the primary dimension and takes n. Later ones
+        // (each word's length, each list's length, a second array) stay within their own
+        // bounds -- forcing them all to n makes nested inputs n² and runs out of memory.
+        if (forcedSize >= 0 && !forcedUsed) { forcedUsed = true; return Math.max(min, forcedSize); }
         if (max <= min) return min;
         double ramp = Math.sqrt(Math.max(0.0, Math.min(1.0, scale)));
         int top = (int) Math.round(min + (max - min) * ramp);
@@ -143,8 +147,14 @@ public final class Gen {
         return a;
     }
 
+    /** One side of a 2-D input: like size(), but at a forced timing size n the grid gets ~n cells, not n². */
+    public int side(int min, int max) {
+        if (forcedSize >= 0) return Math.max(min, (int) Math.ceil(Math.sqrt(forcedSize)));
+        return size(min, max);
+    }
+
     public int[][] grid(int minR, int maxR, int minC, int maxC, int lo, int hi) {
-        int r = size(minR, maxR), c = size(minC, maxC);
+        int r = side(minR, maxR), c = side(minC, maxC);
         int[][] g = new int[r][c];
         for (int i = 0; i < r; i++) for (int j = 0; j < c; j++) g[i][j] = nextInt(lo, hi);
         return g;
@@ -208,6 +218,7 @@ public final class Gen {
 
     /** A valid BST over distinct values. */
     public TreeNode bst(int minNodes, int maxNodes, int lo, int hi) {
+        if (forcedSize >= 0) hi = Math.max(hi, lo + 2 * forcedSize);   // timing: room for n distinct keys
         int[] vals = strictlySortedInts(minNodes, maxNodes, lo, hi);
         return bstFrom(vals, 0, vals.length - 1);
     }
@@ -273,13 +284,35 @@ public final class Gen {
             Integer target = uniquePairSum(nums);
             if (target != null) return new Object[]{ nums, target };
         }
+        // Fallback (the range is too narrow for random values to have a unique pair sum).
+        // Plant a, b >= 0 and make every other value >= a + b + 1. Then any pair that
+        // includes a filler sums to more than a + b (its partner is >= 0), so (a, b) is
+        // the ONLY pair hitting the target -- duplicates among the fillers included.
+        int base = Math.max(0, lo);
+        int a = nextInt(base, Math.max(base, Math.min(hi, base + 3)));
+        int b = nextInt(base, Math.max(base, Math.min(hi, base + 3)));
+        int target = a + b;
+        int fLo = target + 1;
+        int fHi = Math.max(fLo, Math.min(hi, fLo + 3 * n));   // may exceed hi if the range is tiny
         int[] nums = new int[n];
-        for (int i = 0; i < n; i++) nums[i] = 1 + i;
+        for (int i = 0; i < n; i++) nums[i] = nextInt(fLo, fHi);
         int i1 = nextInt(0, n - 1), i2 = nextInt(0, n - 1);
         while (i2 == i1) i2 = nextInt(0, n - 1);
-        nums[i1] = hi / 2;
-        nums[i2] = hi / 2 - 1;
-        return new Object[]{ nums, nums[i1] + nums[i2] };
+        nums[i1] = a;
+        nums[i2] = b;
+        if (pairsSumming(nums, target) != 1) {
+            throw new IllegalStateException("twoSumInput fallback planted a non-unique pair");
+        }
+        return new Object[]{ nums, target };
+    }
+
+    /** Number of unordered index pairs summing to `target`. */
+    static int pairsSumming(int[] nums, int target) {
+        int c = 0;
+        for (int i = 0; i < nums.length; i++)
+            for (int j = i + 1; j < nums.length; j++)
+                if ((long) nums[i] + nums[j] == target) c++;
+        return c;
     }
 
     private void shuffle(int[] a) {
