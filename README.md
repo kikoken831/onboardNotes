@@ -20,7 +20,7 @@ dive) → hiring-manager/behavioural final on teamwork, conflict, and "Responsib
 
 ## How to use this
 
-Three passes, roughly 3 sessions:
+Six passes (0–5), roughly 3 sessions:
 
 | Pass | Goal | Files |
 |---|---|---|
@@ -85,8 +85,9 @@ in most markdown previewers it's collapsed; in a plain editor, cover the screen.
 
 ### Code problems
 - [`problems/java/`](problems/java/) — 12 runnable problems (`java P01Counter.java`). **P12 is the DSA screen practice set with a test harness and the on-camera complexity-narration script.**
-- [`problems/scala/`](problems/scala/) — 5 Scala problems (`scala S01BlockingGlobalEC.scala`)
+- [`problems/scala/`](problems/scala/) — 3 Scala problems (`scala S01BlockingGlobalEC.scala`)
 - [`problems/gc-labs/`](problems/gc-labs/) — 4 GC experiments with real flags and logs
+- [`dsaPractice/`](dsaPractice/) — **offline LeetCode judge**: 306 problems (tier 1 drills, tier 2 easy, tier 3 core set) with pinned examples, randomised differential stress against a reference, input shrinking and timing curves. `./judge next`, `./judge run <slug>`. See [`dsaPractice/README.md`](dsaPractice/README.md).
 - Solutions live in `SOLUTIONS.md` next to each set.
 
 ### Cheatsheets (skim the morning of)
@@ -99,7 +100,7 @@ in most markdown previewers it's collapsed; in a plain editor, cover the screen.
 ## Quick start
 
 ```bash
-cd /Users/kendrickkee/onboardNotes
+# from the repo root
 
 # Java problems run as single files, no build tool needed
 java problems/java/P01Counter.java
@@ -109,6 +110,9 @@ java -Xmx64m -Xlog:gc problems/gc-labs/L01AllocationRate.java
 
 # Scala
 scala problems/scala/S01BlockingGlobalEC.scala
+
+# LeetCode judge
+cd dsaPractice && ./judge next
 ```
 
 ---
