@@ -501,6 +501,53 @@ def _print_pick(problem):
     print()
 
 
+# ---------------------------------------------------------------------- due
+
+def cmd_due(args):
+    state = progress.load()
+    due_slugs = progress.due_now(state)
+    upcoming = progress.next_upcoming(state)
+
+    print()
+    if due_slugs:
+        print("  %s %d re-solve%s due today" %
+              (yellow("●"), len(due_slugs), "" if len(due_slugs) == 1 else "s"))
+        print()
+        for slug in due_slugs:
+            p = catalogue.by_slug(slug)
+            if not p:
+                continue
+            e = state["problems"].get(slug)
+            overdue_days = max(0, int((time.time() - e["due"]) / 86400))
+            colour = DIFFICULTY_COLOUR.get(p.get("difficulty", ""), dim)
+            diff = colour(p.get("difficulty", "")[:6].ljust(6))
+            tier = dim("T%d" % p["tier"])
+            pats = dim(", ".join(p.get("pattern", [])[:3]))
+            age = dim("(%dd overdue)" % overdue_days) if overdue_days >= 1 else ""
+            print("    %s %s  %-40s %s %s" % (tier, diff, bold(slug), pats, age))
+        print()
+    else:
+        print(dim("  no re-solves due today"))
+        print()
+
+    if upcoming:
+        due_epoch, slug = upcoming
+        days_until = max(1, int((due_epoch - time.time()) / 86400 + 0.5))
+        p = catalogue.by_slug(slug)
+        if p:
+            colour = DIFFICULTY_COLOUR.get(p.get("difficulty", ""), dim)
+            diff = colour(p.get("difficulty", "")[:6].ljust(6))
+            tier = dim("T%d" % p["tier"])
+            pats = dim(", ".join(p.get("pattern", [])[:3]))
+            print("  %s next up in %d day%s" % (dim("◇"), days_until,
+                                                "" if days_until == 1 else "s"))
+            print("    %s %s  %-40s %s" % (tier, diff, slug, pats))
+            print()
+    else:
+        print(dim("  no upcoming re-solves scheduled"))
+        print()
+
+
 # --------------------------------------------------------------------- status
 
 def cmd_status(args):
@@ -645,6 +692,9 @@ def main(argv=None):
     p.add_argument("--pattern")
     p.add_argument("--new", action="store_true", help="skip due re-solves")
     p.set_defaults(func=cmd_next)
+
+    p = sub.add_parser("due", help="show due re-solves and next upcoming")
+    p.set_defaults(func=cmd_due)
 
     p = sub.add_parser("status", help="progress overview")
     p.set_defaults(func=cmd_status)
