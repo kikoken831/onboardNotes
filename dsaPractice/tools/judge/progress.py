@@ -20,6 +20,18 @@ INTERVALS_DAYS = [1, 3, 7, 21]
 DAY = 86400
 
 
+def _start_of_day(epoch):
+    """Truncate an epoch timestamp to midnight local time."""
+    t = time.localtime(epoch)
+    return time.mktime(time.struct_time((t.tm_year, t.tm_mon, t.tm_mday,
+                                         0, 0, 0, 0, 0, t.tm_isdst)))
+
+
+def _is_due(due_epoch):
+    """True when the due date is today or in the past (ignores time-of-day)."""
+    return _start_of_day(due_epoch) <= _start_of_day(time.time())
+
+
 def path():
     return os.path.join(catalogue.ROOT, ".progress.json")
 
@@ -81,7 +93,7 @@ def record(slug, verdict, elapsed_ms=None, full=True):
                          **({} if full else {"pinned_only": True})})
     e["history"] = e["history"][-40:]
 
-    due = bool(e["solved"] and e.get("due") and e["due"] <= now)
+    due = bool(e["solved"] and e.get("due") and _is_due(e["due"]))
     event = None
     last = len(INTERVALS_DAYS) - 1
 
@@ -118,7 +130,7 @@ def due_now(state=None):
     now = time.time()
     out = []
     for slug, e in state["problems"].items():
-        if e.get("solved") and e.get("due") and e["due"] <= now:
+        if e.get("solved") and e.get("due") and _is_due(e["due"]):
             out.append((e["due"], slug))
     out.sort()
     return [slug for _, slug in out]
@@ -145,6 +157,6 @@ def summary():
                 row["attempted"] += 1
             if e["solved"]:
                 row["solved"] += 1
-            if e.get("due") and e["due"] <= time.time():
+            if e.get("due") and _is_due(e["due"]):
                 row["due"] += 1
     return tiers, state
