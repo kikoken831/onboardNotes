@@ -289,13 +289,22 @@ def _strip_hints(text):
 
 
 def _rebuild_pages():
-    """Silently regenerate docs/index.html after a run."""
+    """Regenerate docs/index.html and auto-push to update GitHub Pages."""
     try:
         html = pages.build()
         out = os.path.join(pages.DOCS_DIR, "index.html")
         os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, "w") as f:
             f.write(html)
+        repo_root = os.path.dirname(catalogue.ROOT)
+        progress_rel = os.path.relpath(progress.path(), repo_root)
+        docs_rel = os.path.relpath(out, repo_root)
+        subprocess.run(["git", "add", progress_rel, docs_rel],
+                       cwd=repo_root, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "Update progress dashboard"],
+                       cwd=repo_root, capture_output=True)
+        subprocess.run(["git", "push"],
+                       cwd=repo_root, capture_output=True)
     except Exception:
         pass
 
