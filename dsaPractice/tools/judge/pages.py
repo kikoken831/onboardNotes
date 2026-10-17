@@ -231,7 +231,7 @@ function render() {
   ).join('');
 
   // heatmap
-  renderHeatmap(d.daily_solves);
+  renderHeatmap(d.daily_activity);
 
   // tier table
   const table = document.getElementById('tier-table');
@@ -287,57 +287,69 @@ function diffBadge(diff) {
   return `<span class="badge ${cls}">${diff || 'Drill'}</span>`;
 }
 
-function renderHeatmap(dailySolves) {
+function localDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function renderHeatmap(dailyActivity) {
   const container = document.getElementById('heatmap-container');
   const tooltip = document.getElementById('tooltip');
   const today = new Date();
   today.setHours(0,0,0,0);
 
-  // go back ~6 months (26 weeks)
   const weeks = 26;
   const startDay = new Date(today);
   startDay.setDate(startDay.getDate() - (weeks * 7 - 1) - startDay.getDay());
 
-  // build grid
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const dayLabels = ['','Mon','','Wed','','Fri',''];
+  const colWidth = 15; // cell 12px + gap 3px
 
-  let monthHeader = '<div class="heatmap-months" style="padding-left:28px">';
-  let cols = '';
+  // first pass: build columns and record which column each month starts at
+  const columns = [];
+  const monthMarkers = [];
   let currentDate = new Date(startDay);
   let lastMonth = -1;
-  let colCount = 0;
 
   while (currentDate <= today) {
-    let col = '<div class="heatmap-col">';
     const colStart = new Date(currentDate);
+    if (colStart.getMonth() !== lastMonth) {
+      monthMarkers.push({ month: colStart.getMonth(), col: columns.length });
+      lastMonth = colStart.getMonth();
+    }
+
+    let col = '<div class="heatmap-col">';
     for (let dow = currentDate.getDay(); dow < 7; dow++) {
-      if (currentDate > today) { col += '<div style="width:12px;height:12px"></div>'; }
-      else {
-        const dateStr = currentDate.toISOString().slice(0, 10);
-        const count = dailySolves[dateStr] || 0;
-        const level = count === 0 ? 0 : count <= 2 ? 1 : count <= 5 ? 2 : count <= 10 ? 3 : 4;
-        col += `<div class="heatmap-cell" data-level="${level}" data-date="${dateStr}" data-count="${count}"></div>`;
+      if (currentDate > today) {
+        col += '<div style="width:12px;height:12px"></div>';
+      } else {
+        const dateStr = localDateStr(currentDate);
+        const entry = dailyActivity[dateStr];
+        const solves = entry ? entry.solves : 0;
+        const attempts = entry ? entry.attempts : 0;
+        const level = solves === 0 ? 0 : solves <= 2 ? 1 : solves <= 5 ? 2 : solves <= 10 ? 3 : 4;
+        col += `<div class="heatmap-cell" data-level="${level}" data-date="${dateStr}" data-solves="${solves}" data-attempts="${attempts}"></div>`;
       }
       currentDate.setDate(currentDate.getDate() + 1);
     }
     col += '</div>';
-    cols += col;
+    columns.push(col);
+  }
 
-    if (colStart.getMonth() !== lastMonth) {
-      if (colCount > 0) monthHeader += `<span style="width:${colCount * 15}px"></span>`;
-      monthHeader += `<span>${months[colStart.getMonth()]}</span>`;
-      lastMonth = colStart.getMonth();
-      colCount = 0;
-    }
-    colCount++;
+  // build month header using absolute positioning based on column index
+  let monthHeader = '<div class="heatmap-months" style="padding-left:28px;position:relative;height:16px">';
+  for (const m of monthMarkers) {
+    monthHeader += `<span style="position:absolute;left:${m.col * colWidth}px">${monthNames[m.month]}</span>`;
   }
   monthHeader += '</div>';
 
   const dayLabelHtml = '<div class="heatmap-days">' + dayLabels.map(l => `<span>${l}</span>`).join('') + '</div>';
 
   container.innerHTML = monthHeader +
-    '<div class="heatmap-wrap">' + dayLabelHtml + '<div class="heatmap" style="flex:1">' + cols + '</div></div>' +
+    '<div class="heatmap-wrap">' + dayLabelHtml + '<div class="heatmap" style="flex:1">' + columns.join('') + '</div></div>' +
     '<div class="heatmap-legend">Less ' +
     [0,1,2,3,4].map(l => `<div class="heatmap-cell" data-level="${l}"></div>`).join('') +
     ' More</div>';
@@ -345,9 +357,10 @@ function renderHeatmap(dailySolves) {
   container.addEventListener('mouseover', e => {
     const cell = e.target.closest('.heatmap-cell[data-date]');
     if (!cell) { tooltip.style.display = 'none'; return; }
-    const count = cell.dataset.count;
+    const solves = cell.dataset.solves;
+    const attempts = cell.dataset.attempts;
     const date = cell.dataset.date;
-    tooltip.textContent = `${count} solve${count == 1 ? '' : 's'} on ${date}`;
+    tooltip.textContent = `${solves} solve${solves == 1 ? '' : 's'}, ${attempts} attempt${attempts == 1 ? '' : 's'} on ${date}`;
     tooltip.style.display = 'block';
     const r = cell.getBoundingClientRect();
     tooltip.style.left = r.left + 'px';
@@ -360,28 +373,31 @@ render();
 </script>"""
 
 
-def _daily_solves(state):
-    """Count full ACCEPTED verdicts per calendar day."""
-    days = Counter()
+def _daily_activity(state):
+    """Count solves and attempts per calendar day."""
+    solves = Counter()
+    attempts = Counter()
     for e in state["problems"].values():
         for h in e.get("history", []):
+            day = datetime.fromtimestamp(h["t"]).strftime("%Y-%m-%d")
+            attempts[day] += 1
             if h["v"] == "ACCEPTED" and not h.get("pinned_only"):
-                day = datetime.fromtimestamp(h["t"]).strftime("%Y-%m-%d")
-                days[day] += 1
-    return dict(days)
+                solves[day] += 1
+    all_days = set(solves) | set(attempts)
+    return {d: {"solves": solves[d], "attempts": attempts[d]} for d in all_days}
 
 
 def _streak(daily):
-    """Current consecutive-day streak ending today or yesterday."""
+    """Current consecutive-day streak (days with solves) ending today or yesterday."""
     if not daily:
         return 0
+    solve_days = {d for d, v in daily.items() if v["solves"] > 0}
     today = datetime.now().date()
     d = today
     count = 0
-    # allow starting from today or yesterday
-    if d.isoformat() not in daily:
+    if d.isoformat() not in solve_days:
         d -= timedelta(days=1)
-    while d.isoformat() in daily:
+    while d.isoformat() in solve_days:
         count += 1
         d -= timedelta(days=1)
     return count
@@ -438,7 +454,7 @@ def build():
             "days_until": max(1, int((due_epoch - now) / 86400 + 0.5)),
         })
 
-    daily = _daily_solves(state)
+    daily = _daily_activity(state)
 
     data = {
         "generated": now,
@@ -448,7 +464,7 @@ def build():
         "total_upcoming": len(upcoming_list),
         "total_attempts": sum(e.get("attempts", 0) for e in state["problems"].values()),
         "current_streak": _streak(daily),
-        "daily_solves": daily,
+        "daily_activity": daily,
         "tiers": [tiers[t] for t in sorted(tiers)],
         "due_today": due_today,
         "upcoming": upcoming_list,
