@@ -142,7 +142,7 @@ def cmd_open(args):
     print(dim("  judge show %s     full statement and hints" % problem["slug"]))
     print(dim("  judge run  %s     compile and test" % problem["slug"]))
 
-    subprocess.Popen(["idea", p["solution"]],
+    subprocess.Popen(["idea", p["solution"], p["statement"]],
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -270,6 +270,9 @@ def cmd_show(args):
     if not args.hints:
         text = _strip_hints(text)
     print(text)
+
+    subprocess.Popen(["idea", p["statement"]],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def _strip_hints(text):
