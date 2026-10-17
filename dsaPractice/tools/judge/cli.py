@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 
-from . import build, catalogue, progress
+from . import build, catalogue, pages, progress
 
 # ------------------------------------------------------------------ formatting
 
@@ -114,24 +114,36 @@ def cmd_open(args):
 
     if os.path.exists(p["solution"]):
         if args.reset:
+            do_reset = True
+        else:
+            try:
+                ans = input("  solution exists — reset to blank? [y/N] ").strip().lower()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                return
+            do_reset = ans.startswith("y")
+
+        if do_reset:
             os.makedirs(p["attempts"], exist_ok=True)
             stamp = time.strftime("%Y%m%d-%H%M%S")
             shutil.move(p["solution"], os.path.join(p["attempts"],
                                                     "Solution-%s.java" % stamp))
             print(dim("  archived your previous attempt to .attempts/"))
         else:
-            print("  %s" % p["solution"])
-            print(dim("  already started — add --reset to archive it and begin from blank"))
-            return
+            print(dim("  keeping existing solution"))
 
-    os.makedirs(p["solution_dir"], exist_ok=True)
-    with open(p["solution"], "w") as f:
-        f.write(_stub(problem))
+    if not os.path.exists(p["solution"]):
+        os.makedirs(p["solution_dir"], exist_ok=True)
+        with open(p["solution"], "w") as f:
+            f.write(_stub(problem))
 
     print("  %s" % bold(p["solution"]))
     print()
     print(dim("  judge show %s     full statement and hints" % problem["slug"]))
     print(dim("  judge run  %s     compile and test" % problem["slug"]))
+
+    subprocess.Popen(["idea", p["solution"]],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def _stub(problem):
@@ -276,6 +288,18 @@ def _strip_hints(text):
     return "\n".join(out)
 
 
+def _rebuild_pages():
+    """Silently regenerate docs/index.html after a run."""
+    try:
+        html = pages.build()
+        out = os.path.join(catalogue.ROOT, "docs", "index.html")
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out, "w") as f:
+            f.write(html)
+    except Exception:
+        pass
+
+
 # ------------------------------------------------------------------------ run
 
 def cmd_run(args):
@@ -327,6 +351,7 @@ def cmd_run(args):
             print(dim("  re-solve not due yet (in %d day%s) -- schedule unchanged" % (days, plural(days))))
         elif event == "reset" and days:
             print(dim("  re-solve failed -- back to the first interval (due in %d day%s)" % (days, plural(days))))
+        _rebuild_pages()
         print()
     sys.exit(0 if verdict == "ACCEPTED" else 1)
 
@@ -506,7 +531,7 @@ def _print_pick(problem):
 def cmd_due(args):
     state = progress.load()
     due_slugs = progress.due_now(state)
-    upcoming = progress.next_upcoming(state)
+    all_upcoming = progress.upcoming(state)
 
     print()
     if due_slugs:
@@ -530,19 +555,28 @@ def cmd_due(args):
         print(dim("  no re-solves due today"))
         print()
 
-    if upcoming:
-        due_epoch, slug = upcoming
-        days_until = max(1, int((due_epoch - time.time()) / 86400 + 0.5))
-        p = catalogue.by_slug(slug)
-        if p:
-            colour = DIFFICULTY_COLOUR.get(p.get("difficulty", ""), dim)
-            diff = colour(p.get("difficulty", "")[:6].ljust(6))
-            tier = dim("T%d" % p["tier"])
-            pats = dim(", ".join(p.get("pattern", [])[:3]))
-            print("  %s next up in %d day%s" % (dim("◇"), days_until,
-                                                "" if days_until == 1 else "s"))
-            print("    %s %s  %-40s %s" % (tier, diff, slug, pats))
-            print()
+    if all_upcoming:
+        grouped = {}
+        for due_epoch, slug in all_upcoming:
+            days_until = max(1, int((due_epoch - time.time()) / 86400 + 0.5))
+            grouped.setdefault(days_until, []).append(slug)
+
+        print("  %s %d upcoming re-solve%s" %
+              (dim("◇"), len(all_upcoming),
+               "" if len(all_upcoming) == 1 else "s"))
+        print()
+        for days in sorted(grouped):
+            print("    %s" % dim("in %d day%s" % (days, "" if days == 1 else "s")))
+            for slug in grouped[days]:
+                p = catalogue.by_slug(slug)
+                if not p:
+                    continue
+                colour = DIFFICULTY_COLOUR.get(p.get("difficulty", ""), dim)
+                diff = colour(p.get("difficulty", "")[:6].ljust(6))
+                tier = dim("T%d" % p["tier"])
+                pats = dim(", ".join(p.get("pattern", [])[:3]))
+                print("    %s %s  %-40s %s" % (tier, diff, slug, pats))
+        print()
     else:
         print(dim("  no upcoming re-solves scheduled"))
         print()
@@ -636,6 +670,20 @@ def cmd_classify(args):
     print()
 
 
+# ---------------------------------------------------------------------- pages
+
+def cmd_pages(args):
+    html = pages.build()
+    out = os.path.join(catalogue.ROOT, "docs", "index.html")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    with open(out, "w") as f:
+        f.write(html)
+    print()
+    print("  %s" % bold(out))
+    print(dim("  commit and push to update GitHub Pages"))
+    print()
+
+
 # ------------------------------------------------------------------------ main
 
 def main(argv=None):
@@ -703,6 +751,9 @@ def main(argv=None):
     p.add_argument("-n", type=int, default=10)
     p.add_argument("--tier", type=int)
     p.set_defaults(func=cmd_classify)
+
+    p = sub.add_parser("pages", help="generate GitHub Pages dashboard")
+    p.set_defaults(func=cmd_pages)
 
     args = ap.parse_args(argv)
     if not getattr(args, "func", None):

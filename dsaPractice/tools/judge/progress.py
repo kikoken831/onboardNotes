@@ -136,15 +136,15 @@ def due_now(state=None):
     return [slug for _, slug in out]
 
 
-def next_upcoming(state=None):
-    """The slug with the nearest future due date (not yet due today), or None."""
+def upcoming(state=None):
+    """All slugs with a future due date (not yet due today), soonest first."""
     state = state or load()
-    best = None
+    out = []
     for slug, e in state["problems"].items():
         if e.get("solved") and e.get("due") and not _is_due(e["due"]):
-            if best is None or e["due"] < best[0]:
-                best = (e["due"], slug)
-    return best
+            out.append((e["due"], slug))
+    out.sort()
+    return out
 
 
 def status_of(state, slug):
