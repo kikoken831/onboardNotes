@@ -360,7 +360,8 @@ def cmd_run(args):
             print(dim("  re-solve not due yet (in %d day%s) -- schedule unchanged" % (days, plural(days))))
         elif event == "reset" and days:
             print(dim("  re-solve failed -- back to the first interval (due in %d day%s)" % (days, plural(days))))
-        _rebuild_pages()
+        if verdict == "ACCEPTED":
+            _rebuild_pages()
         print()
     sys.exit(0 if verdict == "ACCEPTED" else 1)
 
