@@ -1,11 +1,14 @@
 """Generate a static GitHub Pages dashboard from progress data."""
 
 import json
+import os
 import time
 from collections import Counter
 from datetime import datetime, timedelta
 
 from . import catalogue, progress
+
+DOCS_DIR = os.path.join(os.path.dirname(catalogue.ROOT), "docs")
 
 _TEMPLATE_TOP = r"""<title>DSA Practice</title>
 <meta name="claude:viewport-fit-sides" content="cover">

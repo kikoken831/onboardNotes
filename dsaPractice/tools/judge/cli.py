@@ -292,7 +292,7 @@ def _rebuild_pages():
     """Silently regenerate docs/index.html after a run."""
     try:
         html = pages.build()
-        out = os.path.join(catalogue.ROOT, "docs", "index.html")
+        out = os.path.join(pages.DOCS_DIR, "index.html")
         os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, "w") as f:
             f.write(html)
@@ -674,7 +674,7 @@ def cmd_classify(args):
 
 def cmd_pages(args):
     html = pages.build()
-    out = os.path.join(catalogue.ROOT, "docs", "index.html")
+    out = os.path.join(pages.DOCS_DIR, "index.html")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as f:
         f.write(html)
