@@ -619,6 +619,8 @@ def cmd_status(args):
             row["due"] or "", bar))
 
     total_due = sum(r["due"] for r in tiers.values())
+    secs = progress.total_practice_seconds(state)
+    hours = secs / 3600
     print()
     if total_due:
         print("  %s %d re-solve%s due   %s" %
@@ -626,6 +628,7 @@ def cmd_status(args):
                dim("judge next")))
     else:
         print(dim("  no re-solves due"))
+    print(dim("  %.1f hours practiced" % hours))
     print()
 
 

@@ -230,6 +230,32 @@ def status_of(state, slug):
     return state["problems"].get(slug)
 
 
+def total_practice_seconds(state=None):
+    """Estimate total practice time from history sessions.
+
+    Groups attempts into sessions (gap < 2h) and sums session durations.
+    Each session is at least 5 minutes (accounts for single-attempt solves).
+    """
+    state = state or load()
+    total = 0
+    session_gap = 2 * 3600
+    min_session = 5 * 60
+
+    for e in state["problems"].values():
+        timestamps = sorted(h["t"] for h in e.get("history", []))
+        if not timestamps:
+            continue
+        session_start = timestamps[0]
+        prev = timestamps[0]
+        for t in timestamps[1:]:
+            if t - prev > session_gap:
+                total += max(min_session, prev - session_start)
+                session_start = t
+            prev = t
+        total += max(min_session, prev - session_start)
+    return total
+
+
 def summary():
     """Counts by tier, for `judge status`."""
     state = load()

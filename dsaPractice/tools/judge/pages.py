@@ -218,13 +218,14 @@ function render() {
 
   // stats
   const statsEl = document.getElementById('stats');
+  const hours = (d.total_practice_seconds / 3600).toFixed(1);
   const stats = [
     [d.total_solved, 'solved'],
     [d.total_implemented, 'implemented'],
     [d.total_due, 'due today'],
     [d.total_upcoming, 'upcoming'],
     [d.current_streak, 'day streak'],
-    [d.total_attempts, 'attempts'],
+    [hours + 'h', 'practiced'],
   ];
   statsEl.innerHTML = stats.map(([v, l]) =>
     `<div class="stat"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`
@@ -463,6 +464,7 @@ def build():
         "total_due": len(due_slugs),
         "total_upcoming": len(upcoming_list),
         "total_attempts": sum(e.get("attempts", 0) for e in state["problems"].values()),
+        "total_practice_seconds": progress.total_practice_seconds(state),
         "current_streak": _streak(daily),
         "daily_activity": daily,
         "tiers": [tiers[t] for t in sorted(tiers)],
