@@ -137,6 +137,8 @@ def cmd_open(args):
         with open(p["solution"], "w") as f:
             f.write(_stub(problem))
 
+    progress.mark_opened(problem["slug"])
+
     print("  %s" % bold(p["solution"]))
     print()
     print(dim("  judge show %s     full statement and hints" % problem["slug"]))
@@ -355,14 +357,17 @@ def cmd_run(args):
         if e.get("due"):
             days = max(1, int((e["due"] - time.time()) / 86400 + 0.5))
         plural = lambda d: "" if d == 1 else "s"
+        ease_str = dim("  ease: %.2f" % e.get("ease", 2.5))
         if event == "pinned-only":
             print(dim("  pinned examples only -- not counted as a solve; drop --fixed / -n 0 to stress test"))
         elif event in ("solved", "advanced") and days:
             print(dim("  scheduled for a blank-file re-solve in %d day%s" % (days, plural(days))))
+            print(ease_str)
         elif event == "not-due" and days:
             print(dim("  re-solve not due yet (in %d day%s) -- schedule unchanged" % (days, plural(days))))
         elif event == "reset" and days:
             print(dim("  re-solve failed -- back to the first interval (due in %d day%s)" % (days, plural(days))))
+            print(ease_str)
         if verdict == "ACCEPTED":
             _rebuild_pages()
         print()

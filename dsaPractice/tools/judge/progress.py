@@ -1,13 +1,27 @@
 """
-Progress tracking and spaced retrieval.
+Progress tracking and SM-2 spaced retrieval.
 
-The schedule is the best-evidenced part of the whole design. Re-solving a problem from
-an empty file after a delay is worth considerably more than re-reading a solution you
-already wrote, so `judge next` surfaces due re-solves ahead of new problems.
+Re-solving a problem from an empty file after a delay is worth considerably more than
+re-reading a solution you already wrote, so `judge next` surfaces due re-solves ahead
+of new problems.
 
-Intervals are 1, 3, 7 and 21 days. Only a stress-tested ACCEPTED on a problem not yet
-solved, or on a re-solve that is due, moves the schedule forward. A failed DUE re-solve
-drops back to the first interval; attempts between re-solves change nothing.
+Uses the SM-2 algorithm with per-problem ease factors. Quality is derived from solve
+time (wall-clock from `judge open` to successful `judge run`) and failed attempts in
+the current session:
+
+    quality 5  solved in < 10 min, no prior failures
+    quality 4  solved in 10-30 min, or ≤1 prior failure
+    quality 3  solved in 30+ min, or 2+ prior failures
+    quality 1  failed a due re-solve
+
+SM-2 interval formula:
+    repetition 0 → 1 day
+    repetition 1 → 6 days
+    repetition 2+ → previous_interval * ease
+
+Ease adjusts after each review:
+    ease += 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)
+    ease = max(1.3, ease)
 """
 
 import json
@@ -16,8 +30,9 @@ import time
 
 from . import catalogue
 
-INTERVALS_DAYS = [1, 3, 7, 21]
 DAY = 86400
+DEFAULT_EASE = 2.5
+MIN_EASE = 1.3
 
 
 def _start_of_day(epoch):
@@ -52,33 +67,91 @@ def save(state):
 
 
 def entry(state, slug):
-    return state["problems"].setdefault(slug, {
+    e = state["problems"].setdefault(slug, {
         "attempts": 0,
         "solved": False,
         "first_solved": None,
         "last_verdict": None,
         "last_attempt": None,
-        "stage": 0,          # index into INTERVALS_DAYS
+        "repetition": 0,     # SM-2 repetition count
+        "interval": 0,       # current interval in days
+        "ease": DEFAULT_EASE,
         "due": None,         # epoch seconds, or None when not scheduled
+        "opened_at": None,   # epoch when judge open was called
         "history": [],
     })
+    _migrate(e)
+    return e
+
+
+def _migrate(e):
+    """Migrate old fixed-interval entries to SM-2 fields."""
+    if "stage" in e:
+        stage = e.pop("stage")
+        if not e.get("repetition"):
+            e["repetition"] = stage
+        if not e.get("interval") and e.get("due") and e.get("last_attempt"):
+            e["interval"] = max(1, round((e["due"] - e["last_attempt"]) / DAY))
+        if "ease" not in e:
+            e["ease"] = DEFAULT_EASE
+    e.setdefault("ease", DEFAULT_EASE)
+    e.setdefault("repetition", 0)
+    e.setdefault("interval", 0)
+    e.setdefault("opened_at", None)
 
 
 FAILURES = ("WRONG ANSWER", "RUNTIME ERROR", "TIME LIMIT EXCEEDED")
 
 
+def _sm2_quality(e):
+    """Derive SM-2 quality (3-5) from solve time and recent failures."""
+    opened = e.get("opened_at")
+    now = time.time()
+    solve_minutes = (now - opened) / 60 if opened else 999
+
+    recent_failures = 0
+    for h in reversed(e.get("history", [])):
+        if h["v"] == "ACCEPTED" and not h.get("pinned_only"):
+            break
+        if h["v"] in FAILURES:
+            recent_failures += 1
+
+    if solve_minutes < 10 and recent_failures == 0:
+        return 5
+    if solve_minutes <= 30 or recent_failures <= 1:
+        return 4
+    return 3
+
+
+def _sm2_interval(repetition, interval, ease):
+    """Compute the next interval in days using SM-2."""
+    if repetition == 0:
+        return 1
+    if repetition == 1:
+        return 6
+    return max(1, round(interval * ease))
+
+
+def _sm2_ease(ease, quality):
+    """Adjust ease factor after a review."""
+    new = ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+    return max(MIN_EASE, new)
+
+
+def mark_opened(slug):
+    """Record the timestamp when a problem is opened for solving."""
+    state = load()
+    e = entry(state, slug)
+    e["opened_at"] = time.time()
+    save(state)
+
+
 def record(slug, verdict, elapsed_ms=None, full=True):
     """
-    Log one attempt and move the retrieval schedule. Returns (entry, event).
+    Log one attempt and move the SM-2 schedule. Returns (entry, event).
 
     `full` is False for a pinned-examples-only run (`--fixed`, `-n 0`); that never
-    counts as a solve. The schedule moves only on the attempts it is about:
-
-      first full ACCEPTED        solved; first re-solve due in INTERVALS_DAYS[0]
-      full ACCEPTED, re-solve due next interval (stage advances)
-      full ACCEPTED, not due     nothing -- practising early is not a re-solve
-      failure, re-solve due      back to the first interval (due in 1 day again)
-      failure, not due           nothing -- a failed practice run keeps its progress
+    counts as a solve.
 
     event is one of: solved, advanced, not-due, reset, pinned-only, None.
     """
@@ -95,7 +168,6 @@ def record(slug, verdict, elapsed_ms=None, full=True):
 
     due = bool(e["solved"] and e.get("due") and _is_due(e["due"]))
     event = None
-    last = len(INTERVALS_DAYS) - 1
 
     if verdict == "ACCEPTED":
         if not full:
@@ -103,21 +175,28 @@ def record(slug, verdict, elapsed_ms=None, full=True):
         elif not e["solved"]:
             e["solved"] = True
             e["first_solved"] = now
-            e["due"] = now + INTERVALS_DAYS[0] * DAY
-            e["stage"] = 1
+            quality = _sm2_quality(e)
+            e["ease"] = _sm2_ease(e["ease"], quality)
+            e["interval"] = 1
+            e["repetition"] = 1
+            e["due"] = now + 1 * DAY
+            e["opened_at"] = None
             event = "solved"
         elif due:
-            stage = e.get("stage", 0)
-            e["due"] = now + INTERVALS_DAYS[min(stage, last)] * DAY
-            e["stage"] = min(stage + 1, len(INTERVALS_DAYS))
+            quality = _sm2_quality(e)
+            e["ease"] = _sm2_ease(e["ease"], quality)
+            e["interval"] = _sm2_interval(e["repetition"], e["interval"], e["ease"])
+            e["repetition"] += 1
+            e["due"] = now + e["interval"] * DAY
+            e["opened_at"] = None
             event = "advanced"
         else:
             event = "not-due"
     elif verdict in FAILURES and due:
-        # A failed re-solve means it did not stick: back to the first interval, as if
-        # solved for the first time today.
-        e["stage"] = 1
-        e["due"] = now + INTERVALS_DAYS[0] * DAY
+        e["ease"] = _sm2_ease(e["ease"], 1)
+        e["repetition"] = 0
+        e["interval"] = 1
+        e["due"] = now + 1 * DAY
         event = "reset"
 
     save(state)
