@@ -331,8 +331,9 @@ function renderHeatmap(dailyActivity) {
         const entry = dailyActivity[dateStr];
         const solves = entry ? entry.solves : 0;
         const attempts = entry ? entry.attempts : 0;
+        const hours = entry ? entry.hours : 0;
         const level = solves === 0 ? 0 : solves <= 2 ? 1 : solves <= 5 ? 2 : solves <= 10 ? 3 : 4;
-        col += `<div class="heatmap-cell" data-level="${level}" data-date="${dateStr}" data-solves="${solves}" data-attempts="${attempts}"></div>`;
+        col += `<div class="heatmap-cell" data-level="${level}" data-date="${dateStr}" data-solves="${solves}" data-attempts="${attempts}" data-hours="${hours}"></div>`;
       }
       currentDate.setDate(currentDate.getDate() + 1);
     }
@@ -360,8 +361,10 @@ function renderHeatmap(dailyActivity) {
     if (!cell) { tooltip.style.display = 'none'; return; }
     const solves = cell.dataset.solves;
     const attempts = cell.dataset.attempts;
+    const hours = cell.dataset.hours;
     const date = cell.dataset.date;
-    tooltip.textContent = `${solves} solve${solves == 1 ? '' : 's'}, ${attempts} attempt${attempts == 1 ? '' : 's'} on ${date}`;
+    const hoursPart = hours > 0 ? `, ${hours}h practiced` : '';
+    tooltip.textContent = `${solves} solve${solves == 1 ? '' : 's'}, ${attempts} attempt${attempts == 1 ? '' : 's'}${hoursPart} on ${date}`;
     tooltip.style.display = 'block';
     const r = cell.getBoundingClientRect();
     tooltip.style.left = r.left + 'px';
@@ -375,17 +378,38 @@ render();
 
 
 def _daily_activity(state):
-    """Count solves and attempts per calendar day."""
+    """Count solves, attempts, and practice hours per calendar day."""
     solves = Counter()
     attempts = Counter()
+    day_timestamps = {}
+    session_gap = 2 * 3600
+    min_session = 5 * 60
+
     for e in state["problems"].values():
         for h in e.get("history", []):
             day = datetime.fromtimestamp(h["t"]).strftime("%Y-%m-%d")
             attempts[day] += 1
             if h["v"] == "ACCEPTED" and not h.get("pinned_only"):
                 solves[day] += 1
+            day_timestamps.setdefault(day, []).append(h["t"])
+
+    hours = {}
+    for day, ts in day_timestamps.items():
+        ts.sort()
+        total = 0
+        session_start = ts[0]
+        prev = ts[0]
+        for t in ts[1:]:
+            if t - prev > session_gap:
+                total += max(min_session, prev - session_start)
+                session_start = t
+            prev = t
+        total += max(min_session, prev - session_start)
+        hours[day] = round(total / 3600, 1)
+
     all_days = set(solves) | set(attempts)
-    return {d: {"solves": solves[d], "attempts": attempts[d]} for d in all_days}
+    return {d: {"solves": solves[d], "attempts": attempts[d],
+                "hours": hours.get(d, 0)} for d in all_days}
 
 
 def _streak(daily):
