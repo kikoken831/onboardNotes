@@ -11,6 +11,7 @@ class Ref implements Problem {
             .example("[], [\"a\"]",     "[\"none\"]")
             .example("[\"a\"], [\"\"]", "[\"prefix\"]")
             .example("[\"\"], [\"\"]",  "[\"word\"]")
+            .example("[], [\"\"]", "[\"none\"]")
             .gen(g -> new Object[]{
                 g.words(0, 20, 0, 5, "abc"),
                 g.words(1, 20, 0, 5, "abc") })
@@ -39,7 +40,10 @@ class Ref implements Problem {
         List<String> out = new ArrayList<>(queries.length);
         for (String q : queries) {
             Node n = walk(root, q);
-            out.add(n == null ? "none" : (n.isWord ? "word" : "prefix"));
+            if (n == null) out.add("none");
+            else if (n.isWord) out.add("word");
+            else if (hasChild(n)) out.add("prefix");
+            else out.add("none");
         }
         return out;
     }
@@ -51,5 +55,10 @@ class Ref implements Problem {
             if (cur == null) return null;
         }
         return cur;
+    }
+
+    private boolean hasChild(Node n) {
+        for (Node c : n.next) if (c != null) return true;
+        return false;
     }
 }
